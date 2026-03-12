@@ -1,198 +1,269 @@
-import React, { useMemo } from "react";
-import { View, Text, ScrollView, Pressable } from "react-native";
-import { useQuery } from "convex/react";
-import { api } from "../../convex/_generated/api";
+import React, { useState } from "react";
+import { View, Text, ScrollView, Pressable, Modal } from "react-native";
+import { useRouter } from "expo-router";
+import { useBudget } from "../../src/hooks/use-budget";
 import { useAppStore } from "../../src/stores/app-store";
+import { BudgetRow } from "../../src/components/budget/BudgetRow";
+import { AssignMoney } from "../../src/components/budget/AssignMoney";
 import { Card } from "../../src/components/ui/Card";
 import { formatCurrency } from "../../src/lib/currency";
-import {
-  getMonthLabel,
-  previousMonth,
-  nextMonth,
-} from "../../src/lib/date";
+import { getMonthLabel, previousMonth, nextMonth } from "../../src/lib/date";
+import type { Id } from "../../convex/_generated/dataModel";
+
+interface AssignTarget {
+  categoryId: Id<"categories">;
+  categoryName: string;
+  currentAssigned: number;
+  available: number;
+}
 
 export default function BudgetScreen() {
   const { userId, currentMonth, setCurrentMonth } = useAppStore();
+  const { summary, groups, isLoading } = useBudget();
+  const router = useRouter();
 
-  const categories = useQuery(
-    api.categories.listCategories,
-    userId ? { userId } : "skip"
-  );
+  const [assignTarget, setAssignTarget] = useState<AssignTarget | null>(null);
+  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
 
-  const groups = useQuery(
-    api.categories.listGroups,
-    userId ? { userId } : "skip"
-  );
+  const toggleGroup = (groupId: string) => {
+    setCollapsedGroups((prev) => {
+      const next = new Set(prev);
+      if (next.has(groupId)) {
+        next.delete(groupId);
+      } else {
+        next.add(groupId);
+      }
+      return next;
+    });
+  };
 
-  const budgets = useQuery(
-    api.budgets.getByMonth,
-    userId ? { userId, month: currentMonth } : "skip"
-  );
+  // Group categories by their groupId
+  const groupedBudgets = groups
+    ?.filter((g: any) => {
+      const groupCats = summary?.categories.filter(
+        (c) => c.groupId === g._id
+      );
+      return groupCats && groupCats.length > 0;
+    })
+    .map((g: any) => ({
+      ...g,
+      budgets: summary?.categories.filter((c) => c.groupId === g._id) ?? [],
+    }));
 
-  // Calculate Ready to Assign (simplified for Phase 1)
-  const readyToAssign = useMemo(() => {
-    if (!budgets) return 0;
-    // This will be computed properly in Phase 2
-    return 0;
-  }, [budgets]);
-
-  const expenseGroups = useMemo(() => {
-    if (!groups || !categories) return [];
-    return groups
-      .filter((g) => {
-        const cats = categories.filter(
-          (c) => c.groupId === g._id && c.type === "expense" && !c.isHidden
-        );
-        return cats.length > 0;
-      })
-      .map((g) => ({
-        ...g,
-        categories: categories
-          .filter(
-            (c) => c.groupId === g._id && c.type === "expense" && !c.isHidden
-          )
-          .map((c) => {
-            const budget = budgets?.find((b) => b.categoryId === c._id);
-            return {
-              ...c,
-              assigned: budget?.assigned ?? 0,
-              activity: budget?.activity ?? 0,
-              available: budget?.available ?? 0,
-            };
-          }),
-      }));
-  }, [groups, categories, budgets]);
+  const readyToAssign = summary?.readyToAssign ?? 0;
 
   return (
     <View className="flex-1 bg-background">
       {/* Month Navigator */}
       <View className="flex-row items-center justify-between px-4 py-3 bg-white border-b border-border">
-        <Pressable onPress={() => setCurrentMonth(previousMonth(currentMonth))}>
-          <Text className="text-primary-600 font-semibold text-lg">←</Text>
+        <Pressable
+          onPress={() => setCurrentMonth(previousMonth(currentMonth))}
+          className="px-3 py-1"
+        >
+          <Text className="text-primary-600 font-semibold text-lg">‹</Text>
         </Pressable>
         <Text className="text-base font-bold text-foreground">
           {getMonthLabel(currentMonth)}
         </Text>
-        <Pressable onPress={() => setCurrentMonth(nextMonth(currentMonth))}>
-          <Text className="text-primary-600 font-semibold text-lg">→</Text>
+        <Pressable
+          onPress={() => setCurrentMonth(nextMonth(currentMonth))}
+          className="px-3 py-1"
+        >
+          <Text className="text-primary-600 font-semibold text-lg">›</Text>
         </Pressable>
       </View>
 
-      {/* Ready to Assign */}
-      <View className="mx-4 mt-4">
+      {/* Ready to Assign Banner */}
+      <Pressable className="mx-4 mt-3">
         <Card
-          className={`items-center py-4 ${
-            readyToAssign >= 0 ? "bg-success/10" : "bg-danger/10"
+          className={`items-center py-3 ${
+            readyToAssign > 0
+              ? "bg-emerald-50 border-emerald-200"
+              : readyToAssign < 0
+                ? "bg-red-50 border-red-200"
+                : "bg-primary-50 border-primary-200"
           }`}
         >
-          <Text className="text-sm text-muted-foreground font-medium">
+          <Text className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
             Ready to Assign
           </Text>
           <Text
-            className={`text-2xl font-bold mt-1 ${
-              readyToAssign >= 0 ? "text-success" : "text-danger"
+            className={`text-2xl font-bold mt-0.5 ${
+              readyToAssign > 0
+                ? "text-success"
+                : readyToAssign < 0
+                  ? "text-danger"
+                  : "text-primary-600"
             }`}
           >
             {formatCurrency(readyToAssign)}
           </Text>
+          {readyToAssign > 0 && (
+            <Text className="text-xs text-muted-foreground mt-1">
+              Distribute to categories below
+            </Text>
+          )}
+          {readyToAssign < 0 && (
+            <Text className="text-xs text-danger mt-1">
+              You've assigned more than you have!
+            </Text>
+          )}
         </Card>
-      </View>
+      </Pressable>
 
       {/* Budget Grid */}
-      <ScrollView className="flex-1 mt-4" showsVerticalScrollIndicator={false}>
+      <ScrollView
+        className="flex-1 mt-3"
+        showsVerticalScrollIndicator={false}
+      >
         {/* Column Headers */}
-        <View className="flex-row px-4 py-2 border-b border-border">
-          <Text className="flex-1 text-xs font-semibold text-muted-foreground uppercase">
+        <View className="flex-row px-4 py-2 border-b border-border bg-muted/30">
+          <Text className="flex-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
             Category
           </Text>
-          <Text className="w-20 text-xs font-semibold text-muted-foreground uppercase text-right">
+          <Text className="w-24 text-xs font-semibold text-muted-foreground uppercase text-right">
             Assigned
           </Text>
-          <Text className="w-20 text-xs font-semibold text-muted-foreground uppercase text-right">
+          <Text className="w-24 text-xs font-semibold text-muted-foreground uppercase text-right">
             Activity
           </Text>
-          <Text className="w-20 text-xs font-semibold text-muted-foreground uppercase text-right">
+          <Text className="w-24 text-xs font-semibold text-muted-foreground uppercase text-right">
             Available
           </Text>
         </View>
 
-        {expenseGroups.map((group) => (
-          <View key={group._id} className="mb-2">
-            {/* Group Header */}
-            <View className="flex-row px-4 py-2.5 bg-muted/50">
-              <Text className="flex-1 text-sm font-bold text-foreground">
-                {group.name}
-              </Text>
-              <Text className="w-20 text-xs font-medium text-muted-foreground text-right">
-                {formatCurrency(
-                  group.categories.reduce((s, c) => s + c.assigned, 0)
-                )}
-              </Text>
-              <Text className="w-20 text-xs font-medium text-muted-foreground text-right">
-                {formatCurrency(
-                  group.categories.reduce((s, c) => s + c.activity, 0)
-                )}
-              </Text>
-              <Text className="w-20 text-xs font-medium text-muted-foreground text-right">
-                {formatCurrency(
-                  group.categories.reduce((s, c) => s + c.available, 0)
-                )}
-              </Text>
-            </View>
+        {groupedBudgets?.map((group: any) => {
+          const isCollapsed = collapsedGroups.has(group._id);
+          const groupAssigned = group.budgets.reduce(
+            (s: number, c: any) => s + c.assigned,
+            0
+          );
+          const groupActivity = group.budgets.reduce(
+            (s: number, c: any) => s + c.activity,
+            0
+          );
+          const groupAvailable = group.budgets.reduce(
+            (s: number, c: any) => s + c.available,
+            0
+          );
 
-            {/* Category Rows */}
-            {group.categories.map((cat) => (
-              <View
-                key={cat._id}
-                className="flex-row items-center px-4 py-3 bg-white border-b border-border/30"
+          return (
+            <View key={group._id}>
+              {/* Group Header */}
+              <Pressable
+                onPress={() => toggleGroup(group._id)}
+                className="flex-row items-center px-4 py-2.5 bg-muted/50 border-b border-border/30"
               >
-                <Text
-                  className="flex-1 text-sm text-foreground"
-                  numberOfLines={1}
-                >
-                  {cat.name}
+                <View className="flex-1 flex-row items-center">
+                  <Text className="text-xs mr-1.5 text-muted-foreground">
+                    {isCollapsed ? "▸" : "▾"}
+                  </Text>
+                  <Text className="text-sm font-bold text-foreground">
+                    {group.name}
+                  </Text>
+                </View>
+                <Text className="w-24 text-xs font-medium text-muted-foreground text-right">
+                  {formatCurrency(groupAssigned)}
                 </Text>
-                <Text className="w-20 text-sm text-foreground text-right">
-                  {cat.assigned === 0 ? "—" : formatCurrency(cat.assigned)}
+                <Text className="w-24 text-xs font-medium text-muted-foreground text-right">
+                  {formatCurrency(groupActivity)}
                 </Text>
                 <Text
-                  className={`w-20 text-sm text-right ${
-                    cat.activity < 0 ? "text-danger" : "text-muted-foreground"
+                  className={`w-24 text-xs font-semibold text-right ${
+                    groupAvailable < 0 ? "text-danger" : "text-foreground"
                   }`}
                 >
-                  {cat.activity === 0 ? "—" : formatCurrency(cat.activity)}
+                  {formatCurrency(groupAvailable)}
                 </Text>
-                <Text
-                  className={`w-20 text-sm font-medium text-right ${
-                    cat.available < 0
-                      ? "text-danger"
-                      : cat.available > 0
-                        ? "text-success"
-                        : "text-muted-foreground"
-                  }`}
-                >
-                  {cat.available === 0 ? "—" : formatCurrency(cat.available)}
+              </Pressable>
+
+              {/* Category Rows */}
+              {!isCollapsed &&
+                group.budgets.map((budget: any) => (
+                  <BudgetRow
+                    key={budget.categoryId}
+                    budget={budget}
+                    onPress={() =>
+                      router.push(
+                        `/budget/${budget.categoryId}` as any
+                      )
+                    }
+                    onAssign={() =>
+                      setAssignTarget({
+                        categoryId: budget.categoryId,
+                        categoryName: budget.name,
+                        currentAssigned: budget.assigned,
+                        available: budget.available,
+                      })
+                    }
+                  />
+                ))}
+            </View>
+          );
+        })}
+
+        {/* Overspent summary */}
+        {summary && summary.overspent > 0 && (
+          <View className="mx-4 mt-4">
+            <Card className="bg-red-50 border-red-200">
+              <View className="flex-row items-center justify-between">
+                <Text className="text-sm font-medium text-danger">
+                  Total Overspent
+                </Text>
+                <Text className="text-sm font-bold text-danger">
+                  {formatCurrency(-summary.overspent)}
                 </Text>
               </View>
-            ))}
+              <Text className="text-xs text-muted-foreground mt-1">
+                Move money from other categories to cover
+              </Text>
+            </Card>
           </View>
-        ))}
+        )}
 
         {/* Empty state */}
-        {expenseGroups.length === 0 && (
+        {(!groupedBudgets || groupedBudgets.length === 0) && !isLoading && (
           <View className="items-center py-20">
             <Text className="text-4xl mb-3">📊</Text>
             <Text className="text-base font-medium text-muted-foreground">
               Budget will appear here
             </Text>
             <Text className="text-sm text-muted-foreground mt-1 text-center px-8">
-              Add accounts and transactions to start budgeting
+              Add accounts and income to start budgeting
             </Text>
           </View>
         )}
 
         <View className="h-20" />
       </ScrollView>
+
+      {/* Assign Money Modal */}
+      {assignTarget && userId && (
+        <Modal
+          visible={true}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setAssignTarget(null)}
+        >
+          <Pressable
+            className="flex-1 bg-black/40 justify-center"
+            onPress={() => setAssignTarget(null)}
+          >
+            <Pressable onPress={() => {}}>
+              <AssignMoney
+                userId={userId}
+                categoryId={assignTarget.categoryId}
+                categoryName={assignTarget.categoryName}
+                month={currentMonth}
+                currentAssigned={assignTarget.currentAssigned}
+                available={assignTarget.available}
+                readyToAssign={readyToAssign}
+                onClose={() => setAssignTarget(null)}
+              />
+            </Pressable>
+          </Pressable>
+        </Modal>
+      )}
     </View>
   );
 }

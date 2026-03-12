@@ -12,6 +12,8 @@ import type {
 import type * as accounts from "../accounts";
 import type * as budgets from "../budgets";
 import type * as categories from "../categories";
+import type * as scheduled from "../scheduled";
+import type * as targets from "../targets";
 import type * as transactions from "../transactions";
 import type * as users from "../users";
 
@@ -19,6 +21,8 @@ declare const fullApi: ApiFromModules<{
   accounts: typeof accounts;
   budgets: typeof budgets;
   categories: typeof categories;
+  scheduled: typeof scheduled;
+  targets: typeof targets;
   transactions: typeof transactions;
   users: typeof users;
 }>;
