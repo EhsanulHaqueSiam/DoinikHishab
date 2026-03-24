@@ -10,9 +10,9 @@ interface ButtonProps extends PressableProps {
 
 const variantStyles = {
   default: "bg-primary-600 active:bg-primary-700",
-  secondary: "bg-muted active:bg-gray-200",
-  outline: "border border-border bg-transparent active:bg-muted",
-  ghost: "bg-transparent active:bg-muted",
+  secondary: "bg-surface-300 active:bg-surface-400",
+  outline: "border border-border bg-transparent active:bg-surface-200",
+  ghost: "bg-transparent active:bg-surface-200",
   danger: "bg-danger active:bg-red-600",
 };
 
@@ -20,7 +20,7 @@ const variantTextStyles = {
   default: "text-white font-semibold",
   secondary: "text-foreground font-medium",
   outline: "text-foreground font-medium",
-  ghost: "text-foreground font-medium",
+  ghost: "text-muted-foreground font-medium",
   danger: "text-white font-semibold",
 };
 
@@ -46,14 +46,25 @@ export function Button({
 }: ButtonProps) {
   return (
     <Pressable
-      className={`flex-row items-center justify-center ${variantStyles[variant]} ${sizeStyles[size]} ${disabled || loading ? "opacity-50" : ""}`}
+      className={`flex-row items-center justify-center ${variantStyles[variant]} ${sizeStyles[size]} ${disabled || loading ? "opacity-40" : ""}`}
       disabled={disabled || loading}
+      style={
+        variant === "default"
+          ? {
+              shadowColor: "#0d9488",
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.35,
+              shadowRadius: 8,
+              elevation: 4,
+            }
+          : undefined
+      }
       {...props}
     >
       {loading && (
         <ActivityIndicator
           size="small"
-          color={variant === "default" || variant === "danger" ? "#fff" : "#0891b2"}
+          color={variant === "default" || variant === "danger" ? "#fff" : "#2dd4bf"}
           className="mr-2"
         />
       )}

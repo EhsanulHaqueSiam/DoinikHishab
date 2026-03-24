@@ -45,38 +45,36 @@ export function AssignMoney({
     onClose();
   };
 
-  const quickAmounts = [1000, 2000, 5000, 10000].map((t) => t * 100); // to paisa
+  const quickAmounts = [1000, 2000, 5000, 10000].map((t) => t * 100);
 
   return (
     <Card className="mx-4">
       <Text className="text-base font-semibold text-foreground mb-1">
         Assign to {categoryName}
       </Text>
-      <Text className="text-xs text-muted-foreground mb-4">
+      <Text className="text-xs text-accent-500 mb-4">
         Ready to Assign: {formatCurrency(readyToAssign)}
       </Text>
 
-      {/* Amount input */}
-      <View className="flex-row items-center border border-border rounded-xl px-3 py-2 mb-3">
-        <Text className="text-lg font-bold text-foreground mr-1">৳</Text>
+      <View className="flex-row items-center border border-border rounded-xl px-3 py-2 mb-3 bg-surface-200">
+        <Text className="text-lg font-bold text-accent-500 mr-1">৳</Text>
         <TextInput
           value={inputValue}
           onChangeText={setInputValue}
           keyboardType="numeric"
           placeholder="0"
           className="flex-1 text-lg text-foreground"
-          placeholderTextColor="#94a3b8"
+          placeholderTextColor="#3a5280"
           autoFocus
         />
       </View>
 
-      {/* Quick amounts */}
       <View className="flex-row gap-2 mb-4">
         {quickAmounts.map((amount) => (
           <Pressable
             key={amount}
             onPress={() => setInputValue(String(paisaToTaka(amount)))}
-            className="flex-1 bg-muted rounded-lg py-2 items-center"
+            className="flex-1 bg-surface-300 rounded-lg py-2 items-center border border-border/30 active:bg-surface-400"
           >
             <Text className="text-xs font-medium text-foreground">
               {formatCurrency(amount)}
@@ -85,7 +83,6 @@ export function AssignMoney({
         ))}
       </View>
 
-      {/* Current state */}
       <View className="flex-row justify-between mb-4">
         <Text className="text-xs text-muted-foreground">Currently assigned</Text>
         <Text className="text-xs font-medium text-foreground">
@@ -93,7 +90,6 @@ export function AssignMoney({
         </Text>
       </View>
 
-      {/* Actions */}
       <View className="flex-row gap-3">
         <View className="flex-1">
           <Button variant="ghost" onPress={onClose}>

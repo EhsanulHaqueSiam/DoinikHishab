@@ -63,7 +63,7 @@ export default function AddTransactionScreen() {
   }, [userId, defaultAccount, amount, selectedCategory, type, createTransaction, router]);
 
   return (
-    <View className="flex-1 bg-white">
+    <View className="flex-1 bg-background">
       {/* Header */}
       <View className="flex-row items-center justify-between px-4 pt-14 pb-4 border-b border-border">
         <Pressable onPress={() => router.back()}>
@@ -76,13 +76,13 @@ export default function AddTransactionScreen() {
       </View>
 
       {/* Type toggle */}
-      <View className="flex-row bg-muted mx-4 mt-4 rounded-xl p-1">
+      <View className="flex-row bg-surface-300 mx-4 mt-4 rounded-xl p-1">
         {(["expense", "income", "transfer"] as const).map((t) => (
           <Pressable
             key={t}
             onPress={() => setType(t)}
             className={`flex-1 py-2 rounded-lg items-center ${
-              type === t ? "bg-white shadow-sm" : ""
+              type === t ? "bg-surface-400 shadow-sm" : ""
             }`}
           >
             <Text

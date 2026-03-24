@@ -42,7 +42,7 @@ export default function AccountDetailScreen() {
   return (
     <View className="flex-1 bg-background">
       {/* Header */}
-      <View className="px-4 pt-14 pb-4 bg-white border-b border-border">
+      <View className="px-4 pt-14 pb-4 bg-surface-100 border-b border-border">
         <Pressable onPress={() => router.back()}>
           <Text className="text-primary-600 font-medium mb-2">← Back</Text>
         </Pressable>

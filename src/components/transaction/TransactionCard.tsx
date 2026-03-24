@@ -35,25 +35,22 @@ export function TransactionCard({
   return (
     <Pressable
       onPress={onPress}
-      className="flex-row items-center py-3 px-4 active:bg-muted/50"
+      className="flex-row items-center py-3 px-4 active:bg-surface-300/50"
     >
-      {/* Flag indicator */}
       {transaction.flag && (
         <View
           className="w-1 h-8 rounded-full mr-2"
           style={{
             backgroundColor:
-              FLAG_COLORS[transaction.flag as FlagColor] || "#94a3b8",
+              FLAG_COLORS[transaction.flag as FlagColor] || "#3a5280",
           }}
         />
       )}
 
-      {/* Category icon */}
-      <View className="w-10 h-10 rounded-xl bg-muted items-center justify-center mr-3">
+      <View className="w-10 h-10 rounded-xl bg-surface-300 items-center justify-center mr-3">
         <Text className="text-lg">{emoji}</Text>
       </View>
 
-      {/* Details */}
       <View className="flex-1">
         <Text className="text-base font-medium text-foreground" numberOfLines={1}>
           {transaction.description || categoryName || "Uncategorized"}
@@ -63,14 +60,13 @@ export function TransactionCard({
             <Text className="text-xs text-muted-foreground">{categoryName}</Text>
           )}
           {accountName && (
-            <Text className="text-xs text-muted-foreground">
+            <Text className="text-xs text-surface-700">
               {categoryName && transaction.description ? "·" : ""} {accountName}
             </Text>
           )}
         </View>
       </View>
 
-      {/* Amount */}
       <View className="items-end">
         <Text
           className={`text-base font-semibold ${
@@ -80,7 +76,7 @@ export function TransactionCard({
           {formatCurrency(transaction.amount)}
         </Text>
         {!transaction.isCleared && (
-          <View className="w-2 h-2 rounded-full bg-amber-400 mt-1" />
+          <View className="w-2 h-2 rounded-full bg-accent-500 mt-1" />
         )}
       </View>
     </Pressable>

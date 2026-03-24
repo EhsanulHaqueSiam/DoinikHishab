@@ -20,7 +20,7 @@ const TARGET_LABELS: Record<string, string> = {
 };
 
 const STATUS_LABELS: Record<string, { label: string; color: string }> = {
-  funded: { label: "Funded", color: "text-primary-600" },
+  funded: { label: "Funded", color: "text-primary-700" },
   on_track: { label: "On Track", color: "text-success" },
   behind: { label: "Behind", color: "text-warning" },
 };
@@ -36,7 +36,7 @@ export function GoalProgress({
   const statusInfo = STATUS_LABELS[status] || STATUS_LABELS.behind;
   const barColor =
     status === "funded"
-      ? "bg-primary-500"
+      ? "bg-primary-600"
       : status === "on_track"
         ? "bg-success"
         : "bg-warning";
@@ -52,8 +52,7 @@ export function GoalProgress({
         </Text>
       </View>
 
-      {/* Progress bar */}
-      <View className="h-3 bg-gray-100 rounded-full overflow-hidden">
+      <View className="h-3 bg-surface-400 rounded-full overflow-hidden">
         <View
           className={`h-3 rounded-full ${barColor}`}
           style={{ width: `${Math.min(progress * 100, 100)}%` }}
@@ -71,7 +70,7 @@ export function GoalProgress({
       </View>
 
       {targetDate && (
-        <Text className="text-xs text-muted-foreground">
+        <Text className="text-xs text-surface-700">
           Target date: {targetDate}
         </Text>
       )}

@@ -57,14 +57,12 @@ export function QuickAdd() {
         isCleared: false,
       });
 
-      // Reset state
       setAmount(0);
       setSelectedCategory(null);
       setDescription("");
       setStep("amount");
       closeQuickAdd();
 
-      // Haptic feedback on native
       if (Platform.OS !== "web") {
         try {
           const Haptics = require("expo-haptics");
@@ -78,7 +76,6 @@ export function QuickAdd() {
 
   const handleCategorySelect = useCallback((id: Id<"categories">) => {
     setSelectedCategory(id);
-    // Auto-advance to save
     setStep("confirm");
   }, []);
 
@@ -99,19 +96,39 @@ export function QuickAdd() {
       snapPoints={snapPoints}
       onClose={handleClose}
       enablePanDownToClose
-      backgroundStyle={{ backgroundColor: "#ffffff", borderRadius: 24 }}
-      handleIndicatorStyle={{ backgroundColor: "#cbd5e1", width: 40 }}
+      backgroundStyle={{
+        backgroundColor: "#0c1220",
+        borderRadius: 24,
+        borderWidth: 1,
+        borderColor: "#1a2744",
+      }}
+      handleIndicatorStyle={{ backgroundColor: "#3a5280", width: 40 }}
     >
       <View className="flex-1 px-4">
         {/* Type toggle */}
-        <View className="flex-row bg-muted rounded-xl p-1 mb-4">
+        <View className="flex-row bg-surface-200 rounded-xl p-1 mb-4 border border-border/30">
           {(["expense", "income", "transfer"] as const).map((type) => (
             <Pressable
               key={type}
               onPress={() => useUIStore.getState().openQuickAdd(type)}
               className={`flex-1 py-2 rounded-lg items-center ${
-                quickAddType === type ? "bg-white shadow-sm" : ""
+                quickAddType === type ? "bg-surface-400" : ""
               }`}
+              style={
+                quickAddType === type
+                  ? {
+                      shadowColor:
+                        type === "expense"
+                          ? "#ef4444"
+                          : type === "income"
+                            ? "#22c55e"
+                            : "#0d9488",
+                      shadowOffset: { width: 0, height: 0 },
+                      shadowOpacity: 0.3,
+                      shadowRadius: 8,
+                    }
+                  : undefined
+              }
             >
               <Text
                 className={`text-sm font-medium capitalize ${
@@ -120,7 +137,7 @@ export function QuickAdd() {
                       ? "text-danger"
                       : type === "income"
                         ? "text-success"
-                        : "text-primary-600"
+                        : "text-primary-700"
                     : "text-muted-foreground"
                 }`}
               >
@@ -130,7 +147,6 @@ export function QuickAdd() {
           ))}
         </View>
 
-        {/* Step content */}
         {step === "amount" && (
           <View className="flex-1">
             <AmountPad
@@ -154,13 +170,13 @@ export function QuickAdd() {
           <View className="flex-1">
             <View className="flex-row items-center justify-between mb-3">
               <Pressable onPress={() => setStep("amount")}>
-                <Text className="text-primary-600 font-medium">← Back</Text>
+                <Text className="text-primary-700 font-medium">← Back</Text>
               </Pressable>
               <Text className="text-sm text-muted-foreground">
                 Pick a category
               </Text>
               <Pressable onPress={handleSave}>
-                <Text className="text-primary-600 font-medium">Skip →</Text>
+                <Text className="text-accent-500 font-medium">Skip →</Text>
               </Pressable>
             </View>
             <BottomSheetScrollView>
@@ -194,7 +210,7 @@ export function QuickAdd() {
                 </Text>
               )}
               {defaultAccount && (
-                <Text className="text-sm text-muted-foreground mt-1">
+                <Text className="text-sm text-surface-700 mt-1">
                   from {defaultAccount.name}
                 </Text>
               )}

@@ -1,0 +1,9 @@
+# Bun config — tuned for i7-13700H / 16GB
+
+[install]
+# Use hardlinks from global cache — near-instant reinstalls
+globalDir = "~/.bun/install/cache"
+
+[install.lockfile]
+# Binary lockfile — faster to read/write than JSON
+saveLockfile = true

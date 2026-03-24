@@ -1,6 +1,6 @@
 import React from "react";
 import { Tabs } from "expo-router";
-import { Platform, Text } from "react-native";
+import { Platform, View, Text } from "react-native";
 
 const TAB_ICONS: Record<string, string> = {
   index: "🏠",
@@ -17,34 +17,52 @@ export default function TabsLayout() {
       screenOptions={({ route }) => ({
         headerShown: true,
         headerStyle: {
-          backgroundColor: "#ffffff",
+          backgroundColor: "#0a0f1c",
           elevation: 0,
           shadowOpacity: 0,
           borderBottomWidth: 1,
-          borderBottomColor: "#e2e8f0",
+          borderBottomColor: "#1a2744",
         },
         headerTitleStyle: {
           fontWeight: "700" as const,
           fontSize: 18,
-          color: "#0f172a",
+          color: "#e8edf5",
+          fontFamily: "SpaceMono",
         },
         tabBarStyle: {
-          backgroundColor: "#ffffff",
-          borderTopColor: "#e2e8f0",
+          backgroundColor: "#0a0f1c",
+          borderTopColor: "#1a2744",
+          borderTopWidth: 1,
           paddingBottom: Platform.OS === "ios" ? 24 : 8,
           paddingTop: 8,
           height: Platform.OS === "ios" ? 88 : 64,
         },
-        tabBarActiveTintColor: "#0891b2",
-        tabBarInactiveTintColor: "#94a3b8",
+        tabBarActiveTintColor: "#2dd4bf",
+        tabBarInactiveTintColor: "#3a5280",
         tabBarIcon: ({ focused }) => (
-          <Text style={{ fontSize: 22, opacity: focused ? 1 : 0.5 }}>
-            {TAB_ICONS[route.name] || "📌"}
-          </Text>
+          <View
+            style={
+              focused
+                ? {
+                    shadowColor: "#0d9488",
+                    shadowOffset: { width: 0, height: 0 },
+                    shadowOpacity: 0.6,
+                    shadowRadius: 8,
+                    elevation: 4,
+                  }
+                : undefined
+            }
+          >
+            <Text style={{ fontSize: 22, opacity: focused ? 1 : 0.4 }}>
+              {TAB_ICONS[route.name] || "📌"}
+            </Text>
+          </View>
         ),
         tabBarLabelStyle: {
-          fontSize: 11,
+          fontSize: 10,
           fontWeight: "600" as const,
+          fontFamily: "SpaceMono",
+          letterSpacing: 0.5,
         },
       })}
     >

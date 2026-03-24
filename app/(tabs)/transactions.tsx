@@ -57,8 +57,8 @@ export default function TransactionsScreen() {
         sections={sections}
         keyExtractor={(item) => item._id}
         renderSectionHeader={({ section }) => (
-          <View className="flex-row items-center justify-between px-4 py-2 bg-background">
-            <Text className="text-sm font-semibold text-muted-foreground">
+          <View className="flex-row items-center justify-between px-4 py-2 bg-surface-100 border-b border-border/20">
+            <Text className="text-sm font-semibold text-muted-foreground tracking-wide">
               {formatDateShort(section.title)}
             </Text>
             <Text
@@ -73,7 +73,7 @@ export default function TransactionsScreen() {
         renderItem={({ item }) => {
           const { name, icon } = getCategoryInfo(item.categoryId ?? undefined);
           return (
-            <View className="bg-white">
+            <View className="bg-card">
               <TransactionCard
                 transaction={item}
                 categoryName={name}
@@ -87,7 +87,7 @@ export default function TransactionsScreen() {
           );
         }}
         ItemSeparatorComponent={() => (
-          <View className="h-px bg-border/30 mx-4" />
+          <View className="h-px bg-border/20 mx-4" />
         )}
         ListEmptyComponent={() => (
           <View className="flex-1 items-center justify-center py-20">
@@ -95,7 +95,7 @@ export default function TransactionsScreen() {
             <Text className="text-base font-medium text-muted-foreground">
               No transactions yet
             </Text>
-            <Text className="text-sm text-muted-foreground mt-1">
+            <Text className="text-sm text-surface-700 mt-1">
               Tap + to add your first transaction
             </Text>
           </View>

@@ -3,10 +3,12 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web"
+    "start": "NODE_OPTIONS='--max-old-space-size=3072 --expose-gc' expo start",
+    "android": "NODE_OPTIONS='--max-old-space-size=3072 --expose-gc' expo start --android",
+    "ios": "NODE_OPTIONS='--max-old-space-size=3072 --expose-gc' expo start --ios",
+    "web": "NODE_OPTIONS='--max-old-space-size=3072 --expose-gc' expo start --web",
+    "start:clear": "NODE_OPTIONS='--max-old-space-size=3072' expo start --clear",
+    "nuke": "rm -rf node_modules .expo bun.lockb && bun install"
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^5.2.8",
@@ -14,7 +16,9 @@
     "@shopify/flash-list": "^2.3.0",
     "convex": "^1.32.0",
     "expo": "~55.0.6",
+    "expo-build-properties": "~55.0.10",
     "expo-constants": "~55.0.7",
+    "expo-document-picker": "~55.0.8",
     "expo-font": "~55.0.4",
     "expo-haptics": "~55.0.8",
     "expo-linking": "~55.0.7",

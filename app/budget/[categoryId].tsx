@@ -102,7 +102,7 @@ export default function CategoryDetailScreen() {
   return (
     <View className="flex-1 bg-background">
       {/* Header */}
-      <View className="px-4 pt-14 pb-4 bg-white border-b border-border">
+      <View className="px-4 pt-14 pb-4 bg-surface-100 border-b border-border">
         <Pressable onPress={() => router.back()}>
           <Text className="text-primary-600 font-medium mb-2">← Budget</Text>
         </Pressable>
@@ -171,7 +171,7 @@ export default function CategoryDetailScreen() {
                   keyboardType="numeric"
                   placeholder="0"
                   className="flex-1 text-base text-foreground"
-                  placeholderTextColor="#94a3b8"
+                  placeholderTextColor="#3a5280"
                 />
               </View>
               <Button onPress={handleQuickAssign} size="md">
@@ -237,7 +237,7 @@ export default function CategoryDetailScreen() {
                     onPress={() => setTargetType(tt.key)}
                     className={`px-3 py-2.5 rounded-xl border ${
                       targetType === tt.key
-                        ? "border-primary-400 bg-primary-50"
+                        ? "border-primary-600 bg-surface-300"
                         : "border-border"
                     }`}
                   >
@@ -268,7 +268,7 @@ export default function CategoryDetailScreen() {
                   keyboardType="numeric"
                   placeholder="Target amount"
                   className="flex-1 text-base text-foreground"
-                  placeholderTextColor="#94a3b8"
+                  placeholderTextColor="#3a5280"
                 />
               </View>
 
@@ -279,7 +279,7 @@ export default function CategoryDetailScreen() {
                   onChangeText={setTargetDate}
                   placeholder="Target date (YYYY-MM-DD)"
                   className="border border-border rounded-xl px-3 py-2 text-base mb-3"
-                  placeholderTextColor="#94a3b8"
+                  placeholderTextColor="#3a5280"
                 />
               )}
 

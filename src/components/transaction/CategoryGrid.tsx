@@ -10,40 +10,15 @@ interface CategoryGridProps {
   type: "expense" | "income";
 }
 
-// Map icon names to emoji fallbacks (since lucide needs native setup)
 const ICON_EMOJI: Record<string, string> = {
-  home: "🏠",
-  zap: "⚡",
-  flame: "🔥",
-  droplets: "💧",
-  wifi: "📶",
-  smartphone: "📱",
-  shield: "🛡️",
-  "shopping-cart": "🛒",
-  utensils: "🍽️",
-  bus: "🚌",
-  bike: "🚲",
-  fuel: "⛽",
-  lamp: "💡",
-  heart: "❤️",
-  banknote: "💵",
-  package: "📦",
-  repeat: "🔄",
-  tv: "📺",
-  "shopping-bag": "🛍️",
-  stethoscope: "🏥",
-  "graduation-cap": "🎓",
-  gift: "🎁",
-  shirt: "👔",
-  "shield-alert": "🛡️",
-  plane: "✈️",
-  moon: "🌙",
-  laptop: "💻",
-  briefcase: "💼",
-  code: "💻",
-  building: "🏢",
-  "trending-up": "📈",
-  "plus-circle": "➕",
+  home: "🏠", zap: "⚡", flame: "🔥", droplets: "💧", wifi: "📶",
+  smartphone: "📱", shield: "🛡️", "shopping-cart": "🛒", utensils: "🍽️",
+  bus: "🚌", bike: "🚲", fuel: "⛽", lamp: "💡", heart: "❤️",
+  banknote: "💵", package: "📦", repeat: "🔄", tv: "📺",
+  "shopping-bag": "🛍️", stethoscope: "🏥", "graduation-cap": "🎓",
+  gift: "🎁", shirt: "👔", "shield-alert": "🛡️", plane: "✈️",
+  moon: "🌙", laptop: "💻", briefcase: "💼", code: "💻",
+  building: "🏢", "trending-up": "📈", "plus-circle": "➕",
 };
 
 function CategoryIcon({ icon, isSelected }: { icon?: string; isSelected: boolean }) {
@@ -51,8 +26,19 @@ function CategoryIcon({ icon, isSelected }: { icon?: string; isSelected: boolean
   return (
     <View
       className={`w-12 h-12 rounded-xl items-center justify-center ${
-        isSelected ? "bg-primary-600" : "bg-muted"
+        isSelected ? "bg-primary-600" : "bg-surface-300"
       }`}
+      style={
+        isSelected
+          ? {
+              shadowColor: "#0d9488",
+              shadowOffset: { width: 0, height: 0 },
+              shadowOpacity: 0.5,
+              shadowRadius: 10,
+              elevation: 6,
+            }
+          : undefined
+      }
     >
       <Text className="text-xl">{emoji}</Text>
     </View>
@@ -93,7 +79,7 @@ export function CategoryGrid({
                     key={cat._id}
                     onPress={() => onSelect(cat._id)}
                     className={`items-center p-2 rounded-xl w-20 ${
-                      isSelected ? "bg-primary-50 border border-primary-200" : ""
+                      isSelected ? "bg-surface-300 border border-primary-600/40" : ""
                     }`}
                   >
                     <CategoryIcon icon={cat.icon || undefined} isSelected={isSelected} />

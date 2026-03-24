@@ -72,10 +72,10 @@ export default function AccountsScreen() {
     return (
       <View className="mb-6">
         <View className="flex-row items-center justify-between px-4 mb-2">
-          <Text className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+          <Text className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
             {title}
           </Text>
-          <Text className="text-sm font-semibold text-foreground">
+          <Text className="text-sm font-semibold text-accent-500">
             {formatCurrency(total)}
           </Text>
         </View>
@@ -84,9 +84,9 @@ export default function AccountsScreen() {
             <Pressable
               key={account._id}
               onPress={() => router.push(`/account/${account._id}` as any)}
-              className="flex-row items-center px-4 py-3.5 active:bg-muted/50"
+              className="flex-row items-center px-4 py-3.5 active:bg-surface-300"
             >
-              <View className="w-10 h-10 rounded-xl bg-muted items-center justify-center mr-3">
+              <View className="w-10 h-10 rounded-xl bg-surface-300 items-center justify-center mr-3">
                 <Text className="text-lg">
                   {ACCOUNT_ICONS[account.type] || "🏧"}
                 </Text>
@@ -107,7 +107,7 @@ export default function AccountsScreen() {
                 {formatCurrency(account.balance)}
               </Text>
               {idx < accts.length - 1 && (
-                <View className="absolute bottom-0 left-16 right-0 h-px bg-border/30" />
+                <View className="absolute bottom-0 left-16 right-0 h-px bg-border/20" />
               )}
             </Pressable>
           ))}
@@ -121,8 +121,19 @@ export default function AccountsScreen() {
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Total Balance */}
         <View className="px-4 py-4">
-          <Card className="items-center">
-            <Text className="text-sm text-muted-foreground">Net Worth</Text>
+          <Card
+            className="items-center border-accent-200/20"
+            style={{
+              shadowColor: "#e6a444",
+              shadowOffset: { width: 0, height: 0 },
+              shadowOpacity: 0.12,
+              shadowRadius: 20,
+              elevation: 8,
+            }}
+          >
+            <Text className="text-sm text-muted-foreground tracking-wider uppercase">
+              Net Worth
+            </Text>
             <Text className="text-3xl font-bold text-foreground mt-1">
               {formatCurrency(balances?.total ?? 0)}
             </Text>
@@ -159,8 +170,8 @@ export default function AccountsScreen() {
                 value={newName}
                 onChangeText={setNewName}
                 placeholder="Account name"
-                className="border border-border rounded-xl px-4 py-3 text-base mb-3"
-                placeholderTextColor="#94a3b8"
+                className="border border-border rounded-xl px-4 py-3 text-base text-foreground mb-3 bg-surface-200"
+                placeholderTextColor="#3a5280"
               />
 
               {/* Type selector */}
@@ -181,8 +192,18 @@ export default function AccountsScreen() {
                     className={`px-3 py-2 rounded-lg mr-2 ${
                       newType === type
                         ? "bg-primary-600"
-                        : "bg-muted"
+                        : "bg-surface-300"
                     }`}
+                    style={
+                      newType === type
+                        ? {
+                            shadowColor: "#0d9488",
+                            shadowOffset: { width: 0, height: 0 },
+                            shadowOpacity: 0.4,
+                            shadowRadius: 6,
+                          }
+                        : undefined
+                    }
                   >
                     <Text
                       className={`text-xs font-medium ${
@@ -200,8 +221,8 @@ export default function AccountsScreen() {
                 onChangeText={setNewBalance}
                 placeholder="Starting balance (৳)"
                 keyboardType="numeric"
-                className="border border-border rounded-xl px-4 py-3 text-base mb-4"
-                placeholderTextColor="#94a3b8"
+                className="border border-border rounded-xl px-4 py-3 text-base text-foreground mb-4 bg-surface-200"
+                placeholderTextColor="#3a5280"
               />
 
               <View className="flex-row gap-3">

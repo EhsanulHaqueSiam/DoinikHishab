@@ -9,13 +9,13 @@ export function FAB({ onPress }: FABProps) {
   return (
     <Pressable
       onPress={onPress}
-      className="absolute bottom-6 right-6 w-14 h-14 rounded-full bg-primary-600 items-center justify-center shadow-lg active:bg-primary-700 z-50"
+      className="absolute bottom-6 right-6 w-14 h-14 rounded-full bg-primary-600 items-center justify-center z-50 active:bg-primary-700"
       style={{
-        shadowColor: "#0891b2",
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 8,
-        elevation: 8,
+        shadowColor: "#0d9488",
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.6,
+        shadowRadius: 16,
+        elevation: 12,
       }}
     >
       <Text className="text-white text-3xl font-light leading-none" style={{ marginTop: -2 }}>

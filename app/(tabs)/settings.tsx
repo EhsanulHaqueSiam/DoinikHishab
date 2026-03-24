@@ -16,16 +16,16 @@ function SettingRow({ icon, label, value, onPress, rightElement }: SettingRowPro
   return (
     <Pressable
       onPress={onPress}
-      className="flex-row items-center py-3.5 active:bg-muted/30"
+      className="flex-row items-center py-3.5 active:bg-surface-300/30"
     >
       <Text className="text-lg mr-3">{icon}</Text>
       <Text className="flex-1 text-base text-foreground">{label}</Text>
       {value && (
-        <Text className="text-sm text-muted-foreground mr-2">{value}</Text>
+        <Text className="text-sm text-accent-500 mr-2">{value}</Text>
       )}
       {rightElement}
       {onPress && !rightElement && (
-        <Text className="text-muted-foreground">›</Text>
+        <Text className="text-surface-700">›</Text>
       )}
     </Pressable>
   );
@@ -39,10 +39,19 @@ export default function SettingsScreen() {
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* App Info */}
         <View className="items-center py-6">
-          <Text className="text-4xl mb-2">💰</Text>
+          <View
+            style={{
+              shadowColor: "#0d9488",
+              shadowOffset: { width: 0, height: 0 },
+              shadowOpacity: 0.4,
+              shadowRadius: 20,
+            }}
+          >
+            <Text className="text-4xl mb-2">💰</Text>
+          </View>
           <Text className="text-xl font-bold text-foreground">{APP_NAME}</Text>
-          <Text className="text-sm text-muted-foreground">{APP_NAME_BN}</Text>
-          <Text className="text-xs text-muted-foreground mt-1">Version 1.0.0</Text>
+          <Text className="text-sm text-primary-700">{APP_NAME_BN}</Text>
+          <Text className="text-xs text-surface-700 mt-1">Version 1.0.0</Text>
         </View>
 
         {/* General */}
@@ -57,7 +66,7 @@ export default function SettingsScreen() {
               value={locale === "en" ? "English" : "বাংলা"}
               onPress={() => setLocale(locale === "en" ? "bn" : "en")}
             />
-            <View className="h-px bg-border/30" />
+            <View className="h-px bg-border/20" />
             <SettingRow
               icon="🎨"
               label="Theme"
@@ -72,13 +81,13 @@ export default function SettingsScreen() {
                 )
               }
             />
-            <View className="h-px bg-border/30" />
+            <View className="h-px bg-border/20" />
             <SettingRow
               icon="💱"
               label="Currency"
               value="৳ BDT"
             />
-            <View className="h-px bg-border/30" />
+            <View className="h-px bg-border/20" />
             <SettingRow
               icon="📅"
               label="Date Format"
@@ -98,13 +107,13 @@ export default function SettingsScreen() {
               label="Export Data"
               onPress={() => {}}
             />
-            <View className="h-px bg-border/30" />
+            <View className="h-px bg-border/20" />
             <SettingRow
               icon="📥"
               label="Import Transactions"
               onPress={() => {}}
             />
-            <View className="h-px bg-border/30" />
+            <View className="h-px bg-border/20" />
             <SettingRow
               icon="🔄"
               label="Fresh Start"
@@ -113,7 +122,7 @@ export default function SettingsScreen() {
           </Card>
         </View>
 
-        {/* AI (Phase 6 placeholder) */}
+        {/* AI */}
         <View className="px-4 mb-6">
           <Text className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
             AI Features
@@ -140,7 +149,7 @@ export default function SettingsScreen() {
               value="Local only"
               onPress={() => {}}
             />
-            <View className="h-px bg-border/30" />
+            <View className="h-px bg-border/20" />
             <SettingRow
               icon="👨‍👩‍👧‍👦"
               label="Family Sharing"
@@ -161,7 +170,7 @@ export default function SettingsScreen() {
               label="Feedback"
               onPress={() => {}}
             />
-            <View className="h-px bg-border/30" />
+            <View className="h-px bg-border/20" />
             <SettingRow
               icon="📜"
               label="Privacy Policy"

@@ -37,7 +37,6 @@ export default function BudgetScreen() {
     });
   };
 
-  // Group categories by their groupId
   const groupedBudgets = groups
     ?.filter((g: any) => {
       const groupCats = summary?.categories.filter(
@@ -55,21 +54,21 @@ export default function BudgetScreen() {
   return (
     <View className="flex-1 bg-background">
       {/* Month Navigator */}
-      <View className="flex-row items-center justify-between px-4 py-3 bg-white border-b border-border">
+      <View className="flex-row items-center justify-between px-4 py-3 bg-surface-100 border-b border-border">
         <Pressable
           onPress={() => setCurrentMonth(previousMonth(currentMonth))}
           className="px-3 py-1"
         >
-          <Text className="text-primary-600 font-semibold text-lg">‹</Text>
+          <Text className="text-primary-700 font-semibold text-lg">‹</Text>
         </Pressable>
-        <Text className="text-base font-bold text-foreground">
+        <Text className="text-base font-bold text-foreground tracking-wide">
           {getMonthLabel(currentMonth)}
         </Text>
         <Pressable
           onPress={() => setCurrentMonth(nextMonth(currentMonth))}
           className="px-3 py-1"
         >
-          <Text className="text-primary-600 font-semibold text-lg">›</Text>
+          <Text className="text-primary-700 font-semibold text-lg">›</Text>
         </Pressable>
       </View>
 
@@ -78,11 +77,28 @@ export default function BudgetScreen() {
         <Card
           className={`items-center py-3 ${
             readyToAssign > 0
-              ? "bg-emerald-50 border-emerald-200"
+              ? "border-emerald-800/40"
               : readyToAssign < 0
-                ? "bg-red-50 border-red-200"
-                : "bg-primary-50 border-primary-200"
+                ? "border-red-800/40"
+                : "border-primary-200/40"
           }`}
+          style={
+            readyToAssign > 0
+              ? {
+                  shadowColor: "#22c55e",
+                  shadowOffset: { width: 0, height: 0 },
+                  shadowOpacity: 0.15,
+                  shadowRadius: 16,
+                }
+              : readyToAssign < 0
+                ? {
+                    shadowColor: "#ef4444",
+                    shadowOffset: { width: 0, height: 0 },
+                    shadowOpacity: 0.15,
+                    shadowRadius: 16,
+                  }
+                : undefined
+          }
         >
           <Text className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
             Ready to Assign
@@ -93,7 +109,7 @@ export default function BudgetScreen() {
                 ? "text-success"
                 : readyToAssign < 0
                   ? "text-danger"
-                  : "text-primary-600"
+                  : "text-primary-700"
             }`}
           >
             {formatCurrency(readyToAssign)}
@@ -117,7 +133,7 @@ export default function BudgetScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Column Headers */}
-        <View className="flex-row px-4 py-2 border-b border-border bg-muted/30">
+        <View className="flex-row px-4 py-2 border-b border-border bg-surface-200">
           <Text className="flex-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
             Category
           </Text>
@@ -152,7 +168,7 @@ export default function BudgetScreen() {
               {/* Group Header */}
               <Pressable
                 onPress={() => toggleGroup(group._id)}
-                className="flex-row items-center px-4 py-2.5 bg-muted/50 border-b border-border/30"
+                className="flex-row items-center px-4 py-2.5 bg-surface-300 border-b border-border/30"
               >
                 <View className="flex-1 flex-row items-center">
                   <Text className="text-xs mr-1.5 text-muted-foreground">
@@ -205,7 +221,7 @@ export default function BudgetScreen() {
         {/* Overspent summary */}
         {summary && summary.overspent > 0 && (
           <View className="mx-4 mt-4">
-            <Card className="bg-red-50 border-red-200">
+            <Card className="border-red-800/40">
               <View className="flex-row items-center justify-between">
                 <Text className="text-sm font-medium text-danger">
                   Total Overspent
@@ -228,7 +244,7 @@ export default function BudgetScreen() {
             <Text className="text-base font-medium text-muted-foreground">
               Budget will appear here
             </Text>
-            <Text className="text-sm text-muted-foreground mt-1 text-center px-8">
+            <Text className="text-sm text-surface-700 mt-1 text-center px-8">
               Add accounts and income to start budgeting
             </Text>
           </View>
@@ -246,7 +262,7 @@ export default function BudgetScreen() {
           onRequestClose={() => setAssignTarget(null)}
         >
           <Pressable
-            className="flex-1 bg-black/40 justify-center"
+            className="flex-1 bg-black/60 justify-center"
             onPress={() => setAssignTarget(null)}
           >
             <Pressable onPress={() => {}}>

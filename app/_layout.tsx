@@ -42,7 +42,7 @@ export default function RootLayout() {
         <Stack
           screenOptions={{
             headerShown: false,
-            contentStyle: { backgroundColor: "#f8fafc" },
+            contentStyle: { backgroundColor: "#060a13" },
           }}
         >
           <Stack.Screen name="(tabs)" />
@@ -55,8 +55,25 @@ export default function RootLayout() {
           />
           <Stack.Screen name="transaction/[id]" />
           <Stack.Screen name="account/[id]" />
+          <Stack.Screen
+            name="reconcile/index"
+            options={{
+              presentation: "modal",
+              animation: "slide_from_bottom",
+            }}
+          />
+          <Stack.Screen name="reconcile/review" />
+          <Stack.Screen
+            name="transaction/import"
+            options={{
+              presentation: "modal",
+              animation: "slide_from_bottom",
+            }}
+          />
+          <Stack.Screen name="ai/chat" />
+          <Stack.Screen name="ai/settings" />
         </Stack>
-        <StatusBar style="dark" />
+        <StatusBar style="light" />
       </GestureHandlerRootView>
     </ConvexProvider>
   );

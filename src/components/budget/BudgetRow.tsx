@@ -20,13 +20,13 @@ function TargetIndicator({
 
   const color =
     status === "funded"
-      ? "bg-primary-500"
+      ? "bg-primary-600"
       : status === "on_track"
         ? "bg-success"
         : "bg-warning";
 
   return (
-    <View className="w-full h-1.5 bg-gray-100 rounded-full mt-1">
+    <View className="w-full h-1.5 bg-surface-400 rounded-full mt-1">
       <View
         className={`h-1.5 rounded-full ${color}`}
         style={{ width: `${Math.min(progress * 100, 100)}%` }}
@@ -45,17 +45,16 @@ export function BudgetRow({ budget, onPress, onAssign }: BudgetRowProps) {
 
   const availableBg =
     budget.available < 0
-      ? "bg-red-50"
+      ? "bg-red-950/50"
       : budget.available > 0
-        ? "bg-emerald-50"
+        ? "bg-emerald-950/50"
         : "";
 
   return (
     <Pressable
       onPress={onPress}
-      className="flex-row items-center px-4 py-3 bg-white border-b border-border/20 active:bg-muted/30"
+      className="flex-row items-center px-4 py-3 bg-card border-b border-border/30 active:bg-surface-300"
     >
-      {/* Category name */}
       <View className="flex-1 pr-2">
         <Text className="text-sm text-foreground" numberOfLines={1}>
           {budget.name}
@@ -66,7 +65,6 @@ export function BudgetRow({ budget, onPress, onAssign }: BudgetRowProps) {
         />
       </View>
 
-      {/* Assigned */}
       <Pressable
         onPress={onAssign}
         className="w-24 items-end"
@@ -78,7 +76,6 @@ export function BudgetRow({ budget, onPress, onAssign }: BudgetRowProps) {
         </Text>
       </Pressable>
 
-      {/* Activity */}
       <View className="w-24 items-end">
         <Text
           className={`text-sm ${
@@ -95,7 +92,6 @@ export function BudgetRow({ budget, onPress, onAssign }: BudgetRowProps) {
         </Text>
       </View>
 
-      {/* Available */}
       <View className={`w-24 items-end rounded-lg px-1.5 py-0.5 ${availableBg}`}>
         <Text className={`text-sm font-medium ${availableColor}`}>
           {budget.available === 0

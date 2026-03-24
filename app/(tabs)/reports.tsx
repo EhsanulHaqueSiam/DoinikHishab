@@ -27,7 +27,6 @@ export default function ReportsScreen() {
     userId ? { userId } : "skip"
   );
 
-  // Spending by category
   const spendingByCategory = useMemo(() => {
     if (!transactions || !categories) return [];
     const spending = new Map<string, { name: string; total: number }>();
@@ -55,7 +54,6 @@ export default function ReportsScreen() {
       .slice(0, 10);
   }, [transactions, categories]);
 
-  // Income vs Expense
   const incomeVsExpense = useMemo(() => {
     if (!transactions) return { income: 0, expense: 0, net: 0 };
     let income = 0;
@@ -67,7 +65,6 @@ export default function ReportsScreen() {
     return { income, expense, net: income - expense };
   }, [transactions]);
 
-  // Net Worth
   const netWorth = useMemo(() => {
     if (!accounts) return 0;
     return (accounts as any[]).reduce(
@@ -81,7 +78,7 @@ export default function ReportsScreen() {
   return (
     <View className="flex-1 bg-background">
       {/* Report Type Tabs */}
-      <View className="flex-row bg-white border-b border-border px-2 pt-1">
+      <View className="flex-row bg-surface-100 border-b border-border px-2 pt-1">
         {(
           [
             { key: "spending", label: "Spending" },
@@ -94,14 +91,14 @@ export default function ReportsScreen() {
             onPress={() => setActiveReport(tab.key)}
             className={`flex-1 py-3 items-center border-b-2 ${
               activeReport === tab.key
-                ? "border-primary-600"
+                ? "border-primary-700"
                 : "border-transparent"
             }`}
           >
             <Text
-              className={`text-sm font-medium ${
+              className={`text-sm font-medium tracking-wide ${
                 activeReport === tab.key
-                  ? "text-primary-600"
+                  ? "text-primary-700"
                   : "text-muted-foreground"
               }`}
             >
@@ -140,9 +137,9 @@ export default function ReportsScreen() {
                             {formatCurrency(-cat.total)}
                           </Text>
                         </View>
-                        <View className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                        <View className="h-2 bg-surface-400 rounded-full overflow-hidden">
                           <View
-                            className="h-2 bg-primary-500 rounded-full"
+                            className="h-2 bg-primary-600 rounded-full"
                             style={{ width: `${pct}%` }}
                           />
                         </View>
@@ -200,7 +197,7 @@ export default function ReportsScreen() {
 
             {/* Visual bar comparison */}
             <Card>
-              <Text className="text-sm font-medium text-muted-foreground mb-2">
+              <Text className="text-sm font-medium text-muted-foreground mb-2 tracking-wider uppercase">
                 Comparison
               </Text>
               <View className="gap-2">
@@ -208,7 +205,7 @@ export default function ReportsScreen() {
                   <Text className="text-xs text-muted-foreground mb-1">
                     Income
                   </Text>
-                  <View className="h-6 bg-emerald-100 rounded-lg overflow-hidden">
+                  <View className="h-6 bg-surface-400 rounded-lg overflow-hidden">
                     <View
                       className="h-6 bg-success rounded-lg"
                       style={{
@@ -230,7 +227,7 @@ export default function ReportsScreen() {
                   <Text className="text-xs text-muted-foreground mb-1">
                     Expense
                   </Text>
-                  <View className="h-6 bg-red-100 rounded-lg overflow-hidden">
+                  <View className="h-6 bg-surface-400 rounded-lg overflow-hidden">
                     <View
                       className="h-6 bg-danger rounded-lg"
                       style={{
@@ -256,8 +253,16 @@ export default function ReportsScreen() {
         {/* Net Worth */}
         {activeReport === "net_worth" && (
           <View className="px-4 mt-4">
-            <Card className="items-center">
-              <Text className="text-sm text-muted-foreground">
+            <Card
+              className="items-center border-accent-200/20"
+              style={{
+                shadowColor: "#e6a444",
+                shadowOffset: { width: 0, height: 0 },
+                shadowOpacity: 0.12,
+                shadowRadius: 16,
+              }}
+            >
+              <Text className="text-sm text-muted-foreground tracking-wider uppercase">
                 Current Net Worth
               </Text>
               <Text
@@ -271,13 +276,13 @@ export default function ReportsScreen() {
 
             {accounts && (accounts as any[]).length > 0 && (
               <Card className="mt-4">
-                <Text className="text-sm font-semibold text-foreground mb-3">
+                <Text className="text-sm font-semibold text-foreground mb-3 tracking-wide">
                   By Account
                 </Text>
                 {(accounts as any[]).map((account: any) => (
                   <View
                     key={account._id}
-                    className="flex-row justify-between py-2"
+                    className="flex-row justify-between py-2 border-b border-border/20"
                   >
                     <Text className="text-sm text-foreground">
                       {account.name}

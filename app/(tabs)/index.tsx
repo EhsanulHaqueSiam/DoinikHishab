@@ -18,7 +18,6 @@ export default function DashboardScreen() {
   const createOrGetUser = useMutation(api.users.createOrGet);
   const seedCategories = useMutation(api.categories.seedDefaults);
 
-  // Initialize user on first load
   useEffect(() => {
     if (!userId) {
       createOrGetUser({ deviceId }).then((id) => {
@@ -67,6 +66,7 @@ export default function DashboardScreen() {
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
+            tintColor="#2dd4bf"
             onRefresh={() => {
               setRefreshing(true);
               setTimeout(() => setRefreshing(false), 500);
@@ -96,7 +96,7 @@ export default function DashboardScreen() {
                 >
                   {action.icon}
                 </Text>
-                <Text className="text-xs text-muted-foreground mt-1 font-medium">
+                <Text className="text-xs text-muted-foreground mt-1 font-medium tracking-wider uppercase">
                   {action.label}
                 </Text>
               </Card>
@@ -107,7 +107,7 @@ export default function DashboardScreen() {
         {/* Accounts Summary */}
         {accounts && accounts.length > 0 && (
           <View className="px-4 mt-6">
-            <Text className="text-base font-semibold text-foreground mb-3">
+            <Text className="text-base font-semibold text-foreground mb-3 tracking-wide">
               Accounts
             </Text>
             <Card>
@@ -117,7 +117,7 @@ export default function DashboardScreen() {
                   <View key={account._id}>
                     <View className="flex-row items-center justify-between py-2.5">
                       <View className="flex-row items-center gap-3">
-                        <View className="w-8 h-8 rounded-lg bg-muted items-center justify-center">
+                        <View className="w-8 h-8 rounded-lg bg-surface-300 items-center justify-center">
                           <Text className="text-sm">
                             {account.type === "cash"
                               ? "💵"
@@ -143,7 +143,7 @@ export default function DashboardScreen() {
                       </Text>
                     </View>
                     {idx < arr.length - 1 && (
-                      <View className="h-px bg-border/50" />
+                      <View className="h-px bg-border/30" />
                     )}
                   </View>
                 ))}
@@ -168,7 +168,7 @@ export default function DashboardScreen() {
 
         {/* Recent Transactions */}
         <View className="px-4 mt-6 mb-24">
-          <Text className="text-base font-semibold text-foreground mb-3">
+          <Text className="text-base font-semibold text-foreground mb-3 tracking-wide">
             Recent Transactions
           </Text>
           {transactions && transactions.length > 0 ? (
@@ -186,7 +186,7 @@ export default function DashboardScreen() {
                       accountName={getAccountName(txn.accountId)}
                     />
                     {idx < transactions.length - 1 && (
-                      <View className="h-px bg-border/30 mx-4" />
+                      <View className="h-px bg-border/20 mx-4" />
                     )}
                   </React.Fragment>
                 );
@@ -203,7 +203,6 @@ export default function DashboardScreen() {
         </View>
       </ScrollView>
 
-      {/* FAB + Quick Add */}
       <FAB onPress={() => openQuickAdd("expense")} />
       <QuickAdd />
     </View>

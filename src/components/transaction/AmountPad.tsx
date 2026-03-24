@@ -3,7 +3,7 @@ import { View, Text, Pressable } from "react-native";
 import { formatCurrency } from "../../lib/currency";
 
 interface AmountPadProps {
-  value: number; // paisa
+  value: number;
   onChange: (value: number) => void;
   type: "expense" | "income" | "transfer";
 }
@@ -21,7 +21,7 @@ export function AmountPad({ value, onChange, type }: AmountPadProps) {
   const typeColors = {
     expense: "text-danger",
     income: "text-success",
-    transfer: "text-primary-600",
+    transfer: "text-primary-700",
   };
 
   const handleKey = useCallback(
@@ -34,10 +34,8 @@ export function AmountPad({ value, onChange, type }: AmountPadProps) {
         if (display.includes(".")) return;
         newDisplay = display + ".";
       } else {
-        // Limit to 2 decimal places
         const parts = display.split(".");
         if (parts[1] && parts[1].length >= 2) return;
-        // Limit total digits
         if (display.replace(".", "").length >= 10) return;
         newDisplay = display + key;
       }
@@ -55,17 +53,15 @@ export function AmountPad({ value, onChange, type }: AmountPadProps) {
 
   return (
     <View className="items-center">
-      {/* Amount Display */}
       <View className="py-6 items-center">
         <Text className={`text-5xl font-bold ${typeColors[type]}`}>
           {displayAmount === 0 ? "৳0" : formatCurrency(displayAmount)}
         </Text>
-        <Text className="text-sm text-muted-foreground mt-1 capitalize">
+        <Text className="text-sm text-muted-foreground mt-1 capitalize tracking-wider">
           {type}
         </Text>
       </View>
 
-      {/* Number Pad */}
       <View className="w-full px-4 gap-2">
         {KEYS.map((row, i) => (
           <View key={i} className="flex-row gap-2">
@@ -73,7 +69,7 @@ export function AmountPad({ value, onChange, type }: AmountPadProps) {
               <Pressable
                 key={key}
                 onPress={() => handleKey(key)}
-                className="flex-1 items-center justify-center py-4 rounded-xl bg-muted active:bg-gray-200"
+                className="flex-1 items-center justify-center py-4 rounded-xl bg-surface-300 active:bg-surface-400 border border-border/30"
               >
                 <Text className="text-2xl font-semibold text-foreground">
                   {key}

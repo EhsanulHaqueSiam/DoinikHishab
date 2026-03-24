@@ -65,7 +65,7 @@ export default function TransactionDetailScreen() {
   return (
     <View className="flex-1 bg-background">
       {/* Header */}
-      <View className="flex-row items-center justify-between px-4 pt-14 pb-4 bg-white border-b border-border">
+      <View className="flex-row items-center justify-between px-4 pt-14 pb-4 bg-surface-100 border-b border-border">
         <Pressable onPress={() => router.back()}>
           <Text className="text-primary-600 font-medium text-base">← Back</Text>
         </Pressable>
@@ -81,7 +81,7 @@ export default function TransactionDetailScreen() {
 
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         {/* Amount */}
-        <View className="items-center py-8 bg-white">
+        <View className="items-center py-8 bg-card">
           <Text
             className={`text-4xl font-bold ${
               transaction.amount < 0 ? "text-danger" : "text-success"
@@ -116,8 +116,8 @@ export default function TransactionDetailScreen() {
                     value={description || transaction.description || ""}
                     onChangeText={setDescription}
                     placeholder="Add description"
-                    className="text-sm text-right flex-1 ml-4"
-                    placeholderTextColor="#94a3b8"
+                    className="text-sm text-right flex-1 ml-4 text-foreground"
+                    placeholderTextColor="#3a5280"
                   />
                 ) : (
                   <Text className="text-sm font-medium text-foreground">
@@ -135,8 +135,8 @@ export default function TransactionDetailScreen() {
                     value={memo || transaction.memo || ""}
                     onChangeText={setMemo}
                     placeholder="Add memo"
-                    className="text-sm text-right flex-1 ml-4"
-                    placeholderTextColor="#94a3b8"
+                    className="text-sm text-right flex-1 ml-4 text-foreground"
+                    placeholderTextColor="#3a5280"
                   />
                 ) : (
                   <Text className="text-sm font-medium text-foreground">
