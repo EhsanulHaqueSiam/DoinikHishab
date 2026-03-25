@@ -1,11 +1,13 @@
-import { renderHook, act } from "@testing-library/react-native";
+import { act, renderHook } from "@testing-library/react-native";
 
 // Stateful mock store
 const mockStore = new Map<string, string>();
 
 jest.mock("../services/storage", () => ({
   getSetting: jest.fn((key: string) => mockStore.get(key)),
-  setSetting: jest.fn((key: string, value: string) => { mockStore.set(key, value); }),
+  setSetting: jest.fn((key: string, value: string) => {
+    mockStore.set(key, value);
+  }),
   getJSON: jest.fn((key: string) => {
     const val = mockStore.get(key);
     return val ? JSON.parse(val) : undefined;
@@ -33,14 +35,17 @@ jest.mock("convex/react", () => ({
 // Must mock the Convex API module since _generated/api depends on Convex internals
 jest.mock("../../convex/_generated/api", () => ({
   api: {
-    categories: { listCategories: "categories:listCategories", listGroups: "categories:listGroups" },
+    categories: {
+      listCategories: "categories:listCategories",
+      listGroups: "categories:listGroups",
+    },
     accounts: { list: "accounts:list" },
     transactions: { create: "transactions:create" },
   },
 }));
 
-import { useQuickAdd } from "./use-quick-add";
 import { MOCK_ACCOUNTS } from "../services/mock-data";
+import { useQuickAdd } from "./use-quick-add";
 
 describe("useQuickAdd", () => {
   beforeEach(() => {
@@ -88,7 +93,7 @@ describe("useQuickAdd", () => {
       // When no last_account_id and no isDefault, fallback is first account
       const accounts = MOCK_ACCOUNTS.map((a) => ({ ...a, isDefault: false }));
       const lastUsedId = mockStore.get("last_account_id");
-      let defaultAccount;
+      let defaultAccount: (typeof accounts)[number] | undefined;
       if (lastUsedId) {
         const found = accounts.find((a) => a._id === lastUsedId && !a.isClosed);
         if (found) defaultAccount = found;
@@ -142,14 +147,19 @@ describe("useQuickAdd", () => {
 
     it("appends to existing offline_txns array (not overwrites)", async () => {
       // Pre-populate with an existing transaction
-      mockStore.set("offline_txns", JSON.stringify([{
-        _id: "offline_existing",
-        amount: -2000,
-        accountId: "mock_acct_cash",
-        type: "expense",
-        date: "2026-03-24",
-        createdAt: "2026-03-24T00:00:00Z",
-      }]));
+      mockStore.set(
+        "offline_txns",
+        JSON.stringify([
+          {
+            _id: "offline_existing",
+            amount: -2000,
+            accountId: "mock_acct_cash",
+            type: "expense",
+            date: "2026-03-24",
+            createdAt: "2026-03-24T00:00:00Z",
+          },
+        ])
+      );
 
       const { result } = renderHook(() => useQuickAdd());
 
