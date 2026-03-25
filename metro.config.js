@@ -47,6 +47,10 @@ config.resolver = {
     /\.expo\/.*/,
     /android\/build\/.*/,
     /ios\/Pods\/.*/,
+    // Exclude test files from production bundles (D-05)
+    /.*\.test\.(ts|tsx|js|jsx)$/,
+    /jest\.config\..*/,
+    /jest\.setup\..*/,
   ],
 };
 

@@ -24,6 +24,9 @@ yarn.lock
 # TypeScript
 *.tsbuildinfo
 
+# Jest coverage
+coverage/
+
 # Convex
 .convex/
 
