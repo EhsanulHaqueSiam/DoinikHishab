@@ -34,9 +34,9 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 3 plans
 
 Plans:
-- [ ] 01-01: Biome linting and formatting setup
-- [ ] 01-02: Jest + React Native Testing Library setup with Convex mock patterns
-- [ ] 01-03: i18next + expo-localization migration from custom i18n system
+- [x] 01-01: Biome linting and formatting setup
+- [x] 01-02: Jest + React Native Testing Library setup with Convex mock patterns
+- [x] 01-03: i18next + expo-localization migration from custom i18n system
 
 ### Phase 2: 3-Tap Transaction Entry
 **Goal**: Users can enter a transaction in under 10 seconds with 3 taps: amount, category, save

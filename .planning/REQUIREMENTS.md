@@ -7,7 +7,7 @@
 
 ### Tooling & Developer Experience
 
-- [ ] **TOOL-01**: Biome configured for linting and formatting with project-specific rules, replacing manual style enforcement
+- [x] **TOOL-01**: Biome configured for linting and formatting with project-specific rules, replacing manual style enforcement
 - [x] **TOOL-02**: Jest + jest-expo + React Native Testing Library configured for unit and integration tests with Convex mock patterns
 - [ ] **TOOL-03**: expo-updates configured with EAS Update free tier for OTA JavaScript updates without app store review
 - [ ] **TOOL-04**: Maestro E2E test framework configured with YAML-based flows for critical user paths
@@ -109,7 +109,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TOOL-01 | Phase 1 | Pending |
+| TOOL-01 | Phase 1 | Complete |
 | TOOL-02 | Phase 1 | Complete |
 | TOOL-05 | Phase 1 | Pending |
 | TRAN-01 | Phase 2 | Pending |
