@@ -11,7 +11,7 @@
 - [x] **TOOL-02**: Jest + jest-expo + React Native Testing Library configured for unit and integration tests with Convex mock patterns
 - [ ] **TOOL-03**: expo-updates configured with EAS Update free tier for OTA JavaScript updates without app store review
 - [ ] **TOOL-04**: Maestro E2E test framework configured with YAML-based flows for critical user paths
-- [ ] **TOOL-05**: expo-localization + i18next configured for proper Bengali/English internationalization with pluralization, interpolation, and locale detection
+- [x] **TOOL-05**: expo-localization + i18next configured for proper Bengali/English internationalization with pluralization, interpolation, and locale detection
 
 ### Transaction Experience
 
@@ -111,7 +111,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 |-------------|-------|--------|
 | TOOL-01 | Phase 1 | Complete |
 | TOOL-02 | Phase 1 | Complete |
-| TOOL-05 | Phase 1 | Pending |
+| TOOL-05 | Phase 1 | Complete |
 | TRAN-01 | Phase 2 | Pending |
 | TRAN-02 | Phase 2 | Pending |
 | TRAN-03 | Phase 2 | Pending |
