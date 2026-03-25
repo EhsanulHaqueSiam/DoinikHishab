@@ -6,6 +6,7 @@ import { api } from "../../../convex/_generated/api";
 import { useAppStore } from "../../stores/app-store";
 import { useUIStore } from "../../stores/ui-store";
 import { shadow } from "../../lib/platform";
+import { formatCurrency } from "../../lib/currency";
 import { AmountPad } from "./AmountPad";
 import { CategoryGrid } from "./CategoryGrid";
 import { Button } from "../ui/Button";
@@ -13,6 +14,12 @@ import { today } from "../../lib/date";
 import type { Id } from "../../../convex/_generated/dataModel";
 
 type Step = "amount" | "category" | "confirm";
+
+const TYPE_COLORS = {
+  expense: { active: "text-danger", shadow: "#f87171" },
+  income: { active: "text-success", shadow: "#34d399" },
+  transfer: { active: "text-primary-700", shadow: "#0d9488" },
+};
 
 export function QuickAdd() {
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -26,25 +33,15 @@ export function QuickAdd() {
 
   const snapPoints = useMemo(() => ["85%"], []);
 
-  const categories = useQuery(
-    api.categories.listCategories,
-    userId ? { userId } : "skip"
-  );
-  const groups = useQuery(
-    api.categories.listGroups,
-    userId ? { userId } : "skip"
-  );
-  const accounts = useQuery(
-    api.accounts.list,
-    userId ? { userId } : "skip"
-  );
+  const categories = useQuery(api.categories.listCategories, userId ? { userId } : "skip");
+  const groups = useQuery(api.categories.listGroups, userId ? { userId } : "skip");
+  const accounts = useQuery(api.accounts.list, userId ? { userId } : "skip");
   const createTransaction = useMutation(api.transactions.create);
 
   const defaultAccount = accounts?.find((a) => a.isDefault) ?? accounts?.[0];
 
   const handleSave = useCallback(async () => {
     if (!userId || !defaultAccount || amount === 0) return;
-
     try {
       await createTransaction({
         userId,
@@ -57,13 +54,11 @@ export function QuickAdd() {
         source: "manual",
         isCleared: false,
       });
-
       setAmount(0);
       setSelectedCategory(null);
       setDescription("");
       setStep("amount");
       closeQuickAdd();
-
       if (Platform.OS !== "web") {
         try {
           const Haptics = require("expo-haptics");
@@ -98,41 +93,32 @@ export function QuickAdd() {
       onClose={handleClose}
       enablePanDownToClose
       backgroundStyle={{
-        backgroundColor: "#0c1220",
+        backgroundColor: "#0c1021",
         borderRadius: 24,
         borderWidth: 1,
-        borderColor: "#1a2744",
+        borderColor: "#1e2a3a",
       }}
-      handleIndicatorStyle={{ backgroundColor: "#3a5280", width: 40 }}
+      handleIndicatorStyle={{ backgroundColor: "#4e6381", width: 36 }}
     >
       <View className="flex-1 px-4">
-        {/* Type toggle */}
-        <View className="flex-row bg-surface-200 rounded-xl p-1 mb-4 border border-border/30">
+        {/* Type Toggle */}
+        <View className="flex-row bg-surface-200 rounded-xl p-1 mb-4 border border-border/20">
           {(["expense", "income", "transfer"] as const).map((type) => (
             <Pressable
               key={type}
               onPress={() => useUIStore.getState().openQuickAdd(type)}
-              className={`flex-1 py-2 rounded-lg items-center ${
+              className={`flex-1 py-2.5 rounded-lg items-center ${
                 quickAddType === type ? "bg-surface-400" : ""
               }`}
               style={
                 quickAddType === type
-                  ? shadow(
-                      type === "expense" ? "#ef4444" : type === "income" ? "#22c55e" : "#0d9488",
-                      0, 0, 0.3, 8
-                    )
+                  ? shadow(TYPE_COLORS[type].shadow, 0, 0, 0.25, 8)
                   : undefined
               }
             >
               <Text
-                className={`text-sm font-medium capitalize ${
-                  quickAddType === type
-                    ? type === "expense"
-                      ? "text-danger"
-                      : type === "income"
-                        ? "text-success"
-                        : "text-primary-700"
-                    : "text-muted-foreground"
+                className={`text-xs font-bold uppercase tracking-wider ${
+                  quickAddType === type ? TYPE_COLORS[type].active : "text-surface-800"
                 }`}
               >
                 {type}
@@ -143,17 +129,9 @@ export function QuickAdd() {
 
         {step === "amount" && (
           <View className="flex-1">
-            <AmountPad
-              value={amount}
-              onChange={setAmount}
-              type={quickAddType}
-            />
+            <AmountPad value={amount} onChange={setAmount} type={quickAddType} />
             <View className="px-4 pb-4 mt-4">
-              <Button
-                onPress={() => setStep("category")}
-                disabled={amount === 0}
-                size="lg"
-              >
+              <Button onPress={() => setStep("category")} disabled={amount === 0} size="lg">
                 Next — Pick Category
               </Button>
             </View>
@@ -164,13 +142,13 @@ export function QuickAdd() {
           <View className="flex-1">
             <View className="flex-row items-center justify-between mb-3">
               <Pressable onPress={() => setStep("amount")}>
-                <Text className="text-primary-700 font-medium">← Back</Text>
+                <Text className="text-primary-700 font-semibold text-xs">← Back</Text>
               </Pressable>
-              <Text className="text-sm text-muted-foreground">
+              <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest">
                 Pick a category
               </Text>
               <Pressable onPress={handleSave}>
-                <Text className="text-accent-500 font-medium">Skip →</Text>
+                <Text className="text-accent-500 font-semibold text-xs">Skip →</Text>
               </Pressable>
             </View>
             <BottomSheetScrollView>
@@ -186,25 +164,26 @@ export function QuickAdd() {
         )}
 
         {step === "confirm" && (
-          <View className="flex-1 justify-center items-center gap-6">
+          <View className="flex-1 justify-center items-center gap-8">
             <View className="items-center">
-              <Text className="text-lg text-muted-foreground">
+              <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest">
                 {quickAddType === "expense" ? "Spending" : "Receiving"}
               </Text>
               <Text
-                className={`text-4xl font-bold mt-2 ${
+                className={`text-hero font-bold mt-2 tracking-tight ${
                   quickAddType === "expense" ? "text-danger" : "text-success"
                 }`}
+                style={{ lineHeight: 44 }}
               >
-                {require("../../lib/currency").formatCurrency(Math.abs(amount))}
+                {formatCurrency(Math.abs(amount))}
               </Text>
               {selectedCategory && categories && (
-                <Text className="text-base text-muted-foreground mt-2">
+                <Text className="text-sm text-surface-900 mt-3 font-medium">
                   {categories.find((c) => c._id === selectedCategory)?.name}
                 </Text>
               )}
               {defaultAccount && (
-                <Text className="text-sm text-surface-700 mt-1">
+                <Text className="text-2xs text-surface-700 mt-1 uppercase tracking-wider">
                   from {defaultAccount.name}
                 </Text>
               )}
@@ -213,11 +192,7 @@ export function QuickAdd() {
               <Button onPress={handleSave} size="lg">
                 Save Transaction
               </Button>
-              <Button
-                variant="ghost"
-                onPress={() => setStep("category")}
-                size="md"
-              >
+              <Button variant="ghost" onPress={() => setStep("category")} size="md">
                 Change Category
               </Button>
             </View>

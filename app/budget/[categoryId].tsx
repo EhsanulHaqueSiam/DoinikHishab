@@ -20,47 +20,39 @@ const TARGET_TYPES = [
   { key: "monthly_savings", label: "Monthly Savings", desc: "Save a fixed amount monthly" },
 ] as const;
 
+function SummaryRow({ label, value, valueClass }: { label: string; value: string; valueClass?: string }) {
+  return (
+    <View className="flex-row justify-between py-2.5">
+      <Text className="text-xs text-surface-800">{label}</Text>
+      <Text className={`text-xs font-bold ${valueClass || "text-foreground"}`}>{value}</Text>
+    </View>
+  );
+}
+
 export default function CategoryDetailScreen() {
   const { categoryId } = useLocalSearchParams<{ categoryId: string }>();
   const router = useRouter();
   const { userId, currentMonth } = useAppStore();
 
-  const category = useQuery(
-    api.categories.getById,
-    categoryId ? { id: categoryId as Id<"categories"> } : "skip"
-  );
-
-  const target = useQuery(
-    api.targets.getByCategory,
-    categoryId ? { categoryId: categoryId as Id<"categories"> } : "skip"
-  );
-
-  const budgets = useQuery(
-    api.budgets.getByMonth,
-    userId ? { userId, month: currentMonth } : "skip"
-  );
+  const category = useQuery(api.categories.getById, categoryId ? { id: categoryId as Id<"categories"> } : "skip");
+  const target = useQuery(api.targets.getByCategory, categoryId ? { categoryId: categoryId as Id<"categories"> } : "skip");
+  const budgets = useQuery(api.budgets.getByMonth, userId ? { userId, month: currentMonth } : "skip");
 
   const setTarget = useMutation(api.targets.set);
   const removeTarget = useMutation(api.targets.remove);
   const assignBudget = useMutation(api.budgets.assign);
 
   const [showTargetForm, setShowTargetForm] = useState(false);
-  const [targetType, setTargetType] = useState<string>(
-    target?.type ?? "needed_for_spending"
-  );
+  const [targetType, setTargetType] = useState<string>(target?.type ?? "needed_for_spending");
   const [targetAmount, setTargetAmount] = useState("");
   const [targetDate, setTargetDate] = useState("");
   const [assignAmount, setAssignAmount] = useState("");
 
-  const budget = budgets?.find(
-    (b: any) => b.categoryId === categoryId
-  );
+  const budget = budgets?.find((b: any) => b.categoryId === categoryId);
   const available = budget?.available ?? 0;
   const assigned = budget?.assigned ?? 0;
   const activity = budget?.activity ?? 0;
-
-  const targetProgress =
-    target && calculateTargetProgress(target as any, available);
+  const targetProgress = target && calculateTargetProgress(target as any, available);
 
   const handleSetTarget = async () => {
     if (!userId || !categoryId) return;
@@ -74,19 +66,13 @@ export default function CategoryDetailScreen() {
     setShowTargetForm(false);
   };
 
-  const handleRemoveTarget = async () => {
-    if (!categoryId) return;
-    await removeTarget({ categoryId: categoryId as Id<"categories"> });
-  };
-
   const handleQuickAssign = async () => {
     if (!userId || !categoryId) return;
-    const paisa = takaToPaisa(parseFloat(assignAmount) || 0);
     await assignBudget({
       userId,
       categoryId: categoryId as Id<"categories">,
       month: currentMonth,
-      amount: paisa,
+      amount: takaToPaisa(parseFloat(assignAmount) || 0),
     });
     setAssignAmount("");
   };
@@ -94,7 +80,7 @@ export default function CategoryDetailScreen() {
   if (!category) {
     return (
       <View className="flex-1 items-center justify-center bg-background">
-        <Text className="text-muted-foreground">Loading...</Text>
+        <Text className="text-surface-800 text-xs">Loading...</Text>
       </View>
     );
   }
@@ -104,50 +90,31 @@ export default function CategoryDetailScreen() {
       {/* Header */}
       <View className="px-4 pt-14 pb-4 bg-surface-100 border-b border-border">
         <Pressable onPress={() => router.back()}>
-          <Text className="text-primary-600 font-medium mb-2">← Budget</Text>
+          <Text className="text-primary-700 font-semibold text-xs mb-2">← Budget</Text>
         </Pressable>
-        <Text className="text-xl font-bold text-foreground">
-          {category.name}
-        </Text>
-        <Text className="text-sm text-muted-foreground">
+        <Text className="text-lg font-bold text-foreground tracking-wide">{category.name}</Text>
+        <Text className="text-2xs text-surface-800 uppercase tracking-widest mt-0.5">
           {getMonthLabel(currentMonth)}
         </Text>
       </View>
 
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false} scrollEventThrottle={8} decelerationRate="fast">
         {/* Budget Summary */}
-        <View className="px-4 mt-4">
-          <Card>
-            <View className="flex-row justify-between mb-3">
-              <Text className="text-sm text-muted-foreground">Assigned</Text>
-              <Text className="text-sm font-medium text-foreground">
-                {formatCurrency(assigned)}
-              </Text>
-            </View>
-            <View className="flex-row justify-between mb-3">
-              <Text className="text-sm text-muted-foreground">Activity</Text>
-              <Text
-                className={`text-sm font-medium ${
-                  activity < 0 ? "text-danger" : "text-foreground"
-                }`}
-              >
-                {formatCurrency(activity)}
-              </Text>
-            </View>
-            <View className="h-px bg-border my-1" />
-            <View className="flex-row justify-between mt-2">
-              <Text className="text-base font-semibold text-foreground">
-                Available
-              </Text>
-              <Text
-                className={`text-base font-bold ${
-                  available < 0
-                    ? "text-danger"
-                    : available > 0
-                      ? "text-success"
-                      : "text-muted-foreground"
-                }`}
-              >
+        <View className="px-4 mt-5">
+          <Card className="px-4 py-0">
+            <SummaryRow label="Assigned" value={formatCurrency(assigned)} />
+            <View className="h-px bg-border/15" />
+            <SummaryRow
+              label="Activity"
+              value={formatCurrency(activity)}
+              valueClass={activity < 0 ? "text-danger" : "text-foreground"}
+            />
+            <View className="h-px bg-border/15" />
+            <View className="flex-row justify-between py-3">
+              <Text className="text-sm font-bold text-foreground">Available</Text>
+              <Text className={`text-sm font-bold ${
+                available < 0 ? "text-danger" : available > 0 ? "text-success" : "text-surface-800"
+              }`}>
                 {formatCurrency(available)}
               </Text>
             </View>
@@ -157,26 +124,22 @@ export default function CategoryDetailScreen() {
         {/* Quick Assign */}
         <View className="px-4 mt-4">
           <Card>
-            <Text className="text-sm font-semibold text-foreground mb-2">
+            <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest mb-2.5">
               Quick Assign
             </Text>
             <View className="flex-row items-center gap-2">
-              <View className="flex-1 flex-row items-center border border-border rounded-xl px-3 py-2">
-                <Text className="text-base font-bold text-foreground mr-1">
-                  ৳
-                </Text>
+              <View className="flex-1 flex-row items-center border border-border/50 rounded-xl px-3 py-2.5 bg-surface-200">
+                <Text className="text-base font-bold text-accent-500 mr-1.5">৳</Text>
                 <TextInput
                   value={assignAmount}
                   onChangeText={setAssignAmount}
                   keyboardType="numeric"
                   placeholder="0"
-                  className="flex-1 text-base text-foreground"
-                  placeholderTextColor="#3a5280"
+                  className="flex-1 text-sm text-foreground font-bold"
+                  placeholderTextColor="#4e6381"
                 />
               </View>
-              <Button onPress={handleQuickAssign} size="md">
-                Assign
-              </Button>
+              <Button onPress={handleQuickAssign} size="md">Assign</Button>
             </View>
           </Card>
         </View>
@@ -195,102 +158,62 @@ export default function CategoryDetailScreen() {
               />
               <View className="flex-row gap-3 mt-4">
                 <View className="flex-1">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onPress={() => setShowTargetForm(true)}
-                  >
-                    Edit Goal
-                  </Button>
+                  <Button variant="outline" size="sm" onPress={() => setShowTargetForm(true)}>Edit Goal</Button>
                 </View>
                 <View className="flex-1">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onPress={handleRemoveTarget}
-                  >
-                    Remove
-                  </Button>
+                  <Button variant="ghost" size="sm" onPress={() => removeTarget({ categoryId: categoryId as Id<"categories"> })}>Remove</Button>
                 </View>
               </View>
             </Card>
           ) : !showTargetForm ? (
-            <Button
-              variant="outline"
-              onPress={() => setShowTargetForm(true)}
-            >
-              + Set a Target
-            </Button>
+            <Button variant="outline" onPress={() => setShowTargetForm(true)}>+ Set a Target</Button>
           ) : null}
 
           {showTargetForm && (
             <Card className="mt-3">
-              <Text className="text-base font-semibold text-foreground mb-3">
-                Set Target
-              </Text>
-
-              {/* Target type selector */}
+              <Text className="text-xs font-bold text-foreground mb-3">Set Target</Text>
               <View className="gap-2 mb-4">
                 {TARGET_TYPES.map((tt) => (
                   <Pressable
                     key={tt.key}
                     onPress={() => setTargetType(tt.key)}
                     className={`px-3 py-2.5 rounded-xl border ${
-                      targetType === tt.key
-                        ? "border-primary-600 bg-surface-300"
-                        : "border-border"
+                      targetType === tt.key ? "border-primary-500 bg-surface-300" : "border-border/40"
                     }`}
                   >
-                    <Text
-                      className={`text-sm font-medium ${
-                        targetType === tt.key
-                          ? "text-primary-700"
-                          : "text-foreground"
-                      }`}
-                    >
+                    <Text className={`text-xs font-semibold ${targetType === tt.key ? "text-primary-700" : "text-foreground"}`}>
                       {tt.label}
                     </Text>
-                    <Text className="text-xs text-muted-foreground">
-                      {tt.desc}
-                    </Text>
+                    <Text className="text-2xs text-surface-800 mt-0.5">{tt.desc}</Text>
                   </Pressable>
                 ))}
               </View>
 
-              {/* Amount */}
-              <View className="flex-row items-center border border-border rounded-xl px-3 py-2 mb-3">
-                <Text className="text-base font-bold text-foreground mr-1">
-                  ৳
-                </Text>
+              <View className="flex-row items-center border border-border/50 rounded-xl px-3 py-2.5 mb-3 bg-surface-200">
+                <Text className="text-base font-bold text-accent-500 mr-1.5">৳</Text>
                 <TextInput
                   value={targetAmount}
                   onChangeText={setTargetAmount}
                   keyboardType="numeric"
                   placeholder="Target amount"
-                  className="flex-1 text-base text-foreground"
-                  placeholderTextColor="#3a5280"
+                  className="flex-1 text-sm text-foreground"
+                  placeholderTextColor="#4e6381"
                 />
               </View>
 
-              {/* Date (for spending_by_date) */}
               {targetType === "spending_by_date" && (
                 <TextInput
                   value={targetDate}
                   onChangeText={setTargetDate}
                   placeholder="Target date (YYYY-MM-DD)"
-                  className="border border-border rounded-xl px-3 py-2 text-base mb-3"
-                  placeholderTextColor="#3a5280"
+                  className="border border-border/50 rounded-xl px-3 py-2.5 text-sm text-foreground mb-3 bg-surface-200"
+                  placeholderTextColor="#4e6381"
                 />
               )}
 
               <View className="flex-row gap-3">
                 <View className="flex-1">
-                  <Button
-                    variant="ghost"
-                    onPress={() => setShowTargetForm(false)}
-                  >
-                    Cancel
-                  </Button>
+                  <Button variant="ghost" onPress={() => setShowTargetForm(false)}>Cancel</Button>
                 </View>
                 <View className="flex-1">
                   <Button onPress={handleSetTarget}>Save Target</Button>

@@ -19,14 +19,8 @@ interface AssignMoneyProps {
 }
 
 export function AssignMoney({
-  userId,
-  categoryId,
-  categoryName,
-  month,
-  currentAssigned,
-  available,
-  readyToAssign,
-  onClose,
+  userId, categoryId, categoryName, month,
+  currentAssigned, available, readyToAssign, onClose,
 }: AssignMoneyProps) {
   const [inputValue, setInputValue] = useState(
     currentAssigned === 0 ? "" : String(paisaToTaka(currentAssigned))
@@ -36,35 +30,30 @@ export function AssignMoney({
 
   const handleAssign = async () => {
     const paisa = takaToPaisa(parseFloat(inputValue) || 0);
-    await assign({
-      userId,
-      categoryId,
-      month,
-      amount: paisa,
-    });
+    await assign({ userId, categoryId, month, amount: paisa });
     onClose();
   };
 
   const quickAmounts = [1000, 2000, 5000, 10000].map((t) => t * 100);
 
   return (
-    <Card className="mx-4">
-      <Text className="text-base font-semibold text-foreground mb-1">
+    <Card className="mx-4" variant="elevated">
+      <Text className="text-sm font-bold text-foreground mb-0.5">
         Assign to {categoryName}
       </Text>
-      <Text className="text-xs text-accent-500 mb-4">
+      <Text className="text-2xs text-primary-700 mb-4 font-medium">
         Ready to Assign: {formatCurrency(readyToAssign)}
       </Text>
 
-      <View className="flex-row items-center border border-border rounded-xl px-3 py-2 mb-3 bg-surface-200">
-        <Text className="text-lg font-bold text-accent-500 mr-1">৳</Text>
+      <View className="flex-row items-center border border-border/50 rounded-xl px-3 py-2.5 mb-3 bg-surface-200">
+        <Text className="text-lg font-bold text-accent-500 mr-1.5">৳</Text>
         <TextInput
           value={inputValue}
           onChangeText={setInputValue}
           keyboardType="numeric"
           placeholder="0"
-          className="flex-1 text-lg text-foreground"
-          placeholderTextColor="#3a5280"
+          className="flex-1 text-lg text-foreground font-bold"
+          placeholderTextColor="#4e6381"
           autoFocus
         />
       </View>
@@ -74,9 +63,9 @@ export function AssignMoney({
           <Pressable
             key={amount}
             onPress={() => setInputValue(String(paisaToTaka(amount)))}
-            className="flex-1 bg-surface-300 rounded-lg py-2 items-center border border-border/30 active:bg-surface-400"
+            className="flex-1 bg-surface-300 rounded-lg py-2 items-center border border-border/20 active:bg-surface-500"
           >
-            <Text className="text-xs font-medium text-foreground">
+            <Text className="text-2xs font-bold text-foreground">
               {formatCurrency(amount)}
             </Text>
           </Pressable>
@@ -84,17 +73,13 @@ export function AssignMoney({
       </View>
 
       <View className="flex-row justify-between mb-4">
-        <Text className="text-xs text-muted-foreground">Currently assigned</Text>
-        <Text className="text-xs font-medium text-foreground">
-          {formatCurrency(currentAssigned)}
-        </Text>
+        <Text className="text-2xs text-surface-800">Currently assigned</Text>
+        <Text className="text-2xs font-bold text-foreground">{formatCurrency(currentAssigned)}</Text>
       </View>
 
       <View className="flex-row gap-3">
         <View className="flex-1">
-          <Button variant="ghost" onPress={onClose}>
-            Cancel
-          </Button>
+          <Button variant="ghost" onPress={onClose}>Cancel</Button>
         </View>
         <View className="flex-1">
           <Button onPress={handleAssign}>Assign</Button>

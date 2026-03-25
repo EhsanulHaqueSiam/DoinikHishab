@@ -8,6 +8,7 @@ import { Card } from "../../src/components/ui/Card";
 import { Button } from "../../src/components/ui/Button";
 import { Input } from "../../src/components/ui/Input";
 import { formatCurrency, parseCurrencyInput } from "../../src/lib/currency";
+import { shadow } from "../../src/lib/platform";
 import { today } from "../../src/lib/date";
 import type { Id } from "../../convex/_generated/dataModel";
 
@@ -34,12 +35,7 @@ export default function ReconcileScreen() {
     async (accountId: Id<"accounts">) => {
       if (!userId) return;
       setSelectedAccountId(accountId);
-
-      const id = await startReconciliation({
-        userId,
-        accountId,
-        date: today(),
-      });
+      const id = await startReconciliation({ userId, accountId, date: today() });
       setReconciliationId(id);
       setStep("count");
     },
@@ -49,8 +45,7 @@ export default function ReconcileScreen() {
   const handleSubmitCount = useCallback(() => {
     if (!selectedAccount) return;
     const actualPaisa = parseCurrencyInput(amountInput);
-    const difference = actualPaisa - selectedAccount.balance;
-    setGap(difference);
+    setGap(actualPaisa - selectedAccount.balance);
     setStep("result");
   }, [amountInput, selectedAccount]);
 
@@ -59,10 +54,9 @@ export default function ReconcileScreen() {
       if (!reconciliationId) return;
       setSaving(true);
       try {
-        const actualPaisa = parseCurrencyInput(amountInput);
         await completeReconciliation({
           id: reconciliationId,
-          actualBalance: actualPaisa,
+          actualBalance: parseCurrencyInput(amountInput),
           resolution,
         });
         router.back();
@@ -75,168 +69,103 @@ export default function ReconcileScreen() {
 
   return (
     <View className="flex-1 bg-background">
-      {/* Header */}
       <View className="flex-row items-center justify-between px-4 pt-14 pb-4 bg-surface-100 border-b border-border">
         <Pressable onPress={() => router.back()}>
-          <Text className="text-primary-600 font-medium">Cancel</Text>
+          <Text className="text-primary-700 font-semibold text-xs">Cancel</Text>
         </Pressable>
-        <Text className="text-base font-semibold text-foreground">
-          Reconcile
-        </Text>
+        <Text className="text-xs font-bold text-foreground uppercase tracking-widest">Reconcile</Text>
         <Pressable onPress={() => router.push("/reconcile/review")}>
-          <Text className="text-primary-600 font-medium text-sm">History</Text>
+          <Text className="text-primary-700 font-semibold text-xs">History</Text>
         </Pressable>
       </View>
 
-      <ScrollView className="flex-1 px-4 pt-4" scrollEventThrottle={8} decelerationRate="fast">
-        {/* Step 1: Select Account */}
+      <ScrollView className="flex-1 px-4 pt-5" scrollEventThrottle={8} decelerationRate="fast">
         {step === "select-account" && (
           <View className="gap-3">
-            <Text className="text-lg font-semibold text-foreground mb-1">
+            <Text className="text-sm font-bold text-foreground mb-1">
               Which account to reconcile?
             </Text>
-            {accounts
-              ?.filter((a) => !a.isClosed)
-              .map((account) => (
-                <Pressable
-                  key={account._id}
-                  onPress={() => handleSelectAccount(account._id)}
-                >
-                  <Card className="flex-row items-center justify-between">
-                    <View>
-                      <Text className="text-base font-medium text-foreground">
-                        {account.name}
-                      </Text>
-                      <Text className="text-sm text-muted-foreground capitalize">
-                        {account.type.replace("_", " ")}
-                      </Text>
-                    </View>
-                    <Text className="text-base font-semibold text-foreground">
-                      {formatCurrency(account.balance)}
+            {accounts?.filter((a) => !a.isClosed).map((account) => (
+              <Pressable key={account._id} onPress={() => handleSelectAccount(account._id)}>
+                <Card className="flex-row items-center justify-between active:bg-surface-400/30">
+                  <View>
+                    <Text className="text-sm font-semibold text-foreground">{account.name}</Text>
+                    <Text className="text-2xs text-surface-800 uppercase tracking-wider mt-0.5">
+                      {account.type.replace("_", " ")}
                     </Text>
-                  </Card>
-                </Pressable>
-              ))}
+                  </View>
+                  <Text className="text-sm font-bold text-foreground">{formatCurrency(account.balance)}</Text>
+                </Card>
+              </Pressable>
+            ))}
           </View>
         )}
 
-        {/* Step 2: Count Cash */}
         {step === "count" && selectedAccount && (
           <View className="gap-4">
             <Card>
-              <Text className="text-lg font-semibold text-foreground mb-1">
-                Count your cash
+              <Text className="text-sm font-bold text-foreground mb-1">Count your cash</Text>
+              <Text className="text-xs text-surface-800 mb-4">
+                Enter the actual amount in <Text className="font-bold text-foreground">{selectedAccount.name}</Text>.
               </Text>
-              <Text className="text-sm text-muted-foreground mb-4">
-                Enter the actual amount you have in{" "}
-                <Text className="font-medium">{selectedAccount.name}</Text>.
-              </Text>
-
-              <Text className="text-sm text-muted-foreground mb-1">
+              <Text className="text-2xs text-surface-700 mb-2">
                 App balance: {formatCurrency(selectedAccount.balance)}
               </Text>
-
-              <Input
-                label="Actual amount (in taka)"
-                placeholder="0.00"
-                keyboardType="decimal-pad"
-                value={amountInput}
-                onChangeText={setAmountInput}
-                autoFocus
-              />
+              <Input label="Actual amount (in taka)" placeholder="0.00" keyboardType="decimal-pad" value={amountInput} onChangeText={setAmountInput} autoFocus />
             </Card>
-
-            <Button
-              onPress={handleSubmitCount}
-              size="lg"
-              disabled={!amountInput || amountInput === "0"}
-            >
+            <Button onPress={handleSubmitCount} size="lg" disabled={!amountInput || amountInput === "0"}>
               Compare
             </Button>
           </View>
         )}
 
-        {/* Step 3: Result */}
         {step === "result" && selectedAccount && (
           <View className="gap-4">
-            <Card className="items-center py-6">
+            <Card className="items-center py-8" style={gap === 0 ? shadow("#34d399", 0, 0, 0.1, 16) : shadow("#f87171", 0, 0, 0.1, 16)}>
               {gap === 0 ? (
                 <>
                   <Text className="text-4xl mb-2">✓</Text>
-                  <Text className="text-lg font-semibold text-success">
-                    Perfect match!
-                  </Text>
-                  <Text className="text-sm text-muted-foreground mt-1">
-                    Your records match your actual balance.
-                  </Text>
+                  <Text className="text-base font-bold text-success">Perfect match!</Text>
+                  <Text className="text-2xs text-surface-800 mt-1">Your records match your actual balance.</Text>
                 </>
               ) : (
                 <>
-                  <Text className="text-sm text-muted-foreground mb-1">
-                    Difference
+                  <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest mb-1">Difference</Text>
+                  <Text className={`text-hero font-bold tracking-tight ${gap > 0 ? "text-success" : "text-danger"}`} style={{ lineHeight: 44 }}>
+                    {gap > 0 ? "+" : ""}{formatCurrency(gap)}
                   </Text>
-                  <Text
-                    className={`text-3xl font-bold ${
-                      gap > 0 ? "text-success" : "text-danger"
-                    }`}
-                  >
-                    {gap > 0 ? "+" : ""}
-                    {formatCurrency(gap)}
-                  </Text>
-                  <Text className="text-sm text-muted-foreground mt-2 text-center px-4">
-                    {gap > 0
-                      ? "You have more money than the app shows."
-                      : "You have less money than the app shows."}
+                  <Text className="text-2xs text-surface-800 mt-2 text-center px-4">
+                    {gap > 0 ? "You have more than the app shows." : "You have less than the app shows."}
                   </Text>
                 </>
               )}
             </Card>
 
-            <Card>
-              <Text className="text-sm font-medium text-foreground mb-1">
-                App balance
-              </Text>
-              <Text className="text-base text-muted-foreground mb-3">
-                {formatCurrency(selectedAccount.balance)}
-              </Text>
-              <Text className="text-sm font-medium text-foreground mb-1">
-                Actual balance
-              </Text>
-              <Text className="text-base text-muted-foreground">
-                {formatCurrency(parseCurrencyInput(amountInput))}
-              </Text>
+            <Card className="px-4 py-0">
+              <View className="flex-row justify-between py-3">
+                <Text className="text-xs text-surface-800">App balance</Text>
+                <Text className="text-xs font-bold text-foreground">{formatCurrency(selectedAccount.balance)}</Text>
+              </View>
+              <View className="h-px bg-border/15" />
+              <View className="flex-row justify-between py-3">
+                <Text className="text-xs text-surface-800">Actual balance</Text>
+                <Text className="text-xs font-bold text-foreground">{formatCurrency(parseCurrencyInput(amountInput))}</Text>
+              </View>
             </Card>
 
             {gap === 0 ? (
-              <Button
-                onPress={() => handleResolve("accepted")}
-                size="lg"
-                loading={saving}
-              >
+              <Button onPress={() => handleResolve("accepted")} size="lg" loading={saving}>
                 Confirm Reconciliation
               </Button>
             ) : (
               <View className="gap-3">
-                <Button
-                  onPress={() => handleResolve("adjustment")}
-                  size="lg"
-                  loading={saving}
-                >
+                <Button onPress={() => handleResolve("adjustment")} size="lg" loading={saving}>
                   Create Adjustment Transaction
                 </Button>
-                <Button
-                  variant="secondary"
-                  onPress={() => handleResolve("untracked")}
-                  size="lg"
-                  loading={saving}
-                >
+                <Button variant="secondary" onPress={() => handleResolve("untracked")} size="lg" loading={saving}>
                   Tag as Untracked Spending
                 </Button>
-                <Button
-                  variant="ghost"
-                  onPress={() => handleResolve("accepted")}
-                  loading={saving}
-                >
+                <Button variant="ghost" onPress={() => handleResolve("accepted")} loading={saving}>
                   Accept Difference
                 </Button>
               </View>

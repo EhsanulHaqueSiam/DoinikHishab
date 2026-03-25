@@ -13,6 +13,12 @@ import type { Id } from "../../convex/_generated/dataModel";
 
 type Step = "amount" | "category" | "confirm";
 
+const TYPE_COLORS = {
+  expense: { text: "text-danger", label: "Spending" },
+  income: { text: "text-success", label: "Receiving" },
+  transfer: { text: "text-primary-700", label: "Transferring" },
+};
+
 export default function AddTransactionScreen() {
   const router = useRouter();
   const { userId } = useAppStore();
@@ -22,25 +28,15 @@ export default function AddTransactionScreen() {
   const [type, setType] = useState<"expense" | "income" | "transfer">("expense");
   const [selectedCategory, setSelectedCategory] = useState<Id<"categories"> | null>(null);
 
-  const categories = useQuery(
-    api.categories.listCategories,
-    userId ? { userId } : "skip"
-  );
-  const groups = useQuery(
-    api.categories.listGroups,
-    userId ? { userId } : "skip"
-  );
-  const accounts = useQuery(
-    api.accounts.list,
-    userId ? { userId } : "skip"
-  );
+  const categories = useQuery(api.categories.listCategories, userId ? { userId } : "skip");
+  const groups = useQuery(api.categories.listGroups, userId ? { userId } : "skip");
+  const accounts = useQuery(api.accounts.list, userId ? { userId } : "skip");
   const createTransaction = useMutation(api.transactions.create);
 
   const defaultAccount = accounts?.find((a) => a.isDefault) ?? accounts?.[0];
 
   const handleSave = useCallback(async () => {
     if (!userId || !defaultAccount || amount === 0) return;
-
     await createTransaction({
       userId,
       accountId: defaultAccount._id,
@@ -51,49 +47,39 @@ export default function AddTransactionScreen() {
       source: "manual",
       isCleared: false,
     });
-
     if (Platform.OS !== "web") {
       try {
         const Haptics = require("expo-haptics");
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       } catch {}
     }
-
     router.back();
   }, [userId, defaultAccount, amount, selectedCategory, type, createTransaction, router]);
 
   return (
     <View className="flex-1 bg-background">
       {/* Header */}
-      <View className="flex-row items-center justify-between px-4 pt-14 pb-4 border-b border-border">
+      <View className="flex-row items-center justify-between px-4 pt-14 pb-4 border-b border-border bg-surface-100">
         <Pressable onPress={() => router.back()}>
-          <Text className="text-primary-600 font-medium">Cancel</Text>
+          <Text className="text-primary-700 font-semibold text-xs">Cancel</Text>
         </Pressable>
-        <Text className="text-base font-semibold text-foreground">
+        <Text className="text-xs font-bold text-foreground uppercase tracking-widest">
           Add Transaction
         </Text>
         <View className="w-14" />
       </View>
 
-      {/* Type toggle */}
-      <View className="flex-row bg-surface-300 mx-4 mt-4 rounded-xl p-1">
+      {/* Type Toggle */}
+      <View className="flex-row bg-surface-200 mx-4 mt-4 rounded-xl p-1 border border-border/20">
         {(["expense", "income", "transfer"] as const).map((t) => (
           <Pressable
             key={t}
             onPress={() => setType(t)}
-            className={`flex-1 py-2 rounded-lg items-center ${
-              type === t ? "bg-surface-400 shadow-sm" : ""
-            }`}
+            className={`flex-1 py-2.5 rounded-lg items-center ${type === t ? "bg-surface-400" : ""}`}
           >
             <Text
-              className={`text-sm font-medium capitalize ${
-                type === t
-                  ? t === "expense"
-                    ? "text-danger"
-                    : t === "income"
-                      ? "text-success"
-                      : "text-primary-600"
-                  : "text-muted-foreground"
+              className={`text-xs font-bold uppercase tracking-wider ${
+                type === t ? TYPE_COLORS[t].text : "text-surface-800"
               }`}
             >
               {t}
@@ -108,11 +94,7 @@ export default function AddTransactionScreen() {
           <View className="flex-1">
             <AmountPad value={amount} onChange={setAmount} type={type} />
             <View className="px-4 pb-4 mt-4">
-              <Button
-                onPress={() => setStep("category")}
-                disabled={amount === 0}
-                size="lg"
-              >
+              <Button onPress={() => setStep("category")} disabled={amount === 0} size="lg">
                 Next — Pick Category
               </Button>
             </View>
@@ -123,10 +105,10 @@ export default function AddTransactionScreen() {
           <View className="flex-1 px-4 pt-4">
             <View className="flex-row items-center justify-between mb-3">
               <Pressable onPress={() => setStep("amount")}>
-                <Text className="text-primary-600 font-medium">← Back</Text>
+                <Text className="text-primary-700 font-semibold text-xs">← Back</Text>
               </Pressable>
               <Pressable onPress={handleSave}>
-                <Text className="text-primary-600 font-medium">Skip →</Text>
+                <Text className="text-accent-500 font-semibold text-xs">Skip →</Text>
               </Pressable>
             </View>
             <CategoryGrid
@@ -143,34 +125,26 @@ export default function AddTransactionScreen() {
         )}
 
         {step === "confirm" && (
-          <View className="items-center py-12 gap-6 px-4">
+          <View className="items-center py-14 gap-8 px-4">
             <View className="items-center">
-              <Text className="text-lg text-muted-foreground">
-                {type === "expense" ? "Spending" : "Receiving"}
+              <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest">
+                {TYPE_COLORS[type].label}
               </Text>
               <Text
-                className={`text-4xl font-bold mt-2 ${
-                  type === "expense" ? "text-danger" : "text-success"
-                }`}
+                className={`text-hero font-bold mt-2 tracking-tight ${TYPE_COLORS[type].text}`}
+                style={{ lineHeight: 44 }}
               >
                 {formatCurrency(Math.abs(amount))}
               </Text>
               {selectedCategory && categories && (
-                <Text className="text-base text-muted-foreground mt-2">
+                <Text className="text-sm text-surface-900 mt-3 font-medium">
                   {categories.find((c) => c._id === selectedCategory)?.name}
                 </Text>
               )}
             </View>
             <View className="w-full gap-3">
-              <Button onPress={handleSave} size="lg">
-                Save Transaction
-              </Button>
-              <Button
-                variant="ghost"
-                onPress={() => setStep("category")}
-              >
-                Change Category
-              </Button>
+              <Button onPress={handleSave} size="lg">Save Transaction</Button>
+              <Button variant="ghost" onPress={() => setStep("category")}>Change Category</Button>
             </View>
           </View>
         )}

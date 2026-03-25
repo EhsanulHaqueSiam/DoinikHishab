@@ -6,11 +6,17 @@ export default function NotFoundScreen() {
     <>
       <Stack.Screen options={{ title: "Not Found" }} />
       <View className="flex-1 items-center justify-center p-5 bg-background">
-        <Text className="text-xl font-bold text-foreground">
-          This screen doesn't exist.
+        <Text className="text-4xl mb-4">🔍</Text>
+        <Text className="text-lg font-bold text-foreground tracking-wide">
+          Page not found
         </Text>
-        <Link href="/" className="mt-4 py-4">
-          <Text className="text-sm text-primary-600">Go to home screen</Text>
+        <Text className="text-xs text-surface-800 mt-2 text-center">
+          The screen you're looking for doesn't exist.
+        </Text>
+        <Link href="/" className="mt-6 py-3 px-6">
+          <Text className="text-xs font-bold text-primary-700 uppercase tracking-widest">
+            Go Home
+          </Text>
         </Link>
       </View>
     </>

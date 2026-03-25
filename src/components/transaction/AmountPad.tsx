@@ -15,14 +15,14 @@ const KEYS = [
   [".", "0", "⌫"],
 ];
 
+const TYPE_COLORS = {
+  expense: "text-danger",
+  income: "text-success",
+  transfer: "text-primary-700",
+};
+
 export function AmountPad({ value, onChange, type }: AmountPadProps) {
   const [display, setDisplay] = useState(value === 0 ? "" : String(value / 100));
-
-  const typeColors = {
-    expense: "text-danger",
-    income: "text-success",
-    transfer: "text-primary-700",
-  };
 
   const handleKey = useCallback(
     (key: string) => {
@@ -41,7 +41,6 @@ export function AmountPad({ value, onChange, type }: AmountPadProps) {
       }
 
       setDisplay(newDisplay);
-
       const num = parseFloat(newDisplay || "0");
       const paisa = Math.round(num * 100);
       onChange(type === "expense" ? -paisa : paisa);
@@ -53,15 +52,20 @@ export function AmountPad({ value, onChange, type }: AmountPadProps) {
 
   return (
     <View className="items-center">
-      <View className="py-6 items-center">
-        <Text className={`text-5xl font-bold ${typeColors[type]}`}>
+      {/* Amount Display */}
+      <View className="py-8 items-center">
+        <Text
+          className={`text-hero font-bold ${TYPE_COLORS[type]} tracking-tight`}
+          style={{ lineHeight: 44 }}
+        >
           {displayAmount === 0 ? "৳0" : formatCurrency(displayAmount)}
         </Text>
-        <Text className="text-sm text-muted-foreground mt-1 capitalize tracking-wider">
+        <Text className="text-2xs font-semibold text-surface-800 mt-2 uppercase tracking-widest">
           {type}
         </Text>
       </View>
 
+      {/* Keypad */}
       <View className="w-full px-4 gap-2">
         {KEYS.map((row, i) => (
           <View key={i} className="flex-row gap-2">
@@ -69,9 +73,9 @@ export function AmountPad({ value, onChange, type }: AmountPadProps) {
               <Pressable
                 key={key}
                 onPress={() => handleKey(key)}
-                className="flex-1 items-center justify-center py-4 rounded-xl bg-surface-300 active:bg-surface-400 border border-border/30"
+                className="flex-1 items-center justify-center py-4 rounded-xl bg-surface-200 active:bg-surface-400 border border-border/20"
               >
-                <Text className="text-2xl font-semibold text-foreground">
+                <Text className="text-xl font-bold text-foreground">
                   {key}
                 </Text>
               </Pressable>

@@ -1,11 +1,5 @@
 import React, { useState, useCallback } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  Pressable,
-  Alert,
-} from "react-native";
+import { View, Text, ScrollView, Pressable, Alert } from "react-native";
 import { useRouter } from "expo-router";
 import { useAction } from "convex/react";
 import { api } from "../../convex/_generated/api";
@@ -29,111 +23,66 @@ export default function AISettingsScreen() {
   const [apiKey, setApiKey] = useState("");
   const [model, setModel] = useState(PROVIDERS[0].models[0]);
   const [testing, setTesting] = useState(false);
-  const [testResult, setTestResult] = useState<{
-    success: boolean;
-    message: string;
-  } | null>(null);
-
+  const [testResult, setTestResult] = useState<{ success: boolean; message: string } | null>(null);
   const testConnection = useAction(api.ai.router.testConnection);
-
   const currentProvider = PROVIDERS.find((p) => p.id === provider)!;
 
-  const handleProviderChange = useCallback(
-    (id: ProviderId) => {
-      setProvider(id);
-      const p = PROVIDERS.find((p) => p.id === id)!;
-      setModel(p.models[0]);
-      setTestResult(null);
-    },
-    []
-  );
+  const handleProviderChange = useCallback((id: ProviderId) => {
+    setProvider(id);
+    setModel(PROVIDERS.find((p) => p.id === id)!.models[0]);
+    setTestResult(null);
+  }, []);
 
   const handleTest = useCallback(async () => {
-    if (!apiKey.trim()) {
-      Alert.alert("Missing Key", "Please enter your API key first.");
-      return;
-    }
-
+    if (!apiKey.trim()) { Alert.alert("Missing Key", "Please enter your API key first."); return; }
     setTesting(true);
     setTestResult(null);
-
     try {
-      const result = await testConnection({
-        provider,
-        apiKey,
-        model,
-      });
+      const result = await testConnection({ provider, apiKey, model });
       setTestResult(result);
     } catch {
-      setTestResult({
-        success: false,
-        message: "Connection test failed. Please check your settings.",
-      });
+      setTestResult({ success: false, message: "Connection test failed." });
     } finally {
       setTesting(false);
     }
   }, [apiKey, provider, model, testConnection]);
 
   const handleSave = useCallback(() => {
-    if (!apiKey.trim()) {
-      Alert.alert("Missing Key", "Please enter your API key.");
-      return;
-    }
-    // In production, save to Convex aiConfig table (encrypted)
-    Alert.alert("Saved", "AI settings have been saved.", [
-      { text: "OK", onPress: () => router.back() },
-    ]);
+    if (!apiKey.trim()) { Alert.alert("Missing Key", "Please enter your API key."); return; }
+    Alert.alert("Saved", "AI settings have been saved.", [{ text: "OK", onPress: () => router.back() }]);
   }, [apiKey, router]);
 
-  const maskKey = (key: string) => {
-    if (key.length <= 8) return key;
-    return key.slice(0, 4) + "*".repeat(key.length - 8) + key.slice(-4);
-  };
+  const maskKey = (key: string) => key.length <= 8 ? key : key.slice(0, 4) + "*".repeat(key.length - 8) + key.slice(-4);
 
   return (
     <View className="flex-1 bg-background">
-      {/* Header */}
       <View className="bg-surface-100 border-b border-border px-4 pt-14 pb-4">
         <View className="flex-row items-center justify-between">
           <Pressable onPress={() => router.back()}>
-            <Text className="text-primary-600 text-base">Back</Text>
+            <Text className="text-primary-700 font-semibold text-xs">Back</Text>
           </Pressable>
-          <Text className="text-lg font-bold text-foreground">
-            AI Settings
-          </Text>
+          <Text className="text-xs font-bold text-foreground uppercase tracking-widest">AI Settings</Text>
           <Pressable onPress={handleSave}>
-            <Text className="text-primary-600 text-base font-semibold">
-              Save
-            </Text>
+            <Text className="text-primary-700 font-bold text-xs">Save</Text>
           </Pressable>
         </View>
       </View>
 
-      <ScrollView
-        className="flex-1"
-        contentContainerClassName="px-4 py-4 gap-4 pb-12"
-      >
-        {/* Provider Selector */}
+      <ScrollView className="flex-1" contentContainerClassName="px-4 py-5 gap-4 pb-12" scrollEventThrottle={8} decelerationRate="fast">
         <Card>
-          <Text className="text-sm font-semibold text-foreground mb-3">
-            AI Provider
+          <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest mb-3">
+            Provider
           </Text>
           <View className="flex-row flex-wrap gap-2">
             {PROVIDERS.map((p) => (
               <Pressable
                 key={p.id}
                 onPress={() => handleProviderChange(p.id)}
-                className={`px-4 py-2 rounded-xl border ${
-                  provider === p.id
-                    ? "bg-primary-600 border-primary-600"
-                    : "bg-surface-200 border-border"
+                className={`px-4 py-2.5 rounded-xl border ${
+                  provider === p.id ? "bg-primary-500 border-primary-500" : "bg-surface-200 border-border/40"
                 }`}
               >
-                <Text
-                  className={`text-sm font-medium ${
-                    provider === p.id ? "text-white" : "text-foreground"
-                  }`}
-                >
+                <Text className={`text-xs font-semibold ${provider === p.id ? "text-white" : "text-foreground"}`}>
                   {p.name}
                 </Text>
               </Pressable>
@@ -141,64 +90,43 @@ export default function AISettingsScreen() {
           </View>
         </Card>
 
-        {/* API Key */}
         <Card>
-          <Text className="text-sm font-semibold text-foreground mb-1">
+          <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest mb-1">
             API Key (BYOK)
           </Text>
-          <Text className="text-xs text-muted-foreground mb-3">
-            Your key is encrypted and stored securely. It never leaves the
-            server.
+          <Text className="text-2xs text-surface-700 mb-3">
+            Encrypted and stored securely. Never leaves the server.
           </Text>
           <Input
             placeholder={`Enter your ${currentProvider.name} API key`}
             value={apiKey}
-            onChangeText={(text) => {
-              setApiKey(text);
-              setTestResult(null);
-            }}
+            onChangeText={(text) => { setApiKey(text); setTestResult(null); }}
             secureTextEntry
             autoCapitalize="none"
             autoCorrect={false}
           />
           {apiKey.length > 0 && (
-            <Text className="text-xs text-muted-foreground mt-2">
-              Key: {maskKey(apiKey)}
-            </Text>
+            <Text className="text-2xs text-surface-700 mt-2">Key: {maskKey(apiKey)}</Text>
           )}
         </Card>
 
-        {/* Model Selector */}
         <Card>
-          <Text className="text-sm font-semibold text-foreground mb-3">
-            Model
-          </Text>
+          <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest mb-3">Model</Text>
           <View className="gap-2">
             {currentProvider.models.map((m) => (
               <Pressable
                 key={m}
-                onPress={() => {
-                  setModel(m);
-                  setTestResult(null);
-                }}
+                onPress={() => { setModel(m); setTestResult(null); }}
                 className={`px-4 py-3 rounded-xl border flex-row items-center justify-between ${
-                  model === m
-                    ? "bg-surface-300 border-primary-600"
-                    : "bg-surface-200 border-border"
+                  model === m ? "bg-surface-300 border-primary-500" : "bg-surface-200 border-border/40"
                 }`}
               >
-                <Text
-                  className={`text-sm ${
-                    model === m
-                      ? "text-primary-700 font-semibold"
-                      : "text-foreground"
-                  }`}
-                >
+                <Text className={`text-xs ${model === m ? "text-primary-700 font-bold" : "text-foreground font-medium"}`}>
                   {m}
                 </Text>
                 {model === m && (
-                  <View className="w-4 h-4 rounded-full bg-primary-600 items-center justify-center">
-                    <Text className="text-white text-xs">{"\u2713"}</Text>
+                  <View className="w-4 h-4 rounded-full bg-primary-500 items-center justify-center">
+                    <Text className="text-white text-2xs">{"\u2713"}</Text>
                   </View>
                 )}
               </Pressable>
@@ -206,46 +134,30 @@ export default function AISettingsScreen() {
           </View>
         </Card>
 
-        {/* Test Connection */}
         <Card>
-          <Text className="text-sm font-semibold text-foreground mb-3">
+          <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest mb-3">
             Test Connection
           </Text>
-          <Button
-            onPress={handleTest}
-            loading={testing}
-            variant="outline"
-            size="md"
-          >
+          <Button onPress={handleTest} loading={testing} variant="outline" size="md">
             Test Connection
           </Button>
           {testResult && (
-            <View
-              className={`mt-3 px-3 py-2 rounded-lg ${
-                testResult.success ? "bg-surface-300" : "bg-surface-300"
-              }`}
-            >
-              <Text
-                className={`text-sm ${
-                  testResult.success ? "text-success" : "text-danger"
-                }`}
-              >
+            <View className={`mt-3 px-3 py-2 rounded-lg ${testResult.success ? "bg-success/10" : "bg-danger/10"}`}>
+              <Text className={`text-xs ${testResult.success ? "text-success" : "text-danger"}`}>
                 {testResult.message}
               </Text>
             </View>
           )}
         </Card>
 
-        {/* Info */}
         <Card>
-          <Text className="text-sm font-semibold text-foreground mb-2">
+          <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest mb-2">
             How it works
           </Text>
-          <Text className="text-xs text-muted-foreground leading-5">
-            DoinikHishab uses AI to help categorize transactions and answer
-            questions about your finances. You bring your own API key (BYOK) -
-            we never store or share your financial data with AI providers beyond
-            what's needed for the specific request.
+          <Text className="text-2xs text-surface-800 leading-4">
+            DoinikHishab uses AI to categorize transactions and answer finance questions.
+            You bring your own API key (BYOK) — we never share your data with AI providers
+            beyond what's needed for the specific request.
           </Text>
         </Card>
       </ScrollView>
