@@ -31,7 +31,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. Running `bun run test` executes Jest tests against a React Native component using React Native Testing Library, and at least one sample test passes
   3. Switching the app language between Bengali and English updates all visible text instantly, with correct Bengali plural forms (e.g., "5 items" renders properly in Bengali)
   4. The i18n system detects the device locale on first launch and defaults to the matching language
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
 - [ ] 01-01: Biome linting and formatting setup
