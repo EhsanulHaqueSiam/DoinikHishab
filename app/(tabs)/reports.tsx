@@ -13,52 +13,27 @@ export default function ReportsScreen() {
   const { userId } = useAppStore();
   const [activeReport, setActiveReport] = React.useState<ReportType>("spending");
 
-  const transactions = useQuery(
-    api.transactions.list,
-    userId ? { userId } : "skip"
-  );
-
-  const categories = useQuery(
-    api.categories.listCategories,
-    userId ? { userId } : "skip"
-  );
-
-  const accounts = useQuery(
-    api.accounts.list,
-    userId ? { userId } : "skip"
-  );
+  const transactions = useQuery(api.transactions.list, userId ? { userId } : "skip");
+  const categories = useQuery(api.categories.listCategories, userId ? { userId } : "skip");
+  const accounts = useQuery(api.accounts.list, userId ? { userId } : "skip");
 
   const spendingByCategory = useMemo(() => {
     if (!transactions || !categories) return [];
     const spending = new Map<string, { name: string; total: number }>();
-
     for (const txn of transactions as any[]) {
       if (txn.type !== "expense" || !txn.categoryId) continue;
-      const cat = (categories as any[]).find(
-        (c) => c._id === txn.categoryId
-      );
+      const cat = (categories as any[]).find((c) => c._id === txn.categoryId);
       if (!cat) continue;
-
       const existing = spending.get(txn.categoryId);
-      if (existing) {
-        existing.total += Math.abs(txn.amount);
-      } else {
-        spending.set(txn.categoryId, {
-          name: cat.name,
-          total: Math.abs(txn.amount),
-        });
-      }
+      if (existing) existing.total += Math.abs(txn.amount);
+      else spending.set(txn.categoryId, { name: cat.name, total: Math.abs(txn.amount) });
     }
-
-    return Array.from(spending.values())
-      .sort((a, b) => b.total - a.total)
-      .slice(0, 10);
+    return Array.from(spending.values()).sort((a, b) => b.total - a.total).slice(0, 10);
   }, [transactions, categories]);
 
   const incomeVsExpense = useMemo(() => {
     if (!transactions) return { income: 0, expense: 0, net: 0 };
-    let income = 0;
-    let expense = 0;
+    let income = 0, expense = 0;
     for (const txn of transactions as any[]) {
       if (txn.type === "income") income += txn.amount;
       else if (txn.type === "expense") expense += Math.abs(txn.amount);
@@ -68,10 +43,7 @@ export default function ReportsScreen() {
 
   const netWorth = useMemo(() => {
     if (!accounts) return 0;
-    return (accounts as any[]).reduce(
-      (sum: number, a: any) => sum + a.balance,
-      0
-    );
+    return (accounts as any[]).reduce((sum: number, a: any) => sum + a.balance, 0);
   }, [accounts]);
 
   const totalSpending = spendingByCategory.reduce((s, c) => s + c.total, 0);
@@ -79,28 +51,22 @@ export default function ReportsScreen() {
   return (
     <View className="flex-1 bg-background">
       {/* Report Type Tabs */}
-      <View className="flex-row bg-surface-100 border-b border-border px-2 pt-1">
-        {(
-          [
-            { key: "spending", label: "Spending" },
-            { key: "income_expense", label: "Income/Expense" },
-            { key: "net_worth", label: "Net Worth" },
-          ] as const
-        ).map((tab) => (
+      <View className="flex-row bg-surface-100 border-b border-border px-1 pt-1">
+        {([
+          { key: "spending", label: "Spending" },
+          { key: "income_expense", label: "Income/Expense" },
+          { key: "net_worth", label: "Net Worth" },
+        ] as const).map((tab) => (
           <Pressable
             key={tab.key}
             onPress={() => setActiveReport(tab.key)}
             className={`flex-1 py-3 items-center border-b-2 ${
-              activeReport === tab.key
-                ? "border-primary-700"
-                : "border-transparent"
+              activeReport === tab.key ? "border-primary-600" : "border-transparent"
             }`}
           >
             <Text
-              className={`text-sm font-medium tracking-wide ${
-                activeReport === tab.key
-                  ? "text-primary-700"
-                  : "text-muted-foreground"
+              className={`text-xs font-semibold tracking-wide uppercase ${
+                activeReport === tab.key ? "text-primary-700" : "text-surface-800"
               }`}
             >
               {tab.label}
@@ -112,49 +78,40 @@ export default function ReportsScreen() {
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false} scrollEventThrottle={8} decelerationRate="fast" removeClippedSubviews>
         {/* Spending Report */}
         {activeReport === "spending" && (
-          <View className="px-4 mt-4">
+          <View className="px-4 mt-5">
             <Card>
-              <Text className="text-base font-semibold text-foreground mb-1">
-                Total Spending
-              </Text>
-              <Text className="text-2xl font-bold text-danger mb-4">
-                {formatCurrency(-totalSpending)}
-              </Text>
+              <View className="flex-row items-baseline justify-between mb-4">
+                <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest">
+                  Total Spending
+                </Text>
+                <Text className="text-xl font-bold text-danger tracking-tight">
+                  {formatCurrency(-totalSpending)}
+                </Text>
+              </View>
 
               {spendingByCategory.length > 0 ? (
-                <View className="gap-3">
+                <View className="gap-4">
                   {spendingByCategory.map((cat) => {
-                    const pct =
-                      totalSpending > 0
-                        ? (cat.total / totalSpending) * 100
-                        : 0;
+                    const pct = totalSpending > 0 ? (cat.total / totalSpending) * 100 : 0;
                     return (
                       <View key={cat.name}>
-                        <View className="flex-row justify-between mb-1">
-                          <Text className="text-sm text-foreground">
-                            {cat.name}
-                          </Text>
-                          <Text className="text-sm font-medium text-foreground">
-                            {formatCurrency(-cat.total)}
-                          </Text>
+                        <View className="flex-row justify-between mb-1.5">
+                          <Text className="text-xs font-medium text-foreground">{cat.name}</Text>
+                          <Text className="text-xs font-bold text-foreground">{formatCurrency(-cat.total)}</Text>
                         </View>
-                        <View className="h-2 bg-surface-400 rounded-full overflow-hidden">
+                        <View className="h-1.5 bg-surface-400 rounded-full overflow-hidden">
                           <View
-                            className="h-2 bg-primary-600 rounded-full"
+                            className="h-1.5 bg-primary-500 rounded-full"
                             style={{ width: `${pct}%` }}
                           />
                         </View>
-                        <Text className="text-xs text-muted-foreground mt-0.5">
-                          {pct.toFixed(1)}%
-                        </Text>
+                        <Text className="text-2xs text-surface-700 mt-1">{pct.toFixed(1)}%</Text>
                       </View>
                     );
                   })}
                 </View>
               ) : (
-                <Text className="text-sm text-muted-foreground text-center py-8">
-                  No spending data yet
-                </Text>
+                <Text className="text-xs text-surface-800 text-center py-8">No spending data yet</Text>
               )}
             </Card>
           </View>
@@ -162,86 +119,57 @@ export default function ReportsScreen() {
 
         {/* Income vs Expense */}
         {activeReport === "income_expense" && (
-          <View className="px-4 mt-4 gap-4">
+          <View className="px-4 mt-5 gap-4">
             <Card>
-              <Text className="text-base font-semibold text-foreground mb-3">
+              <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest mb-4">
                 Income vs Expense
               </Text>
               <View className="gap-3">
                 <View className="flex-row justify-between">
                   <Text className="text-sm text-foreground">Income</Text>
-                  <Text className="text-sm font-semibold text-success">
-                    {formatCurrency(incomeVsExpense.income)}
-                  </Text>
+                  <Text className="text-sm font-bold text-success">{formatCurrency(incomeVsExpense.income)}</Text>
                 </View>
                 <View className="flex-row justify-between">
                   <Text className="text-sm text-foreground">Expense</Text>
-                  <Text className="text-sm font-semibold text-danger">
-                    {formatCurrency(-incomeVsExpense.expense)}
-                  </Text>
+                  <Text className="text-sm font-bold text-danger">{formatCurrency(-incomeVsExpense.expense)}</Text>
                 </View>
-                <View className="h-px bg-border" />
+                <View className="h-px bg-border/30" />
                 <View className="flex-row justify-between">
-                  <Text className="text-base font-semibold text-foreground">
-                    Net
-                  </Text>
-                  <Text
-                    className={`text-base font-bold ${
-                      incomeVsExpense.net >= 0 ? "text-success" : "text-danger"
-                    }`}
-                  >
+                  <Text className="text-sm font-bold text-foreground">Net</Text>
+                  <Text className={`text-base font-bold ${incomeVsExpense.net >= 0 ? "text-success" : "text-danger"}`}>
                     {formatCurrency(incomeVsExpense.net)}
                   </Text>
                 </View>
               </View>
             </Card>
 
-            {/* Visual bar comparison */}
             <Card>
-              <Text className="text-sm font-medium text-muted-foreground mb-2 tracking-wider uppercase">
+              <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest mb-3">
                 Comparison
               </Text>
-              <View className="gap-2">
+              <View className="gap-3">
                 <View>
-                  <Text className="text-xs text-muted-foreground mb-1">
-                    Income
-                  </Text>
-                  <View className="h-6 bg-surface-400 rounded-lg overflow-hidden">
+                  <Text className="text-2xs text-surface-800 mb-1">Income</Text>
+                  <View className="h-5 bg-surface-400 rounded-lg overflow-hidden">
                     <View
-                      className="h-6 bg-success rounded-lg"
+                      className="h-5 bg-success rounded-lg"
                       style={{
-                        width: `${
-                          Math.max(incomeVsExpense.income, incomeVsExpense.expense) > 0
-                            ? (incomeVsExpense.income /
-                                Math.max(
-                                  incomeVsExpense.income,
-                                  incomeVsExpense.expense
-                                )) *
-                              100
-                            : 0
-                        }%`,
+                        width: `${Math.max(incomeVsExpense.income, incomeVsExpense.expense) > 0
+                          ? (incomeVsExpense.income / Math.max(incomeVsExpense.income, incomeVsExpense.expense)) * 100
+                          : 0}%`,
                       }}
                     />
                   </View>
                 </View>
                 <View>
-                  <Text className="text-xs text-muted-foreground mb-1">
-                    Expense
-                  </Text>
-                  <View className="h-6 bg-surface-400 rounded-lg overflow-hidden">
+                  <Text className="text-2xs text-surface-800 mb-1">Expense</Text>
+                  <View className="h-5 bg-surface-400 rounded-lg overflow-hidden">
                     <View
-                      className="h-6 bg-danger rounded-lg"
+                      className="h-5 bg-danger rounded-lg"
                       style={{
-                        width: `${
-                          Math.max(incomeVsExpense.income, incomeVsExpense.expense) > 0
-                            ? (incomeVsExpense.expense /
-                                Math.max(
-                                  incomeVsExpense.income,
-                                  incomeVsExpense.expense
-                                )) *
-                              100
-                            : 0
-                        }%`,
+                        width: `${Math.max(incomeVsExpense.income, incomeVsExpense.expense) > 0
+                          ? (incomeVsExpense.expense / Math.max(incomeVsExpense.income, incomeVsExpense.expense)) * 100
+                          : 0}%`,
                       }}
                     />
                   </View>
@@ -253,18 +181,17 @@ export default function ReportsScreen() {
 
         {/* Net Worth */}
         {activeReport === "net_worth" && (
-          <View className="px-4 mt-4">
+          <View className="px-4 mt-5">
             <Card
-              className="items-center border-accent-200/20"
-              style={shadow("#e6a444", 0, 0, 0.12, 16)}
+              className="items-center border-accent-300/10"
+              style={shadow("#e6a444", 0, 4, 0.08, 16)}
             >
-              <Text className="text-sm text-muted-foreground tracking-wider uppercase">
+              <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest">
                 Current Net Worth
               </Text>
               <Text
-                className={`text-3xl font-bold mt-1 ${
-                  netWorth >= 0 ? "text-foreground" : "text-danger"
-                }`}
+                className={`text-hero font-bold mt-1 tracking-tight ${netWorth >= 0 ? "text-foreground" : "text-danger"}`}
+                style={{ lineHeight: 42 }}
               >
                 {formatCurrency(netWorth)}
               </Text>
@@ -272,24 +199,13 @@ export default function ReportsScreen() {
 
             {accounts && (accounts as any[]).length > 0 && (
               <Card className="mt-4">
-                <Text className="text-sm font-semibold text-foreground mb-3 tracking-wide">
+                <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest mb-3">
                   By Account
                 </Text>
                 {(accounts as any[]).map((account: any) => (
-                  <View
-                    key={account._id}
-                    className="flex-row justify-between py-2 border-b border-border/20"
-                  >
-                    <Text className="text-sm text-foreground">
-                      {account.name}
-                    </Text>
-                    <Text
-                      className={`text-sm font-medium ${
-                        account.balance >= 0
-                          ? "text-foreground"
-                          : "text-danger"
-                      }`}
-                    >
+                  <View key={account._id} className="flex-row justify-between py-2.5 border-b border-border/15">
+                    <Text className="text-sm text-foreground">{account.name}</Text>
+                    <Text className={`text-sm font-bold ${account.balance >= 0 ? "text-foreground" : "text-danger"}`}>
                       {formatCurrency(account.balance)}
                     </Text>
                   </View>

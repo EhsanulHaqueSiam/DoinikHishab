@@ -35,14 +35,14 @@ export const TransactionCard = React.memo(function TransactionCard({
   return (
     <Pressable
       onPress={onPress}
-      className="flex-row items-center py-3 px-4 active:bg-surface-300/50"
+      className="flex-row items-center py-3.5 px-4 active:bg-surface-400/40"
     >
       {transaction.flag && (
         <View
-          className="w-1 h-8 rounded-full mr-2"
+          className="w-0.5 h-8 rounded-full mr-2.5"
           style={{
             backgroundColor:
-              FLAG_COLORS[transaction.flag as FlagColor] || "#3a5280",
+              FLAG_COLORS[transaction.flag as FlagColor] || "#4e6381",
           }}
         />
       )}
@@ -51,16 +51,16 @@ export const TransactionCard = React.memo(function TransactionCard({
         <Text className="text-lg">{emoji}</Text>
       </View>
 
-      <View className="flex-1">
-        <Text className="text-base font-medium text-foreground" numberOfLines={1}>
+      <View className="flex-1 mr-3">
+        <Text className="text-sm font-semibold text-foreground" numberOfLines={1}>
           {transaction.description || categoryName || "Uncategorized"}
         </Text>
-        <View className="flex-row items-center gap-2 mt-0.5">
+        <View className="flex-row items-center gap-1.5 mt-0.5">
           {categoryName && transaction.description && (
-            <Text className="text-xs text-muted-foreground">{categoryName}</Text>
+            <Text className="text-2xs text-surface-800">{categoryName}</Text>
           )}
           {accountName && (
-            <Text className="text-xs text-surface-700">
+            <Text className="text-2xs text-surface-700">
               {categoryName && transaction.description ? "·" : ""} {accountName}
             </Text>
           )}
@@ -69,14 +69,14 @@ export const TransactionCard = React.memo(function TransactionCard({
 
       <View className="items-end">
         <Text
-          className={`text-base font-semibold ${
+          className={`text-sm font-bold tracking-tight ${
             isExpense ? "text-danger" : "text-success"
           }`}
         >
           {formatCurrency(transaction.amount)}
         </Text>
         {!transaction.isCleared && (
-          <View className="w-2 h-2 rounded-full bg-accent-500 mt-1" />
+          <View className="w-1.5 h-1.5 rounded-full bg-accent-500 mt-1.5" />
         )}
       </View>
     </Pressable>

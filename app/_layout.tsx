@@ -30,7 +30,7 @@ function WebContainer({ children }: { children: React.ReactNode }) {
         maxWidth: 480,
         width: "100%",
         alignSelf: "center",
-        backgroundColor: "#060a13",
+        backgroundColor: "#070b16",
       }}
     >
       {children}
@@ -57,12 +57,12 @@ export default function RootLayout() {
 
   return (
     <ConvexProvider client={convex}>
-      <GestureHandlerRootView style={{ flex: 1, backgroundColor: "#060a13" }}>
+      <GestureHandlerRootView style={{ flex: 1, backgroundColor: "#070b16" }}>
         <WebContainer>
           <Stack
             screenOptions={{
               headerShown: false,
-              contentStyle: { backgroundColor: "#060a13" },
+              contentStyle: { backgroundColor: "#070b16" },
             }}
           >
             <Stack.Screen name="(tabs)" />

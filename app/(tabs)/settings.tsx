@@ -1,8 +1,7 @@
 import React from "react";
-import { View, Text, ScrollView, Pressable, Switch } from "react-native";
+import { View, Text, ScrollView, Pressable } from "react-native";
 import { useAppStore } from "../../src/stores/app-store";
 import { Card } from "../../src/components/ui/Card";
-import { shadow } from "../../src/lib/platform";
 import { APP_NAME, APP_NAME_BN } from "../../src/lib/constants";
 
 interface SettingRowProps {
@@ -11,26 +10,39 @@ interface SettingRowProps {
   value?: string;
   onPress?: () => void;
   rightElement?: React.ReactNode;
+  danger?: boolean;
 }
 
-function SettingRow({ icon, label, value, onPress, rightElement }: SettingRowProps) {
+function SettingRow({ icon, label, value, onPress, rightElement, danger }: SettingRowProps) {
   return (
     <Pressable
       onPress={onPress}
-      className="flex-row items-center py-3.5 active:bg-surface-300/30"
+      className="flex-row items-center py-3.5 active:bg-surface-400/30"
     >
-      <Text className="text-lg mr-3">{icon}</Text>
-      <Text className="flex-1 text-base text-foreground">{label}</Text>
+      <Text className="text-base mr-3">{icon}</Text>
+      <Text className={`flex-1 text-sm font-medium ${danger ? "text-danger" : "text-foreground"}`}>
+        {label}
+      </Text>
       {value && (
-        <Text className="text-sm text-accent-500 mr-2">{value}</Text>
+        <Text className="text-xs text-primary-700 mr-2 font-medium">{value}</Text>
       )}
       {rightElement}
       {onPress && !rightElement && (
-        <Text className="text-surface-700">›</Text>
+        <Text className="text-surface-700 text-xs">›</Text>
       )}
     </Pressable>
   );
 }
+
+function SectionLabel({ title }: { title: string }) {
+  return (
+    <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest mb-2">
+      {title}
+    </Text>
+  );
+}
+
+const Divider = () => <View className="h-px bg-border/20" />;
 
 export default function SettingsScreen() {
   const { locale, setLocale, theme, setTheme } = useAppStore();
@@ -38,138 +50,67 @@ export default function SettingsScreen() {
   return (
     <View className="flex-1 bg-background">
       <ScrollView showsVerticalScrollIndicator={false} scrollEventThrottle={8} decelerationRate="fast">
-        {/* App Info */}
-        <View className="items-center py-6">
-          <View style={shadow("#0d9488", 0, 0, 0.4, 20)}>
-            <Text className="text-4xl mb-2">💰</Text>
+        {/* App Identity */}
+        <View className="items-center py-8">
+          <View className="w-16 h-16 rounded-2xl bg-surface-300 items-center justify-center mb-3">
+            <Text className="text-3xl">💰</Text>
           </View>
-          <Text className="text-xl font-bold text-foreground">{APP_NAME}</Text>
-          <Text className="text-sm text-primary-700">{APP_NAME_BN}</Text>
-          <Text className="text-xs text-surface-700 mt-1">Version 1.0.0</Text>
+          <Text className="text-lg font-bold text-foreground tracking-wide">{APP_NAME}</Text>
+          <Text className="text-xs text-primary-700 mt-0.5">{APP_NAME_BN}</Text>
+          <Text className="text-2xs text-surface-700 mt-1 tracking-wider">VERSION 1.0.0</Text>
         </View>
 
         {/* General */}
         <View className="px-4 mb-6">
-          <Text className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-            General
-          </Text>
+          <SectionLabel title="General" />
           <Card className="p-0 px-4">
-            <SettingRow
-              icon="🌐"
-              label="Language"
-              value={locale === "en" ? "English" : "বাংলা"}
-              onPress={() => setLocale(locale === "en" ? "bn" : "en")}
-            />
-            <View className="h-px bg-border/20" />
-            <SettingRow
-              icon="🎨"
-              label="Theme"
-              value={theme === "system" ? "System" : theme === "dark" ? "Dark" : "Light"}
-              onPress={() =>
-                setTheme(
-                  theme === "light"
-                    ? "dark"
-                    : theme === "dark"
-                      ? "system"
-                      : "light"
-                )
-              }
-            />
-            <View className="h-px bg-border/20" />
-            <SettingRow
-              icon="💱"
-              label="Currency"
-              value="৳ BDT"
-            />
-            <View className="h-px bg-border/20" />
-            <SettingRow
-              icon="📅"
-              label="Date Format"
-              value="DD/MM/YYYY"
-            />
+            <SettingRow icon="🌐" label="Language" value={locale === "en" ? "English" : "বাংলা"} onPress={() => setLocale(locale === "en" ? "bn" : "en")} />
+            <Divider />
+            <SettingRow icon="🎨" label="Theme" value={theme === "system" ? "System" : theme === "dark" ? "Dark" : "Light"} onPress={() => setTheme(theme === "light" ? "dark" : theme === "dark" ? "system" : "light")} />
+            <Divider />
+            <SettingRow icon="💱" label="Currency" value="৳ BDT" />
+            <Divider />
+            <SettingRow icon="📅" label="Date Format" value="DD/MM/YYYY" />
           </Card>
         </View>
 
         {/* Data */}
         <View className="px-4 mb-6">
-          <Text className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-            Data
-          </Text>
+          <SectionLabel title="Data" />
           <Card className="p-0 px-4">
-            <SettingRow
-              icon="📤"
-              label="Export Data"
-              onPress={() => {}}
-            />
-            <View className="h-px bg-border/20" />
-            <SettingRow
-              icon="📥"
-              label="Import Transactions"
-              onPress={() => {}}
-            />
-            <View className="h-px bg-border/20" />
-            <SettingRow
-              icon="🔄"
-              label="Fresh Start"
-              onPress={() => {}}
-            />
+            <SettingRow icon="📤" label="Export Data" onPress={() => {}} />
+            <Divider />
+            <SettingRow icon="📥" label="Import Transactions" onPress={() => {}} />
+            <Divider />
+            <SettingRow icon="🔄" label="Fresh Start" onPress={() => {}} />
           </Card>
         </View>
 
         {/* AI */}
         <View className="px-4 mb-6">
-          <Text className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-            AI Features
-          </Text>
+          <SectionLabel title="AI Features" />
           <Card className="p-0 px-4">
-            <SettingRow
-              icon="🤖"
-              label="AI Settings"
-              value="Not configured"
-              onPress={() => {}}
-            />
+            <SettingRow icon="🤖" label="AI Settings" value="Not configured" onPress={() => {}} />
           </Card>
         </View>
 
         {/* Account */}
         <View className="px-4 mb-6">
-          <Text className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-            Account
-          </Text>
+          <SectionLabel title="Account" />
           <Card className="p-0 px-4">
-            <SettingRow
-              icon="👤"
-              label="Sign In"
-              value="Local only"
-              onPress={() => {}}
-            />
-            <View className="h-px bg-border/20" />
-            <SettingRow
-              icon="👨‍👩‍👧‍👦"
-              label="Family Sharing"
-              value="Not set up"
-              onPress={() => {}}
-            />
+            <SettingRow icon="👤" label="Sign In" value="Local only" onPress={() => {}} />
+            <Divider />
+            <SettingRow icon="👨‍👩‍👧‍👦" label="Family Sharing" value="Not set up" onPress={() => {}} />
           </Card>
         </View>
 
         {/* About */}
         <View className="px-4 mb-8">
-          <Text className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-            About
-          </Text>
+          <SectionLabel title="About" />
           <Card className="p-0 px-4">
-            <SettingRow
-              icon="📝"
-              label="Feedback"
-              onPress={() => {}}
-            />
-            <View className="h-px bg-border/20" />
-            <SettingRow
-              icon="📜"
-              label="Privacy Policy"
-              onPress={() => {}}
-            />
+            <SettingRow icon="📝" label="Feedback" onPress={() => {}} />
+            <Divider />
+            <SettingRow icon="📜" label="Privacy Policy" onPress={() => {}} />
           </Card>
         </View>
 

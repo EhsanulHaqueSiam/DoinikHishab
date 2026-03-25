@@ -2,14 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Force dark background on web to prevent expo-router white wrapper flash */
+/* ── Obsidian Finance — dark foundation ───────────────── */
 html, body, #root {
-  background-color: #060a13;
+  background-color: #070b16;
   min-height: 100%;
+  color: #eaf0f9;
 }
 
-/* Override expo-router Stack screen wrapper default light background */
-[data-testid="stack-screen-content"],
+/* Override expo-router wrapper backgrounds */
 [style*="background-color: rgb(242, 242, 242)"] {
-  background-color: #060a13 !important;
+  background-color: #070b16 !important;
+}
+
+/* Smooth scrolling on web */
+* {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Remove default focus outlines, add teal glow instead */
+:focus-visible {
+  outline: 1px solid rgba(13, 148, 136, 0.5);
+  outline-offset: 2px;
+}
+
+/* Selection color */
+::selection {
+  background: rgba(13, 148, 136, 0.3);
+  color: #eaf0f9;
 }

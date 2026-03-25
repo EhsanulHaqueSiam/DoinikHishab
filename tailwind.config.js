@@ -9,29 +9,29 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Deep teal — BD rivers at twilight
+        // Deep teal — primary action color
         primary: {
           DEFAULT: "#0d9488",
-          50: "#0d2926",
-          100: "#0f3632",
-          200: "#134e4a",
-          300: "#1a6b64",
-          400: "#2aa69c",
-          500: "#14b8a6",
-          600: "#0d9488",
+          50: "#0a1f1d",
+          100: "#0c2b28",
+          200: "#0f3d39",
+          300: "#14564f",
+          400: "#1a7a71",
+          500: "#0d9488",
+          600: "#14b8a6",
           700: "#2dd4bf",
           800: "#5eead4",
           900: "#99f6e4",
           950: "#ccfbf1",
         },
-        // Warm saffron accent — BD sunset gold
+        // Warm saffron — accent for amounts and highlights
         accent: {
           DEFAULT: "#e6a444",
-          50: "#261a08",
-          100: "#3d2a0d",
-          200: "#5c3f13",
-          300: "#8a5f1d",
-          400: "#c4882e",
+          50: "#1c1408",
+          100: "#2e210d",
+          200: "#4a3514",
+          300: "#73521f",
+          400: "#a87a2d",
           500: "#e6a444",
           600: "#edb85c",
           700: "#f4cc7a",
@@ -39,43 +39,45 @@ module.exports = {
           900: "#fcedc8",
           950: "#fef7ec",
         },
-        // Semantic — tuned for dark backgrounds
-        success: "#22c55e",
-        warning: "#f59e0b",
-        danger: "#ef4444",
-        // Surfaces — midnight indigo depths
+        // Semantic
+        success: { DEFAULT: "#34d399", dark: "#065f46" },
+        warning: { DEFAULT: "#fbbf24", dark: "#78350f" },
+        danger: { DEFAULT: "#f87171", dark: "#7f1d1d" },
+        // Layered surfaces — each step is a distinct depth
         surface: {
-          DEFAULT: "#0a0f1c",
-          50: "#060a13",
-          100: "#0a0f1c",
-          200: "#0f1629",
-          300: "#141e36",
-          400: "#1a2744",
-          500: "#223352",
-          600: "#2c4066",
-          700: "#3a5280",
-          800: "#5272a1",
-          900: "#7a99c2",
-          950: "#a8bdd9",
+          DEFAULT: "#0c1021",
+          50: "#070b16",    // deepest void
+          100: "#0c1021",   // base surface
+          200: "#111827",   // card
+          300: "#1a2332",   // elevated card / section header
+          400: "#222e3f",   // hover / pressed
+          500: "#2d3b4e",   // active elements
+          600: "#3b4d63",   // subtle dividers
+          700: "#4e6381",   // muted icons
+          800: "#6b83a3",   // secondary text
+          900: "#8ea3c0",   // muted text
+          950: "#b4c5da",   // label text
         },
+        // Simplified semantic aliases
         muted: {
-          DEFAULT: "#141e36",
-          foreground: "#7a8ba8",
+          DEFAULT: "#1a2332",
+          foreground: "#8ea3c0",
         },
         card: {
           DEFAULT: "#111827",
-          foreground: "#e8edf5",
+          foreground: "#eaf0f9",
         },
-        // Midnight-first — cinematic depth
-        background: "#060a13",
-        foreground: "#e8edf5",
-        border: "#1a2744",
-        // Glass tint
-        glass: "rgba(10, 15, 28, 0.88)",
-        // Glow effects
+        background: "#070b16",
+        foreground: "#eaf0f9",
+        border: "#1e2a3a",
+        // Glass overlay
+        glass: "rgba(12, 16, 33, 0.85)",
+        // Subtle glow tokens
         glow: {
-          teal: "rgba(13, 148, 136, 0.25)",
-          saffron: "rgba(230, 164, 68, 0.20)",
+          teal: "rgba(13, 148, 136, 0.20)",
+          saffron: "rgba(230, 164, 68, 0.15)",
+          danger: "rgba(248, 113, 113, 0.15)",
+          success: "rgba(52, 211, 153, 0.15)",
         },
       },
       fontFamily: {
@@ -86,6 +88,10 @@ module.exports = {
         "2xl": "16px",
         "3xl": "24px",
         "4xl": "32px",
+      },
+      fontSize: {
+        "2xs": "10px",
+        "hero": "36px",
       },
     },
   },

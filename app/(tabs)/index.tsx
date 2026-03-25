@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { View, Text, ScrollView, RefreshControl } from "react-native";
+import React, { useEffect, useCallback } from "react";
+import { View, Text, ScrollView, RefreshControl, Pressable } from "react-native";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useAppStore } from "../../src/stores/app-store";
@@ -9,7 +9,20 @@ import { TransactionCard } from "../../src/components/transaction/TransactionCar
 import { QuickAdd } from "../../src/components/transaction/QuickAdd";
 import { FAB } from "../../src/components/platform/FAB";
 import { Card } from "../../src/components/ui/Card";
-import { formatDateShort } from "../../src/lib/date";
+import { formatCurrency } from "../../src/lib/currency";
+
+function SectionHeader({ title }: { title: string }) {
+  return (
+    <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest mb-3">
+      {title}
+    </Text>
+  );
+}
+
+const ACCOUNT_ICON: Record<string, string> = {
+  cash: "💵", savings: "🏦", credit_card: "💳",
+  checking: "🏧", line_of_credit: "💳", mortgage: "🏠",
+};
 
 export default function DashboardScreen() {
   const { userId, deviceId, setUserId } = useAppStore();
@@ -19,6 +32,7 @@ export default function DashboardScreen() {
   const seedCategories = useMutation(api.categories.seedDefaults);
 
   const [backendError, setBackendError] = React.useState<string | null>(null);
+  const [refreshing, setRefreshing] = React.useState(false);
 
   useEffect(() => {
     if (!userId) {
@@ -31,45 +45,28 @@ export default function DashboardScreen() {
         .catch((err: Error) => {
           const msg = err.message || String(err);
           if (msg.includes("free plan") || msg.includes("disabled")) {
-            setBackendError("Backend unavailable — Convex free plan limit reached. Data will sync when the backend is restored.");
+            setBackendError("Backend unavailable — Convex free plan limit reached.");
           } else {
-            setBackendError("Unable to connect to server. Please check your connection.");
+            setBackendError("Unable to connect to server.");
           }
         });
     }
   }, [userId, deviceId]);
 
-  const balances = useQuery(
-    api.accounts.getTotalBalance,
-    userId ? { userId } : "skip"
-  );
+  const balances = useQuery(api.accounts.getTotalBalance, userId ? { userId } : "skip");
+  const transactions = useQuery(api.transactions.list, userId ? { userId, limit: 10 } : "skip");
+  const categories = useQuery(api.categories.listCategories, userId ? { userId } : "skip");
+  const accounts = useQuery(api.accounts.list, userId ? { userId } : "skip");
 
-  const transactions = useQuery(
-    api.transactions.list,
-    userId ? { userId, limit: 10 } : "skip"
-  );
-
-  const categories = useQuery(
-    api.categories.listCategories,
-    userId ? { userId } : "skip"
-  );
-
-  const accounts = useQuery(
-    api.accounts.list,
-    userId ? { userId } : "skip"
-  );
-
-  const [refreshing, setRefreshing] = React.useState(false);
-
-  const getCategoryInfo = (categoryId: string | undefined) => {
+  const getCategoryInfo = useCallback((categoryId: string | undefined) => {
     if (!categoryId || !categories) return { name: undefined, icon: undefined };
     const cat = categories.find((c) => c._id === categoryId);
     return { name: cat?.name, icon: cat?.icon || undefined };
-  };
+  }, [categories]);
 
-  const getAccountName = (accountId: string) => {
+  const getAccountName = useCallback((accountId: string) => {
     return accounts?.find((a) => a._id === accountId)?.name;
-  };
+  }, [accounts]);
 
   return (
     <View className="flex-1 bg-background">
@@ -89,16 +86,14 @@ export default function DashboardScreen() {
           />
         }
       >
-        {/* Backend Error Banner */}
+        {/* Error Banner */}
         {backendError && (
-          <View className="mx-4 mt-4 bg-accent-100 border border-accent-300 rounded-xl p-3">
-            <Text className="text-sm text-accent-500 font-medium">
-              {backendError}
-            </Text>
+          <View className="mx-4 mt-4 bg-accent-100 border border-accent-300/30 rounded-xl px-4 py-3">
+            <Text className="text-xs text-accent-600 font-medium">{backendError}</Text>
           </View>
         )}
 
-        {/* Balance Card */}
+        {/* Hero Balance */}
         <BalanceCard
           totalBalance={balances?.total ?? 0}
           budgetBalance={balances?.budgetTotal ?? 0}
@@ -106,50 +101,39 @@ export default function DashboardScreen() {
         />
 
         {/* Quick Actions */}
-        <View className="flex-row px-4 mt-4 gap-3">
+        <View className="flex-row px-4 mt-5 gap-2.5">
           {[
-            { label: "Expense", icon: "💸", type: "expense" as const },
-            { label: "Income", icon: "💵", type: "income" as const },
-            { label: "Transfer", icon: "🔄", type: "transfer" as const },
+            { label: "Expense", icon: "💸", type: "expense" as const, color: "text-danger" },
+            { label: "Income", icon: "💵", type: "income" as const, color: "text-success" },
+            { label: "Transfer", icon: "🔄", type: "transfer" as const, color: "text-primary-700" },
           ].map((action) => (
-            <View key={action.type} className="flex-1">
-              <Card className="items-center py-3">
-                <Text
-                  className="text-2xl"
-                  onPress={() => openQuickAdd(action.type)}
-                >
-                  {action.icon}
-                </Text>
-                <Text className="text-xs text-muted-foreground mt-1 font-medium tracking-wider uppercase">
-                  {action.label}
-                </Text>
-              </Card>
-            </View>
+            <Pressable
+              key={action.type}
+              onPress={() => openQuickAdd(action.type)}
+              className="flex-1 bg-surface-200 border border-border/30 rounded-xl items-center py-3.5 active:bg-surface-400"
+            >
+              <Text className="text-xl mb-1">{action.icon}</Text>
+              <Text className={`text-2xs font-semibold ${action.color} uppercase tracking-wider`}>
+                {action.label}
+              </Text>
+            </Pressable>
           ))}
         </View>
 
         {/* Accounts Summary */}
         {accounts && accounts.length > 0 && (
           <View className="px-4 mt-6">
-            <Text className="text-base font-semibold text-foreground mb-3 tracking-wide">
-              Accounts
-            </Text>
-            <Card>
+            <SectionHeader title="Accounts" />
+            <Card className="p-0 overflow-hidden">
               {accounts
                 .filter((a) => !a.isClosed)
                 .map((account, idx, arr) => (
                   <View key={account._id}>
-                    <View className="flex-row items-center justify-between py-2.5">
+                    <View className="flex-row items-center justify-between py-3 px-4">
                       <View className="flex-row items-center gap-3">
-                        <View className="w-8 h-8 rounded-lg bg-surface-300 items-center justify-center">
+                        <View className="w-9 h-9 rounded-lg bg-surface-300 items-center justify-center">
                           <Text className="text-sm">
-                            {account.type === "cash"
-                              ? "💵"
-                              : account.type === "savings"
-                                ? "🏦"
-                                : account.type === "credit_card"
-                                  ? "💳"
-                                  : "🏧"}
+                            {ACCOUNT_ICON[account.type] || "🏧"}
                           </Text>
                         </View>
                         <Text className="text-sm font-medium text-foreground">
@@ -157,17 +141,15 @@ export default function DashboardScreen() {
                         </Text>
                       </View>
                       <Text
-                        className={`text-sm font-semibold ${
-                          account.balance >= 0
-                            ? "text-foreground"
-                            : "text-danger"
+                        className={`text-sm font-bold tracking-tight ${
+                          account.balance >= 0 ? "text-foreground" : "text-danger"
                         }`}
                       >
-                        {require("../../src/lib/currency").formatCurrency(account.balance)}
+                        {formatCurrency(account.balance)}
                       </Text>
                     </View>
                     {idx < arr.length - 1 && (
-                      <View className="h-px bg-border/30" />
+                      <View className="h-px bg-border/20 ml-16" />
                     )}
                   </View>
                 ))}
@@ -178,12 +160,12 @@ export default function DashboardScreen() {
         {/* No accounts prompt */}
         {accounts && accounts.length === 0 && (
           <View className="px-4 mt-6">
-            <Card className="items-center py-8">
+            <Card className="items-center py-10">
               <Text className="text-4xl mb-3">🏦</Text>
-              <Text className="text-base font-semibold text-foreground">
+              <Text className="text-base font-bold text-foreground">
                 Add Your First Account
               </Text>
-              <Text className="text-sm text-muted-foreground text-center mt-1">
+              <Text className="text-xs text-surface-800 text-center mt-1.5 px-4 leading-5">
                 Start by adding a cash wallet or bank account to begin tracking
               </Text>
             </Card>
@@ -192,15 +174,11 @@ export default function DashboardScreen() {
 
         {/* Recent Transactions */}
         <View className="px-4 mt-6 mb-24">
-          <Text className="text-base font-semibold text-foreground mb-3 tracking-wide">
-            Recent Transactions
-          </Text>
+          <SectionHeader title="Recent Transactions" />
           {transactions && transactions.length > 0 ? (
             <Card className="p-0 overflow-hidden">
               {transactions.map((txn, idx) => {
-                const { name, icon } = getCategoryInfo(
-                  txn.categoryId ?? undefined
-                );
+                const { name, icon } = getCategoryInfo(txn.categoryId ?? undefined);
                 return (
                   <React.Fragment key={txn._id}>
                     <TransactionCard
@@ -210,16 +188,16 @@ export default function DashboardScreen() {
                       accountName={getAccountName(txn.accountId)}
                     />
                     {idx < transactions.length - 1 && (
-                      <View className="h-px bg-border/20 mx-4" />
+                      <View className="h-px bg-border/15 ml-16" />
                     )}
                   </React.Fragment>
                 );
               })}
             </Card>
           ) : (
-            <Card className="items-center py-8">
+            <Card className="items-center py-10">
               <Text className="text-4xl mb-3">📝</Text>
-              <Text className="text-sm text-muted-foreground text-center">
+              <Text className="text-sm font-medium text-surface-900 text-center">
                 No transactions yet. Tap + to add your first one!
               </Text>
             </Card>

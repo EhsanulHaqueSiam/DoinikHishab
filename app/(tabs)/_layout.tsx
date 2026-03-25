@@ -18,43 +18,45 @@ export default function TabsLayout() {
       screenOptions={({ route }) => ({
         headerShown: true,
         headerStyle: {
-          backgroundColor: "#0a0f1c",
+          backgroundColor: "#0c1021",
           elevation: 0,
           ...(Platform.OS === "web"
             ? { boxShadow: "none" }
             : { shadowOpacity: 0 }),
           borderBottomWidth: 1,
-          borderBottomColor: "#1a2744",
+          borderBottomColor: "#1e2a3a",
         },
         headerTitleStyle: {
           fontWeight: "700" as const,
-          fontSize: 18,
-          color: "#e8edf5",
+          fontSize: 17,
+          color: "#eaf0f9",
           fontFamily: "SpaceMono",
+          letterSpacing: 0.5,
         },
         tabBarStyle: {
-          backgroundColor: "#0a0f1c",
-          borderTopColor: "#1a2744",
+          backgroundColor: "#0c1021",
+          borderTopColor: "#1e2a3a",
           borderTopWidth: 1,
           paddingBottom: Platform.OS === "ios" ? 24 : 8,
           paddingTop: 8,
           height: Platform.OS === "ios" ? 88 : 64,
         },
         tabBarActiveTintColor: "#2dd4bf",
-        tabBarInactiveTintColor: "#3a5280",
+        tabBarInactiveTintColor: "#4e6381",
         tabBarShowLabel: true,
         tabBarIcon: ({ focused }) => (
-          <View style={focused ? shadow("#0d9488", 0, 0, 0.6, 8, 4) : undefined}>
-            <Text style={{ fontSize: 22, opacity: focused ? 1 : 0.4 }}>
+          <View style={focused ? shadow("#0d9488", 0, 0, 0.5, 8, 4) : undefined}>
+            <Text style={{ fontSize: 20, opacity: focused ? 1 : 0.35 }}>
               {TAB_ICONS[route.name] || "📌"}
             </Text>
           </View>
         ),
         tabBarLabelStyle: {
-          fontSize: 10,
+          fontSize: 9,
           fontWeight: "600" as const,
           fontFamily: "SpaceMono",
-          letterSpacing: 0.5,
+          letterSpacing: 0.8,
+          textTransform: "uppercase" as const,
         },
       })}
     >
