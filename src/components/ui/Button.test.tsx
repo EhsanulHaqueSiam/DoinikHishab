@@ -1,5 +1,5 @@
+import { fireEvent, render, screen } from "@testing-library/react-native";
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react-native";
 import { Button } from "./Button";
 
 describe("Button", () => {
@@ -17,14 +17,22 @@ describe("Button", () => {
 
   it("does not call onPress when disabled", () => {
     const onPress = jest.fn();
-    render(<Button onPress={onPress} disabled>Save</Button>);
+    render(
+      <Button onPress={onPress} disabled>
+        Save
+      </Button>
+    );
     fireEvent.press(screen.getByText("Save"));
     expect(onPress).not.toHaveBeenCalled();
   });
 
   it("does not call onPress when loading", () => {
     const onPress = jest.fn();
-    render(<Button onPress={onPress} loading>Save</Button>);
+    render(
+      <Button onPress={onPress} loading>
+        Save
+      </Button>
+    );
     fireEvent.press(screen.getByText("Save"));
     expect(onPress).not.toHaveBeenCalled();
   });

@@ -116,11 +116,14 @@ describe("convex/transactions handlers", () => {
       });
 
       expect(result).toBe("new_id");
-      expect(mockCtx.db.insert).toHaveBeenCalledWith("transactions", expect.objectContaining({
-        userId: "u1",
-        amount: -3000,
-        type: "expense",
-      }));
+      expect(mockCtx.db.insert).toHaveBeenCalledWith(
+        "transactions",
+        expect.objectContaining({
+          userId: "u1",
+          amount: -3000,
+          type: "expense",
+        })
+      );
       expect(mockCtx.db.patch).toHaveBeenCalledWith("a1", { balance: 47000 });
     });
   });
@@ -131,8 +134,9 @@ describe("convex/transactions handlers", () => {
       const mockAccount = { _id: "a1", balance: 45000 };
       const mockCtx = {
         db: {
-          get: jest.fn()
-            .mockResolvedValueOnce(mockTxn)    // first call: get transaction
+          get: jest
+            .fn()
+            .mockResolvedValueOnce(mockTxn) // first call: get transaction
             .mockResolvedValueOnce(mockAccount), // second call: get account
           patch: jest.fn().mockResolvedValue(undefined),
           delete: jest.fn().mockResolvedValue(undefined),

@@ -15,9 +15,9 @@
 
 ### Transaction Experience
 
-- [ ] **TRAN-01**: User can enter a transaction in 3 taps: amount via custom numeric keypad, category from recent/frequent grid, auto-save
+- [x] **TRAN-01**: User can enter a transaction in 3 taps: amount via custom numeric keypad, category from recent/frequent grid, auto-save
 - [x] **TRAN-02**: Custom numeric keypad displays BDT formatting live (paisa to taka conversion) without system keyboard
-- [ ] **TRAN-03**: Category grid shows recent/frequent categories first, sorted by usage frequency
+- [x] **TRAN-03**: Category grid shows recent/frequent categories first, sorted by usage frequency
 - [x] **TRAN-04**: Smart defaults auto-select last-used account, today's date, and expense type
 - [x] **TRAN-05**: Optional fields (payee, memo, flag) are collapsed by default, expandable inline
 
@@ -112,9 +112,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TOOL-01 | Phase 1 | Complete |
 | TOOL-02 | Phase 1 | Complete |
 | TOOL-05 | Phase 1 | Complete |
-| TRAN-01 | Phase 2 | Pending |
+| TRAN-01 | Phase 2 | Complete |
 | TRAN-02 | Phase 2 | Complete |
-| TRAN-03 | Phase 2 | Pending |
+| TRAN-03 | Phase 2 | Complete |
 | TRAN-04 | Phase 2 | Complete |
 | TRAN-05 | Phase 2 | Complete |
 | BUDG-01 | Phase 3 | Pending |

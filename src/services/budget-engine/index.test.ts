@@ -1,10 +1,10 @@
 import {
-  calculateReadyToAssign,
-  calculateAvailable,
   calculateAgeOfMoney,
-  getOverspentAmount,
   calculateAutoAssign,
+  calculateAvailable,
   calculateCCPaymentAvailable,
+  calculateReadyToAssign,
+  getOverspentAmount,
 } from "./index";
 
 describe("budget-engine", () => {
@@ -69,11 +69,15 @@ describe("budget-engine", () => {
 
   describe("calculateAutoAssign", () => {
     it("returns lastMonthAssigned for last_month_budgeted strategy", () => {
-      expect(calculateAutoAssign("last_month_budgeted", 50000, -30000, -25000, 40000, 10000)).toBe(50000);
+      expect(calculateAutoAssign("last_month_budgeted", 50000, -30000, -25000, 40000, 10000)).toBe(
+        50000
+      );
     });
 
     it("returns absolute lastMonthActivity for last_month_spent strategy", () => {
-      expect(calculateAutoAssign("last_month_spent", 50000, -30000, -25000, 40000, 10000)).toBe(30000);
+      expect(calculateAutoAssign("last_month_spent", 50000, -30000, -25000, 40000, 10000)).toBe(
+        30000
+      );
     });
 
     it("returns absolute averageActivity for average_spent strategy", () => {

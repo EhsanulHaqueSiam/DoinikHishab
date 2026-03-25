@@ -50,7 +50,7 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 02-01-PLAN.md -- Foundation: mock data, frequency service, storage helpers, hooks, AmountPad Bengali extension, ExpandableDetails component
+- [x] 02-01-PLAN.md -- Foundation: mock data, frequency service, storage helpers, hooks, AmountPad Bengali extension, ExpandableDetails component
 - [ ] 02-02-PLAN.md -- Integration: CategoryFrequent strip, CategoryGrid generalization, QuickAdd 2-step auto-save refactor with batch mode
 **UI hint**: yes
 

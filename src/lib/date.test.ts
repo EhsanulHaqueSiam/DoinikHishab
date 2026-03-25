@@ -1,10 +1,4 @@
-import {
-  previousMonth,
-  nextMonth,
-  getMonthLabel,
-  groupByDate,
-  formatDate,
-} from "./date";
+import { formatDate, getMonthLabel, groupByDate, nextMonth, previousMonth } from "./date";
 
 describe("date utilities", () => {
   describe("previousMonth", () => {

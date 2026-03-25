@@ -1,10 +1,10 @@
 import {
-  paisaToTaka,
-  takaToPaisa,
   formatCurrency,
   formatCurrencyShort,
-  toBengaliNumerals,
+  paisaToTaka,
   parseCurrencyInput,
+  takaToPaisa,
+  toBengaliNumerals,
 } from "./currency";
 
 describe("currency utilities", () => {
@@ -38,7 +38,9 @@ describe("currency utilities", () => {
     it("converts ASCII digits to Bengali digits", () => {
       expect(toBengaliNumerals("123")).toBe("\u09E7\u09E8\u09E9");
       expect(toBengaliNumerals("0")).toBe("\u09E6");
-      expect(toBengaliNumerals("9876543210")).toBe("\u09EF\u09EE\u09ED\u09EC\u09EB\u09EA\u09E9\u09E8\u09E7\u09E6");
+      expect(toBengaliNumerals("9876543210")).toBe(
+        "\u09EF\u09EE\u09ED\u09EC\u09EB\u09EA\u09E9\u09E8\u09E7\u09E6"
+      );
     });
 
     it("preserves non-digit characters", () => {
