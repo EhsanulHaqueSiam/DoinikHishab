@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, ScrollView, Pressable, TextInput } from "react-native";
+import { useTranslation } from "react-i18next";
 import { useQuery, useMutation } from "convex/react";
 import { useRouter } from "expo-router";
 import { api } from "../../convex/_generated/api";
@@ -21,6 +22,7 @@ const ACCOUNT_ICONS: Record<string, string> = {
 export default function AccountsScreen() {
   const { userId } = useAppStore();
   const router = useRouter();
+  const { t } = useTranslation();
 
   const accounts = useQuery(api.accounts.list, userId ? { userId } : "skip");
   const balances = useQuery(api.accounts.getTotalBalance, userId ? { userId } : "skip");
@@ -95,7 +97,7 @@ export default function AccountsScreen() {
             style={shadow("#e6a444", 0, 4, 0.08, 20, 6)}
           >
             <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest">
-              Net Worth
+              {t("accounts.netWorth")}
             </Text>
             <Text className="text-hero font-bold text-foreground mt-1 tracking-tight" style={{ lineHeight: 42 }}>
               {formatCurrency(balances?.total ?? 0)}
@@ -103,25 +105,25 @@ export default function AccountsScreen() {
           </Card>
         </View>
 
-        {renderAccountGroup("Budget Accounts", budgetAccounts, balances?.budgetTotal ?? 0)}
-        {renderAccountGroup("Tracking Accounts", trackingAccounts, balances?.trackingTotal ?? 0)}
-        {closedAccounts.length > 0 && renderAccountGroup("Closed", closedAccounts, 0)}
+        {renderAccountGroup(t("accounts.budgetAccounts"), budgetAccounts, balances?.budgetTotal ?? 0)}
+        {renderAccountGroup(t("accounts.trackingAccounts"), trackingAccounts, balances?.trackingTotal ?? 0)}
+        {closedAccounts.length > 0 && renderAccountGroup(t("accounts.closed"), closedAccounts, 0)}
 
         {/* Add Account */}
         {!showAddForm ? (
           <View className="px-4 mb-8">
             <Button variant="outline" onPress={() => setShowAddForm(true)}>
-              + Add Account
+              + {t("accounts.addAccount")}
             </Button>
           </View>
         ) : (
           <View className="px-4 mb-8">
             <Card>
-              <Text className="text-sm font-bold text-foreground mb-4">New Account</Text>
+              <Text className="text-sm font-bold text-foreground mb-4">{t("accounts.addAccount")}</Text>
               <TextInput
                 value={newName}
                 onChangeText={setNewName}
-                placeholder="Account name"
+                placeholder={t("accounts.accountName")}
                 className="border border-border/50 rounded-xl px-4 py-3 text-sm text-foreground mb-3 bg-surface-200"
                 placeholderTextColor="#4e6381"
               />
@@ -144,7 +146,7 @@ export default function AccountsScreen() {
               <TextInput
                 value={newBalance}
                 onChangeText={setNewBalance}
-                placeholder="Starting balance (৳)"
+                placeholder={`${t("accounts.startingBalance")} (৳)`}
                 keyboardType="numeric"
                 className="border border-border/50 rounded-xl px-4 py-3 text-sm text-foreground mb-4 bg-surface-200"
                 placeholderTextColor="#4e6381"
@@ -152,10 +154,10 @@ export default function AccountsScreen() {
 
               <View className="flex-row gap-3">
                 <View className="flex-1">
-                  <Button variant="ghost" onPress={() => setShowAddForm(false)}>Cancel</Button>
+                  <Button variant="ghost" onPress={() => setShowAddForm(false)}>{t("common.cancel")}</Button>
                 </View>
                 <View className="flex-1">
-                  <Button onPress={handleAdd} disabled={!newName.trim()}>Add</Button>
+                  <Button onPress={handleAdd} disabled={!newName.trim()}>{t("common.save")}</Button>
                 </View>
               </View>
             </Card>

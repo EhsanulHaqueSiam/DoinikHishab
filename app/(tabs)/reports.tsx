@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import { View, Text, ScrollView, Pressable } from "react-native";
+import { useTranslation } from "react-i18next";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useAppStore } from "../../src/stores/app-store";
@@ -11,6 +12,7 @@ type ReportType = "spending" | "income_expense" | "net_worth";
 
 export default function ReportsScreen() {
   const { userId } = useAppStore();
+  const { t } = useTranslation();
   const [activeReport, setActiveReport] = React.useState<ReportType>("spending");
 
   const transactions = useQuery(api.transactions.list, userId ? { userId } : "skip");
@@ -53,9 +55,9 @@ export default function ReportsScreen() {
       {/* Report Type Tabs */}
       <View className="flex-row bg-surface-100 border-b border-border px-1 pt-1">
         {([
-          { key: "spending", label: "Spending" },
-          { key: "income_expense", label: "Income/Expense" },
-          { key: "net_worth", label: "Net Worth" },
+          { key: "spending", label: t("reports.spending") },
+          { key: "income_expense", label: t("reports.incomeExpense") },
+          { key: "net_worth", label: t("reports.netWorth") },
         ] as const).map((tab) => (
           <Pressable
             key={tab.key}
@@ -82,7 +84,7 @@ export default function ReportsScreen() {
             <Card>
               <View className="flex-row items-baseline justify-between mb-4">
                 <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest">
-                  Total Spending
+                  {t("reports.totalSpending")}
                 </Text>
                 <Text className="text-xl font-bold text-danger tracking-tight">
                   {formatCurrency(-totalSpending)}
@@ -111,7 +113,7 @@ export default function ReportsScreen() {
                   })}
                 </View>
               ) : (
-                <Text className="text-xs text-surface-800 text-center py-8">No spending data yet</Text>
+                <Text className="text-xs text-surface-800 text-center py-8">{t("reports.noData")}</Text>
               )}
             </Card>
           </View>
@@ -122,15 +124,15 @@ export default function ReportsScreen() {
           <View className="px-4 mt-5 gap-4">
             <Card>
               <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest mb-4">
-                Income vs Expense
+                {t("reports.incomeExpense")}
               </Text>
               <View className="gap-3">
                 <View className="flex-row justify-between">
-                  <Text className="text-sm text-foreground">Income</Text>
+                  <Text className="text-sm text-foreground">{t("transaction.income")}</Text>
                   <Text className="text-sm font-bold text-success">{formatCurrency(incomeVsExpense.income)}</Text>
                 </View>
                 <View className="flex-row justify-between">
-                  <Text className="text-sm text-foreground">Expense</Text>
+                  <Text className="text-sm text-foreground">{t("transaction.expense")}</Text>
                   <Text className="text-sm font-bold text-danger">{formatCurrency(-incomeVsExpense.expense)}</Text>
                 </View>
                 <View className="h-px bg-border/30" />
@@ -187,7 +189,7 @@ export default function ReportsScreen() {
               style={shadow("#e6a444", 0, 4, 0.08, 16)}
             >
               <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest">
-                Current Net Worth
+                {t("reports.netWorth")}
               </Text>
               <Text
                 className={`text-hero font-bold mt-1 tracking-tight ${netWorth >= 0 ? "text-foreground" : "text-danger"}`}

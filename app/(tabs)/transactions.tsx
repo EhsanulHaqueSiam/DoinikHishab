@@ -1,5 +1,6 @@
 import React, { useMemo, useCallback } from "react";
 import { View, Text, SectionList, Pressable } from "react-native";
+import { useTranslation } from "react-i18next";
 import { useQuery } from "convex/react";
 import { useRouter } from "expo-router";
 import { api } from "../../convex/_generated/api";
@@ -13,22 +14,20 @@ import { formatCurrency } from "../../src/lib/currency";
 
 const ItemSeparator = () => <View className="h-px bg-border/20 mx-4" />;
 
-const ListEmpty = () => (
-  <View className="flex-1 items-center justify-center py-20">
-    <Text className="text-4xl mb-3">📝</Text>
-    <Text className="text-base font-medium text-muted-foreground">
-      No transactions yet
-    </Text>
-    <Text className="text-sm text-surface-700 mt-1">
-      Tap + to add your first transaction
-    </Text>
-  </View>
-);
-
 export default function TransactionsScreen() {
   const { userId } = useAppStore();
   const { openQuickAdd } = useUIStore();
   const router = useRouter();
+  const { t } = useTranslation();
+
+  const ListEmpty = useCallback(() => (
+    <View className="flex-1 items-center justify-center py-20">
+      <Text className="text-4xl mb-3">📝</Text>
+      <Text className="text-base font-medium text-muted-foreground">
+        {t("dashboard.noTransactions")}
+      </Text>
+    </View>
+  ), [t]);
 
   const transactions = useQuery(
     api.transactions.list,

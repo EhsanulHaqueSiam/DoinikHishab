@@ -1,5 +1,6 @@
 import React, { useEffect, useCallback } from "react";
 import { View, Text, ScrollView, RefreshControl, Pressable } from "react-native";
+import { useTranslation } from "react-i18next";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useAppStore } from "../../src/stores/app-store";
@@ -27,6 +28,7 @@ const ACCOUNT_ICON: Record<string, string> = {
 export default function DashboardScreen() {
   const { userId, deviceId, setUserId } = useAppStore();
   const { openQuickAdd } = useUIStore();
+  const { t } = useTranslation();
 
   const createOrGetUser = useMutation(api.users.createOrGet);
   const seedCategories = useMutation(api.categories.seedDefaults);
@@ -103,9 +105,9 @@ export default function DashboardScreen() {
         {/* Quick Actions */}
         <View className="flex-row px-4 mt-5 gap-2.5">
           {[
-            { label: "Expense", icon: "💸", type: "expense" as const, color: "text-danger" },
-            { label: "Income", icon: "💵", type: "income" as const, color: "text-success" },
-            { label: "Transfer", icon: "🔄", type: "transfer" as const, color: "text-primary-700" },
+            { label: t("transaction.expense"), icon: "💸", type: "expense" as const, color: "text-danger" },
+            { label: t("transaction.income"), icon: "💵", type: "income" as const, color: "text-success" },
+            { label: t("transaction.transfer"), icon: "🔄", type: "transfer" as const, color: "text-primary-700" },
           ].map((action) => (
             <Pressable
               key={action.type}
@@ -123,7 +125,7 @@ export default function DashboardScreen() {
         {/* Accounts Summary */}
         {accounts && accounts.length > 0 && (
           <View className="px-4 mt-6">
-            <SectionHeader title="Accounts" />
+            <SectionHeader title={t("tabs.accounts")} />
             <Card className="p-0 overflow-hidden">
               {accounts
                 .filter((a) => !a.isClosed)
@@ -163,10 +165,10 @@ export default function DashboardScreen() {
             <Card className="items-center py-10">
               <Text className="text-4xl mb-3">🏦</Text>
               <Text className="text-base font-bold text-foreground">
-                Add Your First Account
+                {t("dashboard.addFirstAccount")}
               </Text>
               <Text className="text-xs text-surface-800 text-center mt-1.5 px-4 leading-5">
-                Start by adding a cash wallet or bank account to begin tracking
+                {t("dashboard.addFirstAccountDesc")}
               </Text>
             </Card>
           </View>
@@ -174,7 +176,7 @@ export default function DashboardScreen() {
 
         {/* Recent Transactions */}
         <View className="px-4 mt-6 mb-24">
-          <SectionHeader title="Recent Transactions" />
+          <SectionHeader title={t("dashboard.recentTransactions")} />
           {transactions && transactions.length > 0 ? (
             <Card className="p-0 overflow-hidden">
               {transactions.map((txn, idx) => {
@@ -198,7 +200,7 @@ export default function DashboardScreen() {
             <Card className="items-center py-10">
               <Text className="text-4xl mb-3">📝</Text>
               <Text className="text-sm font-medium text-surface-900 text-center">
-                No transactions yet. Tap + to add your first one!
+                {t("dashboard.noTransactions")}
               </Text>
             </Card>
           )}
