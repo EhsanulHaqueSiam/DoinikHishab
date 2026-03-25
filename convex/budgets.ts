@@ -9,9 +9,7 @@ export const getByMonth = query({
   handler: async (ctx, args) => {
     return await ctx.db
       .query("budgets")
-      .withIndex("by_userId_month", (q) =>
-        q.eq("userId", args.userId).eq("month", args.month)
-      )
+      .withIndex("by_userId_month", (q) => q.eq("userId", args.userId).eq("month", args.month))
       .collect();
   },
 });
@@ -26,9 +24,7 @@ export const assign = mutation({
   handler: async (ctx, args) => {
     const existing = await ctx.db
       .query("budgets")
-      .withIndex("by_userId_month", (q) =>
-        q.eq("userId", args.userId).eq("month", args.month)
-      )
+      .withIndex("by_userId_month", (q) => q.eq("userId", args.userId).eq("month", args.month))
       .collect();
 
     const budget = existing.find((b) => b.categoryId === args.categoryId);
@@ -62,9 +58,7 @@ export const updateActivity = mutation({
   handler: async (ctx, args) => {
     const existing = await ctx.db
       .query("budgets")
-      .withIndex("by_userId_month", (q) =>
-        q.eq("userId", args.userId).eq("month", args.month)
-      )
+      .withIndex("by_userId_month", (q) => q.eq("userId", args.userId).eq("month", args.month))
       .collect();
 
     const budget = existing.find((b) => b.categoryId === args.categoryId);
@@ -99,14 +93,10 @@ export const moveMoney = mutation({
   handler: async (ctx, args) => {
     const budgets = await ctx.db
       .query("budgets")
-      .withIndex("by_userId_month", (q) =>
-        q.eq("userId", args.userId).eq("month", args.month)
-      )
+      .withIndex("by_userId_month", (q) => q.eq("userId", args.userId).eq("month", args.month))
       .collect();
 
-    const fromBudget = budgets.find(
-      (b) => b.categoryId === args.fromCategoryId
-    );
+    const fromBudget = budgets.find((b) => b.categoryId === args.fromCategoryId);
     const toBudget = budgets.find((b) => b.categoryId === args.toCategoryId);
 
     if (fromBudget) {

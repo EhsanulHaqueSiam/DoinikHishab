@@ -1,5 +1,4 @@
-import React from "react";
-import { View, Text } from "react-native";
+import { Text, View } from "react-native";
 import { formatCurrency } from "../../lib/currency";
 
 interface GoalProgressProps {
@@ -26,7 +25,12 @@ const STATUS_CONFIG: Record<string, { label: string; color: string; bar: string 
 };
 
 export function GoalProgress({
-  targetType, targetAmount, currentAvailable, progress, status, targetDate,
+  targetType,
+  targetAmount,
+  currentAvailable,
+  progress,
+  status,
+  targetDate,
 }: GoalProgressProps) {
   const config = STATUS_CONFIG[status] || STATUS_CONFIG.behind;
 
@@ -52,15 +56,11 @@ export function GoalProgress({
         <Text className="text-2xs text-surface-800">
           {formatCurrency(currentAvailable)} of {formatCurrency(targetAmount)}
         </Text>
-        <Text className="text-2xs font-bold text-surface-900">
-          {Math.round(progress * 100)}%
-        </Text>
+        <Text className="text-2xs font-bold text-surface-900">{Math.round(progress * 100)}%</Text>
       </View>
 
       {targetDate && (
-        <Text className="text-2xs text-surface-700 tracking-wide">
-          Target: {targetDate}
-        </Text>
+        <Text className="text-2xs text-surface-700 tracking-wide">Target: {targetDate}</Text>
       )}
     </View>
   );

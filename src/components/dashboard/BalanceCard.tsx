@@ -1,5 +1,4 @@
-import React from "react";
-import { View, Text } from "react-native";
+import { Text, View } from "react-native";
 import { formatCurrency } from "../../lib/currency";
 import { shadow } from "../../lib/platform";
 
@@ -9,11 +8,7 @@ interface BalanceCardProps {
   trackingBalance: number;
 }
 
-export function BalanceCard({
-  totalBalance,
-  budgetBalance,
-  trackingBalance,
-}: BalanceCardProps) {
+export function BalanceCard({ totalBalance, budgetBalance, trackingBalance }: BalanceCardProps) {
   return (
     <View
       className="mx-4 mt-4 rounded-2xl p-5 bg-surface-200 border border-primary-400/15"

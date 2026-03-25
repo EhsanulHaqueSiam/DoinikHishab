@@ -32,9 +32,7 @@ export const create = mutation({
       .withIndex("by_userId", (q) => q.eq("userId", args.userId))
       .collect();
 
-    const duplicate = existing.find(
-      (p) => p.name.toLowerCase() === args.name.toLowerCase()
-    );
+    const duplicate = existing.find((p) => p.name.toLowerCase() === args.name.toLowerCase());
     if (duplicate) {
       throw new Error(`Payee "${args.name}" already exists`);
     }
@@ -96,9 +94,7 @@ export const merge = mutation({
       .withIndex("by_userId", (q) => q.eq("userId", keep.userId))
       .collect();
 
-    const toReassign = transactions.filter(
-      (t) => t.payeeId === args.mergeId
-    );
+    const toReassign = transactions.filter((t) => t.payeeId === args.mergeId);
 
     for (const txn of toReassign) {
       await ctx.db.patch(txn._id, { payeeId: args.keepId });

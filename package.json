@@ -8,7 +8,10 @@
     "ios": "NODE_OPTIONS='--max-old-space-size=3072 --expose-gc' expo start --ios",
     "web": "NODE_OPTIONS='--max-old-space-size=3072 --expose-gc' expo start --web",
     "start:clear": "NODE_OPTIONS='--max-old-space-size=3072' expo start --clear",
-    "nuke": "rm -rf node_modules .expo bun.lockb && bun install"
+    "nuke": "rm -rf node_modules .expo bun.lockb && bun install",
+    "lint": "bunx @biomejs/biome check app/ src/ convex/",
+    "lint:fix": "bunx @biomejs/biome check --write app/ src/ convex/",
+    "format": "bunx @biomejs/biome format --write app/ src/ convex/"
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^5.2.8",
@@ -45,6 +48,7 @@
     "zustand": "^5.0.11"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.4.9",
     "@types/react": "~19.2.2",
     "typescript": "~5.9.2"
   },

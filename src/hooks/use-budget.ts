@@ -1,13 +1,12 @@
-import { useMemo } from "react";
 import { useQuery } from "convex/react";
+import { useMemo } from "react";
 import { api } from "../../convex/_generated/api";
-import type { Id } from "../../convex/_generated/dataModel";
-import { useAppStore } from "../stores/app-store";
 import {
+  type CategoryBudget,
   calculateReadyToAssign,
   calculateTargetProgress,
-  type CategoryBudget,
 } from "../services/budget-engine";
+import { useAppStore } from "../stores/app-store";
 
 export function useBudget() {
   const { userId, currentMonth } = useAppStore();
@@ -17,49 +16,29 @@ export function useBudget() {
     userId ? { userId, month: currentMonth } : "skip"
   );
 
-  const categories = useQuery(
-    api.categories.listCategories,
-    userId ? { userId } : "skip"
-  );
+  const categories = useQuery(api.categories.listCategories, userId ? { userId } : "skip");
 
-  const groups = useQuery(
-    api.categories.listGroups,
-    userId ? { userId } : "skip"
-  );
+  const groups = useQuery(api.categories.listGroups, userId ? { userId } : "skip");
 
-  const targets = useQuery(
-    api.targets.list,
-    userId ? { userId } : "skip"
-  );
+  const targets = useQuery(api.targets.list, userId ? { userId } : "skip");
 
-  const transactions = useQuery(
-    api.transactions.list,
-    userId ? { userId } : "skip"
-  );
+  const transactions = useQuery(api.transactions.list, userId ? { userId } : "skip");
 
   const summary = useMemo(() => {
     if (!categories || !budgets || !transactions) return null;
 
     // Calculate total income this month
     const monthPrefix = `${currentMonth.substring(0, 4)}-${currentMonth.substring(4, 6)}`;
-    const monthTransactions = transactions.filter((t: any) =>
-      t.date.startsWith(monthPrefix)
-    );
+    const monthTransactions = transactions.filter((t: any) => t.date.startsWith(monthPrefix));
     const totalIncome = monthTransactions
       .filter((t: any) => t.type === "income")
       .reduce((sum: number, t: any) => sum + t.amount, 0);
 
     // Total assigned this month
-    const totalAssigned = budgets.reduce(
-      (sum: number, b: any) => sum + b.assigned,
-      0
-    );
+    const totalAssigned = budgets.reduce((sum: number, b: any) => sum + b.assigned, 0);
 
     // Total activity this month
-    const totalActivity = budgets.reduce(
-      (sum: number, b: any) => sum + b.activity,
-      0
-    );
+    const totalActivity = budgets.reduce((sum: number, b: any) => sum + b.activity, 0);
 
     // Calculate overspent
     const overspent = budgets.reduce((sum: number, b: any) => {
@@ -77,12 +56,8 @@ export function useBudget() {
     const categoryBudgets: CategoryBudget[] = (categories as any[])
       .filter((c) => c.type === "expense" && !c.isHidden)
       .map((cat) => {
-        const budget = (budgets as any[]).find(
-          (b) => b.categoryId === cat._id
-        );
-        const target = targets?.find(
-          (t: any) => t.categoryId === cat._id
-        );
+        const budget = (budgets as any[]).find((b) => b.categoryId === cat._id);
+        const target = targets?.find((t: any) => t.categoryId === cat._id);
 
         const available = budget?.available ?? 0;
         let targetProgress: number | undefined;

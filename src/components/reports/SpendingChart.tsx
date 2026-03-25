@@ -1,5 +1,4 @@
-import React from "react";
-import { View, Text } from "react-native";
+import { Text, View } from "react-native";
 import { formatCurrency } from "../../lib/currency";
 
 interface CategorySpending {
@@ -30,9 +29,7 @@ export function SpendingChart({ categories, grandTotal }: SpendingChartProps) {
   if (categories.length === 0) {
     return (
       <View className="items-center py-8">
-        <Text className="text-muted-foreground text-sm">
-          No spending data yet
-        </Text>
+        <Text className="text-muted-foreground text-sm">No spending data yet</Text>
       </View>
     );
   }
@@ -42,31 +39,20 @@ export function SpendingChart({ categories, grandTotal }: SpendingChartProps) {
   return (
     <View className="gap-3">
       <View className="flex-row items-baseline justify-between mb-2">
-        <Text className="text-sm font-medium text-muted-foreground">
-          Total Spending
-        </Text>
-        <Text className="text-lg font-bold text-foreground">
-          {formatCurrency(grandTotal)}
-        </Text>
+        <Text className="text-sm font-medium text-muted-foreground">Total Spending</Text>
+        <Text className="text-lg font-bold text-foreground">{formatCurrency(grandTotal)}</Text>
       </View>
 
-      {categories.map((category, index) => {
-        const barColor =
-          category.color ?? DEFAULT_COLORS[index % DEFAULT_COLORS.length];
-        const widthPercent =
-          maxTotal > 0 ? (category.total / maxTotal) * 100 : 0;
+      {categories.map((category, categoryIndex) => {
+        const barColor = category.color ?? DEFAULT_COLORS[categoryIndex % DEFAULT_COLORS.length];
+        const widthPercent = maxTotal > 0 ? (category.total / maxTotal) * 100 : 0;
 
         return (
-          <View key={category.name + index} className="gap-1">
+          <View key={category.name} className="gap-1">
             <View className="flex-row items-center justify-between">
               <View className="flex-row items-center gap-2 flex-1">
-                {category.icon && (
-                  <Text className="text-sm">{category.icon}</Text>
-                )}
-                <Text
-                  className="text-sm font-medium text-foreground"
-                  numberOfLines={1}
-                >
+                {category.icon && <Text className="text-sm">{category.icon}</Text>}
+                <Text className="text-sm font-medium text-foreground" numberOfLines={1}>
                   {category.name}
                 </Text>
               </View>

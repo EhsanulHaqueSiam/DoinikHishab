@@ -33,7 +33,7 @@ export const create = mutation({
       v.literal("auto_loan"),
       v.literal("student_loan"),
       v.literal("other_debt"),
-      v.literal("other_asset"),
+      v.literal("other_asset")
     ),
     balance: v.number(),
     icon: v.optional(v.string()),

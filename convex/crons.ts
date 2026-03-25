@@ -10,9 +10,7 @@ export const autoEnterScheduledTransactions = internalMutation({
 
     // Find all active scheduled transactions with autoEnter and nextDate <= today
     const allScheduled = await ctx.db.query("scheduled").collect();
-    const due = allScheduled.filter(
-      (s) => s.isActive && s.autoEnter && s.nextDate <= todayStr
-    );
+    const due = allScheduled.filter((s) => s.isActive && s.autoEnter && s.nextDate <= todayStr);
 
     for (const scheduled of due) {
       // Create the transaction
@@ -73,7 +71,7 @@ export const monthlyBudgetRollover = internalMutation({
     }
 
     // Get all budgets from previous month
-    const prevBudgets = await ctx.db
+    const _prevBudgets = await ctx.db
       .query("budgets")
       .withIndex("by_userId_month", (q) => q.eq("userId" as never, undefined as never))
       .collect();
@@ -86,9 +84,7 @@ export const monthlyBudgetRollover = internalMutation({
     for (const prevBudget of previousMonthBudgets) {
       // Check if current month budget already exists for this category
       const existing = currentMonthBudgets.find(
-        (b) =>
-          b.userId === prevBudget.userId &&
-          b.categoryId === prevBudget.categoryId
+        (b) => b.userId === prevBudget.userId && b.categoryId === prevBudget.categoryId
       );
 
       if (!existing && prevBudget.available !== 0) {
@@ -127,7 +123,7 @@ export default crons;
 // --- Helper: advance date by rrule ---
 
 function advanceDate(dateStr: string, rrule: string): string | null {
-  const d = new Date(dateStr + "T00:00:00Z");
+  const d = new Date(`${dateStr}T00:00:00Z`);
 
   // Parse simple RRULE patterns
   // FREQ=DAILY;INTERVAL=N
@@ -142,10 +138,10 @@ function advanceDate(dateStr: string, rrule: string): string | null {
     return acc;
   }, {});
 
-  const freq = parts["FREQ"];
-  const interval = parseInt(parts["INTERVAL"] ?? "1", 10);
-  const count = parts["COUNT"] ? parseInt(parts["COUNT"], 10) : null;
-  const until = parts["UNTIL"] ?? null;
+  const freq = parts.FREQ;
+  const interval = parseInt(parts.INTERVAL ?? "1", 10);
+  const _count = parts.COUNT ? parseInt(parts.COUNT, 10) : null;
+  const until = parts.UNTIL ?? null;
 
   // COUNT tracking is simplified — for a proper implementation you'd track occurrences
   // For now, always advance unless UNTIL is passed

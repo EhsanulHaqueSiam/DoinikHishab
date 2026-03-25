@@ -45,13 +45,13 @@ export function formatCurrencyShort(paisa: number): string {
 const bengaliDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
 
 export function toBengaliNumerals(str: string): string {
-  return str.replace(/[0-9]/g, (d) => bengaliDigits[parseInt(d)]);
+  return str.replace(/[0-9]/g, (d) => bengaliDigits[parseInt(d, 10)]);
 }
 
 export function parseCurrencyInput(input: string): number {
   // Remove taka symbol, commas, spaces
   const cleaned = input.replace(/[৳,\s]/g, "");
   const num = parseFloat(cleaned);
-  if (isNaN(num)) return 0;
+  if (Number.isNaN(num)) return 0;
   return takaToPaisa(num);
 }

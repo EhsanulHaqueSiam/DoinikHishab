@@ -1,11 +1,12 @@
-import React, { useEffect } from "react";
-import { View, Text, Platform } from "react-native";
-import { Stack } from "expo-router";
-import { StatusBar } from "expo-status-bar";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ConvexProvider, ConvexReactClient } from "convex/react";
-import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
+import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import { StatusBar } from "expo-status-bar";
+import type React from "react";
+import { useEffect } from "react";
+import { Platform, View } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "../global.css";
 
 export { ErrorBoundary } from "expo-router";

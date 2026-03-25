@@ -33,7 +33,7 @@ function parseCSVLine(line: string): string[] {
 
 function normalizeDate(raw: string): string {
   // Handle DD/MM/YYYY (common BD bank format)
-  const ddmmyyyy = raw.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+  const ddmmyyyy = raw.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})$/);
   if (ddmmyyyy) {
     const [, day, month, year] = ddmmyyyy;
     return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
@@ -42,7 +42,7 @@ function normalizeDate(raw: string): string {
   const iso = raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
   if (iso) return raw;
   // Handle MM/DD/YYYY
-  const mmddyyyy = raw.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+  const mmddyyyy = raw.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})$/);
   if (mmddyyyy) {
     const [, month, day, year] = mmddyyyy;
     return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
@@ -52,11 +52,9 @@ function normalizeDate(raw: string): string {
 
 function parseAmount(raw: string): number {
   // Remove currency symbols, commas, spaces
-  const cleaned = raw.replace(/[৳$,\s]/g, "").replace(/[()]/g, (m) =>
-    m === "(" ? "-" : ""
-  );
+  const cleaned = raw.replace(/[৳$,\s]/g, "").replace(/[()]/g, (m) => (m === "(" ? "-" : ""));
   const num = parseFloat(cleaned);
-  if (isNaN(num)) return 0;
+  if (Number.isNaN(num)) return 0;
   // Convert to paisa (integer)
   return Math.round(num * 100);
 }
@@ -73,15 +71,9 @@ function parseCSVContent(content: string): ParsedTransaction[] {
   const descIdx = header.findIndex((h) =>
     ["description", "narration", "particulars", "details", "বিবরণ"].includes(h)
   );
-  const amountIdx = header.findIndex((h) =>
-    ["amount", "debit/credit", "টাকা"].includes(h)
-  );
-  const debitIdx = header.findIndex((h) =>
-    ["debit", "withdrawal", "dr"].includes(h)
-  );
-  const creditIdx = header.findIndex((h) =>
-    ["credit", "deposit", "cr"].includes(h)
-  );
+  const amountIdx = header.findIndex((h) => ["amount", "debit/credit", "টাকা"].includes(h));
+  const debitIdx = header.findIndex((h) => ["debit", "withdrawal", "dr"].includes(h));
+  const creditIdx = header.findIndex((h) => ["credit", "deposit", "cr"].includes(h));
   const refIdx = header.findIndex((h) =>
     ["reference", "ref", "ref no", "transaction id", "txn id"].includes(h)
   );

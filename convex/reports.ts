@@ -14,17 +14,11 @@ export const spendingByCategory = query({
       .collect();
 
     const filtered = transactions.filter(
-      (t) =>
-        t.type === "expense" &&
-        t.date >= args.startDate &&
-        t.date <= args.endDate
+      (t) => t.type === "expense" && t.date >= args.startDate && t.date <= args.endDate
     );
 
     // Group by category
-    const categoryTotals = new Map<
-      string,
-      { categoryId: string; total: number }
-    >();
+    const categoryTotals = new Map<string, { categoryId: string; total: number }>();
 
     for (const txn of filtered) {
       const key = txn.categoryId ?? "uncategorized";
@@ -37,10 +31,7 @@ export const spendingByCategory = query({
       }
     }
 
-    const grandTotal = Array.from(categoryTotals.values()).reduce(
-      (sum, c) => sum + c.total,
-      0
-    );
+    const grandTotal = Array.from(categoryTotals.values()).reduce((sum, c) => sum + c.total, 0);
 
     // Resolve category names
     const results = [];
@@ -91,17 +82,13 @@ export const spendingByPayee = query({
       .collect();
 
     const filtered = transactions.filter(
-      (t) =>
-        t.type === "expense" &&
-        t.date >= args.startDate &&
-        t.date <= args.endDate &&
-        t.payeeId
+      (t) => t.type === "expense" && t.date >= args.startDate && t.date <= args.endDate && t.payeeId
     );
 
     const payeeTotals = new Map<string, { payeeId: string; total: number }>();
 
     for (const txn of filtered) {
-      const key = txn.payeeId!;
+      const key = txn.payeeId ?? "";
       const existing = payeeTotals.get(key as string);
       const amount = Math.abs(txn.amount);
       if (existing) {
@@ -145,10 +132,7 @@ export const incomeVsExpense = query({
       .collect();
 
     // Build monthly buckets
-    const monthlyData = new Map<
-      string,
-      { income: number; expense: number }
-    >();
+    const monthlyData = new Map<string, { income: number; expense: number }>();
 
     // Initialize months
     const now = new Date();
@@ -197,32 +181,25 @@ export const netWorthOverTime = query({
       .collect();
 
     // Current total balance
-    const currentTotal = accounts
-      .filter((a) => !a.isClosed)
-      .reduce((sum, a) => sum + a.balance, 0);
+    const currentTotal = accounts.filter((a) => !a.isClosed).reduce((sum, a) => sum + a.balance, 0);
 
     // Work backwards from current balance using transactions
     const now = new Date();
     const snapshots: { month: string; balance: number }[] = [];
 
     // Sort transactions by date descending
-    const sorted = [...transactions].sort((a, b) =>
-      b.date.localeCompare(a.date)
-    );
+    const sorted = [...transactions].sort((a, b) => b.date.localeCompare(a.date));
 
     let runningBalance = currentTotal;
     let txnIndex = 0;
 
     for (let i = 0; i < args.months; i++) {
       const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      const monthEnd = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-31`;
+      const _monthEnd = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-31`;
       const monthStart = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-01`;
 
       // Subtract transactions from this month to get the balance at start of month
-      while (
-        txnIndex < sorted.length &&
-        sorted[txnIndex].date >= monthStart
-      ) {
+      while (txnIndex < sorted.length && sorted[txnIndex].date >= monthStart) {
         runningBalance -= sorted[txnIndex].amount;
         txnIndex++;
       }
@@ -247,9 +224,7 @@ export const budgetPerformance = query({
   handler: async (ctx, args) => {
     const budgets = await ctx.db
       .query("budgets")
-      .withIndex("by_userId_month", (q) =>
-        q.eq("userId", args.userId).eq("month", args.month)
-      )
+      .withIndex("by_userId_month", (q) => q.eq("userId", args.userId).eq("month", args.month))
       .collect();
 
     const results = [];

@@ -19,7 +19,7 @@ interface SuggestionChip {
  */
 export function generateSuggestions(
   transactions: Doc<"transactions">[],
-  categories: Doc<"categories">[],
+  _categories: Doc<"categories">[],
   hour: number
 ): SuggestionChip[] {
   const suggestions: SuggestionChip[] = [];
@@ -56,8 +56,7 @@ export function generateSuggestions(
     if (existing) {
       existing.count++;
       existing.amount = Math.round(
-        (existing.amount * (existing.count - 1) + Math.abs(txn.amount)) /
-          existing.count
+        (existing.amount * (existing.count - 1) + Math.abs(txn.amount)) / existing.count
       );
     } else {
       descCounts.set(key, {

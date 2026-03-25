@@ -1,27 +1,23 @@
-import React, { useMemo, useCallback } from "react";
-import { View, Text, SectionList, Pressable } from "react-native";
 import { useQuery } from "convex/react";
 import { useRouter } from "expo-router";
+import { useCallback, useMemo } from "react";
+import { SectionList, Text, View } from "react-native";
 import { api } from "../../convex/_generated/api";
+import { FAB } from "../../src/components/platform/FAB";
+import { QuickAdd } from "../../src/components/transaction/QuickAdd";
+import { TransactionCard } from "../../src/components/transaction/TransactionCard";
+import { formatCurrency } from "../../src/lib/currency";
+import { formatDateShort, groupByDate } from "../../src/lib/date";
 import { useAppStore } from "../../src/stores/app-store";
 import { useUIStore } from "../../src/stores/ui-store";
-import { TransactionCard } from "../../src/components/transaction/TransactionCard";
-import { QuickAdd } from "../../src/components/transaction/QuickAdd";
-import { FAB } from "../../src/components/platform/FAB";
-import { formatDateShort, groupByDate } from "../../src/lib/date";
-import { formatCurrency } from "../../src/lib/currency";
 
 const ItemSeparator = () => <View className="h-px bg-border/20 mx-4" />;
 
 const ListEmpty = () => (
   <View className="flex-1 items-center justify-center py-20">
     <Text className="text-4xl mb-3">📝</Text>
-    <Text className="text-base font-medium text-muted-foreground">
-      No transactions yet
-    </Text>
-    <Text className="text-sm text-surface-700 mt-1">
-      Tap + to add your first transaction
-    </Text>
+    <Text className="text-base font-medium text-muted-foreground">No transactions yet</Text>
+    <Text className="text-sm text-surface-700 mt-1">Tap + to add your first transaction</Text>
   </View>
 );
 
@@ -30,20 +26,11 @@ export default function TransactionsScreen() {
   const { openQuickAdd } = useUIStore();
   const router = useRouter();
 
-  const transactions = useQuery(
-    api.transactions.list,
-    userId ? { userId } : "skip"
-  );
+  const transactions = useQuery(api.transactions.list, userId ? { userId } : "skip");
 
-  const categories = useQuery(
-    api.categories.listCategories,
-    userId ? { userId } : "skip"
-  );
+  const categories = useQuery(api.categories.listCategories, userId ? { userId } : "skip");
 
-  const accounts = useQuery(
-    api.accounts.list,
-    userId ? { userId } : "skip"
-  );
+  const accounts = useQuery(api.accounts.list, userId ? { userId } : "skip");
 
   const sections = useMemo(() => {
     if (!transactions) return [];
@@ -96,9 +83,7 @@ export default function TransactionsScreen() {
           {formatDateShort(section.title)}
         </Text>
         <Text
-          className={`text-sm font-medium ${
-            section.total < 0 ? "text-danger" : "text-success"
-          }`}
+          className={`text-sm font-medium ${section.total < 0 ? "text-danger" : "text-success"}`}
         >
           {formatCurrency(section.total)}
         </Text>

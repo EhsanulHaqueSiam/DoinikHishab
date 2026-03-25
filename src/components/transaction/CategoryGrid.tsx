@@ -1,7 +1,6 @@
-import React from "react";
-import { View, Text, Pressable, ScrollView } from "react-native";
-import { shadow } from "../../lib/platform";
+import { Pressable, ScrollView, Text, View } from "react-native";
 import type { Doc, Id } from "../../../convex/_generated/dataModel";
+import { shadow } from "../../lib/platform";
 
 interface CategoryGridProps {
   categories: Doc<"categories">[];
@@ -12,14 +11,38 @@ interface CategoryGridProps {
 }
 
 const ICON_EMOJI: Record<string, string> = {
-  home: "🏠", zap: "⚡", flame: "🔥", droplets: "💧", wifi: "📶",
-  smartphone: "📱", shield: "🛡️", "shopping-cart": "🛒", utensils: "🍽️",
-  bus: "🚌", bike: "🚲", fuel: "⛽", lamp: "💡", heart: "❤️",
-  banknote: "💵", package: "📦", repeat: "🔄", tv: "📺",
-  "shopping-bag": "🛍️", stethoscope: "🏥", "graduation-cap": "🎓",
-  gift: "🎁", shirt: "👔", "shield-alert": "🛡️", plane: "✈️",
-  moon: "🌙", laptop: "💻", briefcase: "💼", code: "💻",
-  building: "🏢", "trending-up": "📈", "plus-circle": "➕",
+  home: "🏠",
+  zap: "⚡",
+  flame: "🔥",
+  droplets: "💧",
+  wifi: "📶",
+  smartphone: "📱",
+  shield: "🛡️",
+  "shopping-cart": "🛒",
+  utensils: "🍽️",
+  bus: "🚌",
+  bike: "🚲",
+  fuel: "⛽",
+  lamp: "💡",
+  heart: "❤️",
+  banknote: "💵",
+  package: "📦",
+  repeat: "🔄",
+  tv: "📺",
+  "shopping-bag": "🛍️",
+  stethoscope: "🏥",
+  "graduation-cap": "🎓",
+  gift: "🎁",
+  shirt: "👔",
+  "shield-alert": "🛡️",
+  plane: "✈️",
+  moon: "🌙",
+  laptop: "💻",
+  briefcase: "💼",
+  code: "💻",
+  building: "🏢",
+  "trending-up": "📈",
+  "plus-circle": "➕",
 };
 
 function CategoryIcon({ icon, isSelected }: { icon?: string; isSelected: boolean }) {
@@ -36,13 +59,24 @@ function CategoryIcon({ icon, isSelected }: { icon?: string; isSelected: boolean
   );
 }
 
-export function CategoryGrid({ categories, groups, selectedId, onSelect, type }: CategoryGridProps) {
+export function CategoryGrid({
+  categories,
+  groups,
+  selectedId,
+  onSelect,
+  type,
+}: CategoryGridProps) {
   const filteredGroups = groups.filter((g) => {
     return categories.some((c) => c.groupId === g._id && c.type === type && !c.isHidden);
   });
 
   return (
-    <ScrollView className="flex-1" showsVerticalScrollIndicator={false} scrollEventThrottle={8} decelerationRate="fast">
+    <ScrollView
+      className="flex-1"
+      showsVerticalScrollIndicator={false}
+      scrollEventThrottle={8}
+      decelerationRate="fast"
+    >
       {filteredGroups.map((group) => {
         const groupCats = categories.filter(
           (c) => c.groupId === group._id && c.type === type && !c.isHidden

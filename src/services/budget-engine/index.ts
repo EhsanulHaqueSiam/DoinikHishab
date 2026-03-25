@@ -65,13 +65,9 @@ export function calculateAgeOfMoney(
   if (inflows.length === 0 || outflows.length === 0) return null;
 
   // Sort inflows by date ascending (oldest first, FIFO)
-  const sortedInflows = [...inflows].sort((a, b) =>
-    a.date.localeCompare(b.date)
-  );
+  const sortedInflows = [...inflows].sort((a, b) => a.date.localeCompare(b.date));
   // Sort outflows by date descending (most recent first)
-  const sortedOutflows = [...outflows].sort((a, b) =>
-    b.date.localeCompare(a.date)
-  );
+  const sortedOutflows = [...outflows].sort((a, b) => b.date.localeCompare(a.date));
 
   // Take last 10 outflows
   const recentOutflows = sortedOutflows.slice(0, 10);
@@ -127,8 +123,7 @@ export function calculateTargetProgress(
       const progress = Math.min(currentAvailable / targetAmount, 1);
       return {
         progress,
-        status:
-          progress >= 1 ? "funded" : progress >= 0.8 ? "on_track" : "behind",
+        status: progress >= 1 ? "funded" : progress >= 0.8 ? "on_track" : "behind",
       };
     }
 
@@ -146,11 +141,7 @@ export function calculateTargetProgress(
       return {
         progress,
         status:
-          progress >= 1
-            ? "funded"
-            : currentAvailable >= neededPerMonth
-              ? "on_track"
-              : "behind",
+          progress >= 1 ? "funded" : currentAvailable >= neededPerMonth ? "on_track" : "behind",
       };
     }
 
@@ -168,8 +159,7 @@ export function calculateTargetProgress(
       const progress = Math.min(currentAvailable / targetAmount, 1);
       return {
         progress,
-        status:
-          progress >= 1 ? "funded" : progress >= 0.8 ? "on_track" : "behind",
+        status: progress >= 1 ? "funded" : progress >= 0.8 ? "on_track" : "behind",
       };
     }
 

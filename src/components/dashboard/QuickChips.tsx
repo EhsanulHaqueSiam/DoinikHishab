@@ -1,7 +1,7 @@
-import React, { useMemo } from "react";
-import { View, Text, Pressable, ScrollView } from "react-native";
-import { generateSuggestions } from "../../services/suggestions";
+import { useMemo } from "react";
+import { Pressable, ScrollView, Text } from "react-native";
 import type { Doc } from "../../../convex/_generated/dataModel";
+import { generateSuggestions } from "../../services/suggestions";
 
 interface QuickChipsProps {
   transactions: Doc<"transactions">[];
@@ -14,11 +14,7 @@ interface QuickChipsProps {
   }) => void;
 }
 
-export function QuickChips({
-  transactions,
-  categories,
-  onPress,
-}: QuickChipsProps) {
+export function QuickChips({ transactions, categories, onPress }: QuickChipsProps) {
   const hour = new Date().getHours();
 
   const suggestions = useMemo(
@@ -35,9 +31,9 @@ export function QuickChips({
       className="px-4 py-2"
       contentContainerStyle={{ gap: 8 }}
     >
-      {suggestions.map((chip, index) => (
+      {suggestions.map((chip) => (
         <Pressable
-          key={`${chip.label}-${index}`}
+          key={chip.label}
           onPress={() =>
             onPress({
               label: chip.label,
@@ -50,9 +46,7 @@ export function QuickChips({
         >
           <Text className="text-sm text-foreground">{chip.label}</Text>
           {chip.amount != null && chip.amount > 0 && (
-            <Text className="text-xs text-accent-500">
-              ~{Math.round(chip.amount / 100)}
-            </Text>
+            <Text className="text-xs text-accent-500">~{Math.round(chip.amount / 100)}</Text>
           )}
         </Pressable>
       ))}

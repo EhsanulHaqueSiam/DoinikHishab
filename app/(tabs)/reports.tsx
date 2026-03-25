@@ -1,11 +1,11 @@
-import React, { useMemo } from "react";
-import { View, Text, ScrollView, Pressable } from "react-native";
 import { useQuery } from "convex/react";
+import React, { useMemo } from "react";
+import { Pressable, ScrollView, Text, View } from "react-native";
 import { api } from "../../convex/_generated/api";
-import { useAppStore } from "../../src/stores/app-store";
 import { Card } from "../../src/components/ui/Card";
 import { formatCurrency } from "../../src/lib/currency";
 import { shadow } from "../../src/lib/platform";
+import { useAppStore } from "../../src/stores/app-store";
 
 type ReportType = "spending" | "income_expense" | "net_worth";
 
@@ -28,12 +28,15 @@ export default function ReportsScreen() {
       if (existing) existing.total += Math.abs(txn.amount);
       else spending.set(txn.categoryId, { name: cat.name, total: Math.abs(txn.amount) });
     }
-    return Array.from(spending.values()).sort((a, b) => b.total - a.total).slice(0, 10);
+    return Array.from(spending.values())
+      .sort((a, b) => b.total - a.total)
+      .slice(0, 10);
   }, [transactions, categories]);
 
   const incomeVsExpense = useMemo(() => {
     if (!transactions) return { income: 0, expense: 0, net: 0 };
-    let income = 0, expense = 0;
+    let income = 0,
+      expense = 0;
     for (const txn of transactions as any[]) {
       if (txn.type === "income") income += txn.amount;
       else if (txn.type === "expense") expense += Math.abs(txn.amount);
@@ -52,11 +55,13 @@ export default function ReportsScreen() {
     <View className="flex-1 bg-background">
       {/* Report Type Tabs */}
       <View className="flex-row bg-surface-100 border-b border-border px-1 pt-1">
-        {([
-          { key: "spending", label: "Spending" },
-          { key: "income_expense", label: "Income/Expense" },
-          { key: "net_worth", label: "Net Worth" },
-        ] as const).map((tab) => (
+        {(
+          [
+            { key: "spending", label: "Spending" },
+            { key: "income_expense", label: "Income/Expense" },
+            { key: "net_worth", label: "Net Worth" },
+          ] as const
+        ).map((tab) => (
           <Pressable
             key={tab.key}
             onPress={() => setActiveReport(tab.key)}
@@ -75,7 +80,13 @@ export default function ReportsScreen() {
         ))}
       </View>
 
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false} scrollEventThrottle={8} decelerationRate="fast" removeClippedSubviews>
+      <ScrollView
+        className="flex-1"
+        showsVerticalScrollIndicator={false}
+        scrollEventThrottle={8}
+        decelerationRate="fast"
+        removeClippedSubviews
+      >
         {/* Spending Report */}
         {activeReport === "spending" && (
           <View className="px-4 mt-5">
@@ -97,7 +108,9 @@ export default function ReportsScreen() {
                       <View key={cat.name}>
                         <View className="flex-row justify-between mb-1.5">
                           <Text className="text-xs font-medium text-foreground">{cat.name}</Text>
-                          <Text className="text-xs font-bold text-foreground">{formatCurrency(-cat.total)}</Text>
+                          <Text className="text-xs font-bold text-foreground">
+                            {formatCurrency(-cat.total)}
+                          </Text>
                         </View>
                         <View className="h-1.5 bg-surface-400 rounded-full overflow-hidden">
                           <View
@@ -111,7 +124,9 @@ export default function ReportsScreen() {
                   })}
                 </View>
               ) : (
-                <Text className="text-xs text-surface-800 text-center py-8">No spending data yet</Text>
+                <Text className="text-xs text-surface-800 text-center py-8">
+                  No spending data yet
+                </Text>
               )}
             </Card>
           </View>
@@ -127,16 +142,22 @@ export default function ReportsScreen() {
               <View className="gap-3">
                 <View className="flex-row justify-between">
                   <Text className="text-sm text-foreground">Income</Text>
-                  <Text className="text-sm font-bold text-success">{formatCurrency(incomeVsExpense.income)}</Text>
+                  <Text className="text-sm font-bold text-success">
+                    {formatCurrency(incomeVsExpense.income)}
+                  </Text>
                 </View>
                 <View className="flex-row justify-between">
                   <Text className="text-sm text-foreground">Expense</Text>
-                  <Text className="text-sm font-bold text-danger">{formatCurrency(-incomeVsExpense.expense)}</Text>
+                  <Text className="text-sm font-bold text-danger">
+                    {formatCurrency(-incomeVsExpense.expense)}
+                  </Text>
                 </View>
                 <View className="h-px bg-border/30" />
                 <View className="flex-row justify-between">
                   <Text className="text-sm font-bold text-foreground">Net</Text>
-                  <Text className={`text-base font-bold ${incomeVsExpense.net >= 0 ? "text-success" : "text-danger"}`}>
+                  <Text
+                    className={`text-base font-bold ${incomeVsExpense.net >= 0 ? "text-success" : "text-danger"}`}
+                  >
                     {formatCurrency(incomeVsExpense.net)}
                   </Text>
                 </View>
@@ -154,9 +175,14 @@ export default function ReportsScreen() {
                     <View
                       className="h-5 bg-success rounded-lg"
                       style={{
-                        width: `${Math.max(incomeVsExpense.income, incomeVsExpense.expense) > 0
-                          ? (incomeVsExpense.income / Math.max(incomeVsExpense.income, incomeVsExpense.expense)) * 100
-                          : 0}%`,
+                        width: `${
+                          Math.max(incomeVsExpense.income, incomeVsExpense.expense) > 0
+                            ? (
+                                incomeVsExpense.income /
+                                  Math.max(incomeVsExpense.income, incomeVsExpense.expense)
+                              ) * 100
+                            : 0
+                        }%`,
                       }}
                     />
                   </View>
@@ -167,9 +193,14 @@ export default function ReportsScreen() {
                     <View
                       className="h-5 bg-danger rounded-lg"
                       style={{
-                        width: `${Math.max(incomeVsExpense.income, incomeVsExpense.expense) > 0
-                          ? (incomeVsExpense.expense / Math.max(incomeVsExpense.income, incomeVsExpense.expense)) * 100
-                          : 0}%`,
+                        width: `${
+                          Math.max(incomeVsExpense.income, incomeVsExpense.expense) > 0
+                            ? (
+                                incomeVsExpense.expense /
+                                  Math.max(incomeVsExpense.income, incomeVsExpense.expense)
+                              ) * 100
+                            : 0
+                        }%`,
                       }}
                     />
                   </View>
@@ -203,9 +234,14 @@ export default function ReportsScreen() {
                   By Account
                 </Text>
                 {(accounts as any[]).map((account: any) => (
-                  <View key={account._id} className="flex-row justify-between py-2.5 border-b border-border/15">
+                  <View
+                    key={account._id}
+                    className="flex-row justify-between py-2.5 border-b border-border/15"
+                  >
                     <Text className="text-sm text-foreground">{account.name}</Text>
-                    <Text className={`text-sm font-bold ${account.balance >= 0 ? "text-foreground" : "text-danger"}`}>
+                    <Text
+                      className={`text-sm font-bold ${account.balance >= 0 ? "text-foreground" : "text-danger"}`}
+                    >
                       {formatCurrency(account.balance)}
                     </Text>
                   </View>

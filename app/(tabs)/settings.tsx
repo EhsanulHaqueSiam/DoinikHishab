@@ -1,8 +1,8 @@
-import React from "react";
-import { View, Text, ScrollView, Pressable } from "react-native";
-import { useAppStore } from "../../src/stores/app-store";
+import type React from "react";
+import { Pressable, ScrollView, Text, View } from "react-native";
 import { Card } from "../../src/components/ui/Card";
 import { APP_NAME, APP_NAME_BN } from "../../src/lib/constants";
+import { useAppStore } from "../../src/stores/app-store";
 
 interface SettingRowProps {
   icon: string;
@@ -15,21 +15,14 @@ interface SettingRowProps {
 
 function SettingRow({ icon, label, value, onPress, rightElement, danger }: SettingRowProps) {
   return (
-    <Pressable
-      onPress={onPress}
-      className="flex-row items-center py-3.5 active:bg-surface-400/30"
-    >
+    <Pressable onPress={onPress} className="flex-row items-center py-3.5 active:bg-surface-400/30">
       <Text className="text-base mr-3">{icon}</Text>
       <Text className={`flex-1 text-sm font-medium ${danger ? "text-danger" : "text-foreground"}`}>
         {label}
       </Text>
-      {value && (
-        <Text className="text-xs text-primary-700 mr-2 font-medium">{value}</Text>
-      )}
+      {value && <Text className="text-xs text-primary-700 mr-2 font-medium">{value}</Text>}
       {rightElement}
-      {onPress && !rightElement && (
-        <Text className="text-surface-700 text-xs">›</Text>
-      )}
+      {onPress && !rightElement && <Text className="text-surface-700 text-xs">›</Text>}
     </Pressable>
   );
 }
@@ -49,7 +42,11 @@ export default function SettingsScreen() {
 
   return (
     <View className="flex-1 bg-background">
-      <ScrollView showsVerticalScrollIndicator={false} scrollEventThrottle={8} decelerationRate="fast">
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        scrollEventThrottle={8}
+        decelerationRate="fast"
+      >
         {/* App Identity */}
         <View className="items-center py-8">
           <View className="w-16 h-16 rounded-2xl bg-surface-300 items-center justify-center mb-3">
@@ -64,9 +61,21 @@ export default function SettingsScreen() {
         <View className="px-4 mb-6">
           <SectionLabel title="General" />
           <Card className="p-0 px-4">
-            <SettingRow icon="🌐" label="Language" value={locale === "en" ? "English" : "বাংলা"} onPress={() => setLocale(locale === "en" ? "bn" : "en")} />
+            <SettingRow
+              icon="🌐"
+              label="Language"
+              value={locale === "en" ? "English" : "বাংলা"}
+              onPress={() => setLocale(locale === "en" ? "bn" : "en")}
+            />
             <Divider />
-            <SettingRow icon="🎨" label="Theme" value={theme === "system" ? "System" : theme === "dark" ? "Dark" : "Light"} onPress={() => setTheme(theme === "light" ? "dark" : theme === "dark" ? "system" : "light")} />
+            <SettingRow
+              icon="🎨"
+              label="Theme"
+              value={theme === "system" ? "System" : theme === "dark" ? "Dark" : "Light"}
+              onPress={() =>
+                setTheme(theme === "light" ? "dark" : theme === "dark" ? "system" : "light")
+              }
+            />
             <Divider />
             <SettingRow icon="💱" label="Currency" value="৳ BDT" />
             <Divider />
@@ -100,7 +109,12 @@ export default function SettingsScreen() {
           <Card className="p-0 px-4">
             <SettingRow icon="👤" label="Sign In" value="Local only" onPress={() => {}} />
             <Divider />
-            <SettingRow icon="👨‍👩‍👧‍👦" label="Family Sharing" value="Not set up" onPress={() => {}} />
+            <SettingRow
+              icon="👨‍👩‍👧‍👦"
+              label="Family Sharing"
+              value="Not set up"
+              onPress={() => {}}
+            />
           </Card>
         </View>
 

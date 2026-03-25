@@ -1,14 +1,14 @@
-import React from "react";
-import { View, Text, ScrollView, Pressable } from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
 import { useQuery } from "convex/react";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import React from "react";
+import { Pressable, ScrollView, Text, View } from "react-native";
 import { api } from "../../convex/_generated/api";
+import type { Id } from "../../convex/_generated/dataModel";
 import { TransactionCard } from "../../src/components/transaction/TransactionCard";
 import { Card } from "../../src/components/ui/Card";
+import { ACCOUNT_TYPE_LABELS } from "../../src/lib/constants";
 import { formatCurrency } from "../../src/lib/currency";
 import { shadow } from "../../src/lib/platform";
-import { ACCOUNT_TYPE_LABELS } from "../../src/lib/constants";
-import type { Id } from "../../convex/_generated/dataModel";
 
 export default function AccountDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -39,9 +39,7 @@ export default function AccountDetailScreen() {
         <Pressable onPress={() => router.back()}>
           <Text className="text-primary-700 font-semibold text-xs mb-2">← Back</Text>
         </Pressable>
-        <Text className="text-lg font-bold text-foreground tracking-wide">
-          {account.name}
-        </Text>
+        <Text className="text-lg font-bold text-foreground tracking-wide">{account.name}</Text>
         <Text className="text-2xs text-surface-800 uppercase tracking-widest mt-0.5">
           {ACCOUNT_TYPE_LABELS[account.type]}
         </Text>
@@ -72,7 +70,12 @@ export default function AccountDetailScreen() {
         <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest mb-2.5">
           Transactions
         </Text>
-        <ScrollView showsVerticalScrollIndicator={false} scrollEventThrottle={8} decelerationRate="fast" removeClippedSubviews>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          scrollEventThrottle={8}
+          decelerationRate="fast"
+          removeClippedSubviews
+        >
           {transactions && transactions.length > 0 ? (
             <Card className="p-0 overflow-hidden">
               {transactions.map((txn, idx) => {
@@ -85,9 +88,7 @@ export default function AccountDetailScreen() {
                       categoryIcon={cat?.icon || undefined}
                       onPress={() => router.push(`/transaction/${txn._id}` as any)}
                     />
-                    {idx < transactions.length - 1 && (
-                      <View className="h-px bg-border/15 ml-16" />
-                    )}
+                    {idx < transactions.length - 1 && <View className="h-px bg-border/15 ml-16" />}
                   </React.Fragment>
                 );
               })}

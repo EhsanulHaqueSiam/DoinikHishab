@@ -1,5 +1,4 @@
-import React from "react";
-import { Pressable, Text, Platform } from "react-native";
+import { Platform, Pressable, Text } from "react-native";
 import { shadow } from "../../lib/platform";
 
 interface FABProps {
@@ -21,10 +20,7 @@ export function FAB({ onPress }: FABProps) {
         },
       ]}
     >
-      <Text
-        className="text-white text-2xl font-light leading-none"
-        style={{ marginTop: -1 }}
-      >
+      <Text className="text-white text-2xl font-light leading-none" style={{ marginTop: -1 }}>
         +
       </Text>
     </Pressable>

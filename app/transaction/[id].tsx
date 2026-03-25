@@ -1,17 +1,25 @@
-import React, { useState } from "react";
-import { View, Text, ScrollView, Pressable, TextInput } from "react-native";
+import { useMutation, useQuery } from "convex/react";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useQuery, useMutation } from "convex/react";
+import type React from "react";
+import { useState } from "react";
+import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { api } from "../../convex/_generated/api";
-import { Card } from "../../src/components/ui/Card";
+import type { Id } from "../../convex/_generated/dataModel";
 import { Button } from "../../src/components/ui/Button";
+import { Card } from "../../src/components/ui/Card";
+import { FLAG_COLORS } from "../../src/lib/constants";
 import { formatCurrency } from "../../src/lib/currency";
 import { formatDate } from "../../src/lib/date";
-import { shadow } from "../../src/lib/platform";
-import { FLAG_COLORS, type FlagColor } from "../../src/lib/constants";
-import type { Id } from "../../convex/_generated/dataModel";
 
-function DetailRow({ label, value, children }: { label: string; value?: string; children?: React.ReactNode }) {
+function DetailRow({
+  label,
+  value,
+  children,
+}: {
+  label: string;
+  value?: string;
+  children?: React.ReactNode;
+}) {
   return (
     <View className="flex-row justify-between items-center py-3">
       <Text className="text-xs font-medium text-surface-800">{label}</Text>
@@ -26,7 +34,10 @@ export default function TransactionDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
 
-  const transaction = useQuery(api.transactions.getById, id ? { id: id as Id<"transactions"> } : "skip");
+  const transaction = useQuery(
+    api.transactions.getById,
+    id ? { id: id as Id<"transactions"> } : "skip"
+  );
   const updateTransaction = useMutation(api.transactions.update);
   const deleteTransaction = useMutation(api.transactions.remove);
 
@@ -81,7 +92,12 @@ export default function TransactionDetailScreen() {
         </Pressable>
       </View>
 
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false} scrollEventThrottle={8} decelerationRate="fast">
+      <ScrollView
+        className="flex-1"
+        showsVerticalScrollIndicator={false}
+        scrollEventThrottle={8}
+        decelerationRate="fast"
+      >
         {/* Hero Amount */}
         <View className="items-center py-10 bg-surface-200 border-b border-border/20">
           <Text
@@ -170,7 +186,9 @@ export default function TransactionDetailScreen() {
         {/* Actions */}
         <View className="px-4 mt-4 gap-3 mb-8">
           {isEditing && <Button onPress={handleSaveMemo}>Save Changes</Button>}
-          <Button variant="danger" onPress={handleDelete}>Delete Transaction</Button>
+          <Button variant="danger" onPress={handleDelete}>
+            Delete Transaction
+          </Button>
         </View>
       </ScrollView>
     </View>

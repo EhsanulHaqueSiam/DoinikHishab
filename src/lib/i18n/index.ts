@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useAppStore } from "../../stores/app-store";
-import { en, type TranslationKeys } from "./en";
 import { bn } from "./bn";
+import { en, type TranslationKeys } from "./en";
 
 const translations: Record<string, TranslationKeys> = {
   en,
@@ -10,9 +10,7 @@ const translations: Record<string, TranslationKeys> = {
 
 type NestedKeyOf<T> = T extends object
   ? {
-      [K in keyof T & string]: T[K] extends object
-        ? `${K}.${NestedKeyOf<T[K]>}`
-        : K;
+      [K in keyof T & string]: T[K] extends object ? `${K}.${NestedKeyOf<T[K]>}` : K;
     }[keyof T & string]
   : never;
 

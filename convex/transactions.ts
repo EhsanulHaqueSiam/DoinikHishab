@@ -8,7 +8,7 @@ export const list = query({
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    let q = ctx.db
+    const q = ctx.db
       .query("transactions")
       .withIndex("by_userId", (q) => q.eq("userId", args.userId))
       .order("desc");
@@ -44,11 +44,7 @@ export const create = mutation({
     accountId: v.id("accounts"),
     categoryId: v.optional(v.id("categories")),
     amount: v.number(),
-    type: v.union(
-      v.literal("expense"),
-      v.literal("income"),
-      v.literal("transfer"),
-    ),
+    type: v.union(v.literal("expense"), v.literal("income"), v.literal("transfer")),
     description: v.optional(v.string()),
     memo: v.optional(v.string()),
     date: v.string(),
@@ -57,7 +53,7 @@ export const create = mutation({
       v.literal("import"),
       v.literal("scheduled"),
       v.literal("reconciliation"),
-      v.literal("untracked"),
+      v.literal("untracked")
     ),
     payeeId: v.optional(v.id("payees")),
     flag: v.optional(v.string()),
@@ -177,8 +173,6 @@ export const getByDateRange = query({
       .withIndex("by_userId", (q) => q.eq("userId", args.userId))
       .collect();
 
-    return all.filter(
-      (t) => t.date >= args.startDate && t.date <= args.endDate
-    );
+    return all.filter((t) => t.date >= args.startDate && t.date <= args.endDate);
   },
 });

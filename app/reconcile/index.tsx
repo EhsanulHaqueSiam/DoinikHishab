@@ -1,16 +1,16 @@
-import React, { useState, useCallback } from "react";
-import { View, Text, ScrollView, Pressable } from "react-native";
-import { useRouter } from "expo-router";
 import { useMutation, useQuery } from "convex/react";
+import { useRouter } from "expo-router";
+import { useCallback, useState } from "react";
+import { Pressable, ScrollView, Text, View } from "react-native";
 import { api } from "../../convex/_generated/api";
-import { useAppStore } from "../../src/stores/app-store";
-import { Card } from "../../src/components/ui/Card";
+import type { Id } from "../../convex/_generated/dataModel";
 import { Button } from "../../src/components/ui/Button";
+import { Card } from "../../src/components/ui/Card";
 import { Input } from "../../src/components/ui/Input";
 import { formatCurrency, parseCurrencyInput } from "../../src/lib/currency";
-import { shadow } from "../../src/lib/platform";
 import { today } from "../../src/lib/date";
-import type { Id } from "../../convex/_generated/dataModel";
+import { shadow } from "../../src/lib/platform";
+import { useAppStore } from "../../src/stores/app-store";
 
 type Step = "select-account" | "count" | "result";
 
@@ -73,7 +73,9 @@ export default function ReconcileScreen() {
         <Pressable onPress={() => router.back()}>
           <Text className="text-primary-700 font-semibold text-xs">Cancel</Text>
         </Pressable>
-        <Text className="text-xs font-bold text-foreground uppercase tracking-widest">Reconcile</Text>
+        <Text className="text-xs font-bold text-foreground uppercase tracking-widest">
+          Reconcile
+        </Text>
         <Pressable onPress={() => router.push("/reconcile/review")}>
           <Text className="text-primary-700 font-semibold text-xs">History</Text>
         </Pressable>
@@ -85,19 +87,23 @@ export default function ReconcileScreen() {
             <Text className="text-sm font-bold text-foreground mb-1">
               Which account to reconcile?
             </Text>
-            {accounts?.filter((a) => !a.isClosed).map((account) => (
-              <Pressable key={account._id} onPress={() => handleSelectAccount(account._id)}>
-                <Card className="flex-row items-center justify-between active:bg-surface-400/30">
-                  <View>
-                    <Text className="text-sm font-semibold text-foreground">{account.name}</Text>
-                    <Text className="text-2xs text-surface-800 uppercase tracking-wider mt-0.5">
-                      {account.type.replace("_", " ")}
+            {accounts
+              ?.filter((a) => !a.isClosed)
+              .map((account) => (
+                <Pressable key={account._id} onPress={() => handleSelectAccount(account._id)}>
+                  <Card className="flex-row items-center justify-between active:bg-surface-400/30">
+                    <View>
+                      <Text className="text-sm font-semibold text-foreground">{account.name}</Text>
+                      <Text className="text-2xs text-surface-800 uppercase tracking-wider mt-0.5">
+                        {account.type.replace("_", " ")}
+                      </Text>
+                    </View>
+                    <Text className="text-sm font-bold text-foreground">
+                      {formatCurrency(account.balance)}
                     </Text>
-                  </View>
-                  <Text className="text-sm font-bold text-foreground">{formatCurrency(account.balance)}</Text>
-                </Card>
-              </Pressable>
-            ))}
+                  </Card>
+                </Pressable>
+              ))}
           </View>
         )}
 
@@ -106,14 +112,26 @@ export default function ReconcileScreen() {
             <Card>
               <Text className="text-sm font-bold text-foreground mb-1">Count your cash</Text>
               <Text className="text-xs text-surface-800 mb-4">
-                Enter the actual amount in <Text className="font-bold text-foreground">{selectedAccount.name}</Text>.
+                Enter the actual amount in{" "}
+                <Text className="font-bold text-foreground">{selectedAccount.name}</Text>.
               </Text>
               <Text className="text-2xs text-surface-700 mb-2">
                 App balance: {formatCurrency(selectedAccount.balance)}
               </Text>
-              <Input label="Actual amount (in taka)" placeholder="0.00" keyboardType="decimal-pad" value={amountInput} onChangeText={setAmountInput} autoFocus />
+              <Input
+                label="Actual amount (in taka)"
+                placeholder="0.00"
+                keyboardType="decimal-pad"
+                value={amountInput}
+                onChangeText={setAmountInput}
+                autoFocus
+              />
             </Card>
-            <Button onPress={handleSubmitCount} size="lg" disabled={!amountInput || amountInput === "0"}>
+            <Button
+              onPress={handleSubmitCount}
+              size="lg"
+              disabled={!amountInput || amountInput === "0"}
+            >
               Compare
             </Button>
           </View>
@@ -121,21 +139,36 @@ export default function ReconcileScreen() {
 
         {step === "result" && selectedAccount && (
           <View className="gap-4">
-            <Card className="items-center py-8" style={gap === 0 ? shadow("#34d399", 0, 0, 0.1, 16) : shadow("#f87171", 0, 0, 0.1, 16)}>
+            <Card
+              className="items-center py-8"
+              style={
+                gap === 0 ? shadow("#34d399", 0, 0, 0.1, 16) : shadow("#f87171", 0, 0, 0.1, 16)
+              }
+            >
               {gap === 0 ? (
                 <>
                   <Text className="text-4xl mb-2">✓</Text>
                   <Text className="text-base font-bold text-success">Perfect match!</Text>
-                  <Text className="text-2xs text-surface-800 mt-1">Your records match your actual balance.</Text>
+                  <Text className="text-2xs text-surface-800 mt-1">
+                    Your records match your actual balance.
+                  </Text>
                 </>
               ) : (
                 <>
-                  <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest mb-1">Difference</Text>
-                  <Text className={`text-hero font-bold tracking-tight ${gap > 0 ? "text-success" : "text-danger"}`} style={{ lineHeight: 44 }}>
-                    {gap > 0 ? "+" : ""}{formatCurrency(gap)}
+                  <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest mb-1">
+                    Difference
+                  </Text>
+                  <Text
+                    className={`text-hero font-bold tracking-tight ${gap > 0 ? "text-success" : "text-danger"}`}
+                    style={{ lineHeight: 44 }}
+                  >
+                    {gap > 0 ? "+" : ""}
+                    {formatCurrency(gap)}
                   </Text>
                   <Text className="text-2xs text-surface-800 mt-2 text-center px-4">
-                    {gap > 0 ? "You have more than the app shows." : "You have less than the app shows."}
+                    {gap > 0
+                      ? "You have more than the app shows."
+                      : "You have less than the app shows."}
                   </Text>
                 </>
               )}
@@ -144,12 +177,16 @@ export default function ReconcileScreen() {
             <Card className="px-4 py-0">
               <View className="flex-row justify-between py-3">
                 <Text className="text-xs text-surface-800">App balance</Text>
-                <Text className="text-xs font-bold text-foreground">{formatCurrency(selectedAccount.balance)}</Text>
+                <Text className="text-xs font-bold text-foreground">
+                  {formatCurrency(selectedAccount.balance)}
+                </Text>
               </View>
               <View className="h-px bg-border/15" />
               <View className="flex-row justify-between py-3">
                 <Text className="text-xs text-surface-800">Actual balance</Text>
-                <Text className="text-xs font-bold text-foreground">{formatCurrency(parseCurrencyInput(amountInput))}</Text>
+                <Text className="text-xs font-bold text-foreground">
+                  {formatCurrency(parseCurrencyInput(amountInput))}
+                </Text>
               </View>
             </Card>
 
@@ -162,7 +199,12 @@ export default function ReconcileScreen() {
                 <Button onPress={() => handleResolve("adjustment")} size="lg" loading={saving}>
                   Create Adjustment Transaction
                 </Button>
-                <Button variant="secondary" onPress={() => handleResolve("untracked")} size="lg" loading={saving}>
+                <Button
+                  variant="secondary"
+                  onPress={() => handleResolve("untracked")}
+                  size="lg"
+                  loading={saving}
+                >
                   Tag as Untracked Spending
                 </Button>
                 <Button variant="ghost" onPress={() => handleResolve("accepted")} loading={saving}>

@@ -10,7 +10,8 @@ export default defineSchema({
     currency: v.string(), // BDT
     locale: v.string(), // bn-BD or en-BD
     familyMembers: v.optional(v.array(v.string())),
-  }).index("by_clerkId", ["clerkId"])
+  })
+    .index("by_clerkId", ["clerkId"])
     .index("by_deviceId", ["deviceId"]),
 
   aiConfig: defineTable({
@@ -42,7 +43,7 @@ export default defineSchema({
       v.literal("auto_loan"),
       v.literal("student_loan"),
       v.literal("other_debt"),
-      v.literal("other_asset"),
+      v.literal("other_asset")
     ),
     balance: v.number(), // paisa (integer)
     icon: v.optional(v.string()),
@@ -66,16 +67,13 @@ export default defineSchema({
     nameBn: v.optional(v.string()),
     icon: v.optional(v.string()),
     color: v.optional(v.string()),
-    type: v.union(
-      v.literal("expense"),
-      v.literal("income"),
-      v.literal("transfer"),
-    ),
+    type: v.union(v.literal("expense"), v.literal("income"), v.literal("transfer")),
     groupId: v.id("categoryGroups"),
     isHidden: v.boolean(),
     isSystem: v.boolean(),
     sortOrder: v.number(),
-  }).index("by_userId", ["userId"])
+  })
+    .index("by_userId", ["userId"])
     .index("by_groupId", ["groupId"]),
 
   // --- Transactions ---
@@ -84,11 +82,7 @@ export default defineSchema({
     accountId: v.id("accounts"),
     categoryId: v.optional(v.id("categories")),
     amount: v.number(), // paisa, positive = inflow, negative = outflow
-    type: v.union(
-      v.literal("expense"),
-      v.literal("income"),
-      v.literal("transfer"),
-    ),
+    type: v.union(v.literal("expense"), v.literal("income"), v.literal("transfer")),
     description: v.optional(v.string()),
     memo: v.optional(v.string()),
     date: v.string(), // ISO date string YYYY-MM-DD
@@ -97,7 +91,7 @@ export default defineSchema({
       v.literal("import"),
       v.literal("scheduled"),
       v.literal("reconciliation"),
-      v.literal("untracked"),
+      v.literal("untracked")
     ),
     bankRef: v.optional(v.string()),
     payeeId: v.optional(v.id("payees")),
@@ -108,7 +102,8 @@ export default defineSchema({
     flag: v.optional(v.string()), // red, orange, yellow, green, blue, purple
     transferAccountId: v.optional(v.id("accounts")),
     importId: v.optional(v.string()),
-  }).index("by_userId", ["userId"])
+  })
+    .index("by_userId", ["userId"])
     .index("by_accountId", ["accountId"])
     .index("by_date", ["userId", "date"])
     .index("by_categoryId", ["categoryId"]),
@@ -118,10 +113,14 @@ export default defineSchema({
     name: v.string(),
     defaultCategoryId: v.optional(v.id("categories")),
     lastUsed: v.optional(v.string()),
-    renameRules: v.optional(v.array(v.object({
-      pattern: v.string(),
-      replacement: v.string(),
-    }))),
+    renameRules: v.optional(
+      v.array(
+        v.object({
+          pattern: v.string(),
+          replacement: v.string(),
+        })
+      )
+    ),
   }).index("by_userId", ["userId"]),
 
   scheduled: defineTable({
@@ -146,7 +145,8 @@ export default defineSchema({
     assigned: v.number(), // paisa
     activity: v.number(), // paisa
     available: v.number(), // paisa
-  }).index("by_userId_month", ["userId", "month"])
+  })
+    .index("by_userId_month", ["userId", "month"])
     .index("by_categoryId", ["categoryId"]),
 
   targets: defineTable({
@@ -157,12 +157,13 @@ export default defineSchema({
       v.literal("weekly_spending"),
       v.literal("spending_by_date"),
       v.literal("savings_balance"),
-      v.literal("monthly_savings"),
+      v.literal("monthly_savings")
     ),
     amount: v.number(), // paisa
     targetDate: v.optional(v.string()),
     cadence: v.optional(v.string()),
-  }).index("by_userId", ["userId"])
+  })
+    .index("by_userId", ["userId"])
     .index("by_categoryId", ["categoryId"]),
 
   monthlyNotes: defineTable({
@@ -176,10 +177,12 @@ export default defineSchema({
     userId: v.id("users"),
     name: v.string(),
     description: v.optional(v.string()),
-    assignments: v.array(v.object({
-      categoryId: v.id("categories"),
-      amount: v.number(),
-    })),
+    assignments: v.array(
+      v.object({
+        categoryId: v.id("categories"),
+        amount: v.number(),
+      })
+    ),
   }).index("by_userId", ["userId"]),
 
   // --- Reconciliation ---
@@ -192,7 +195,8 @@ export default defineSchema({
     expectedBalance: v.number(),
     gap: v.number(),
     resolution: v.optional(v.string()),
-  }).index("by_userId", ["userId"])
+  })
+    .index("by_userId", ["userId"])
     .index("by_accountId", ["accountId"]),
 
   // --- Loans ---
@@ -211,11 +215,7 @@ export default defineSchema({
     pattern: v.string(),
     categoryId: v.id("categories"),
     confidence: v.number(),
-    source: v.union(
-      v.literal("system"),
-      v.literal("user"),
-      v.literal("learned"),
-    ),
+    source: v.union(v.literal("system"), v.literal("user"), v.literal("learned")),
   }).index("by_userId", ["userId"]),
 
   // --- History ---
