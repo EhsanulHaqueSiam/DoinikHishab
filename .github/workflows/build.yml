@@ -38,6 +38,22 @@ env:
   JAVA_VERSION: '17'
 
 jobs:
+  # ── Lint check ───────────────────────────────────────────────
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile || bun install
+
+      - name: Lint check
+        run: bun run lint
+
   # ── Deploy Convex backend ───────────────────────────────────
   convex-deploy:
     if: github.event_name == 'push'
@@ -60,6 +76,7 @@ jobs:
 
   # ── TypeScript check ───────────────────────────────────────
   typecheck:
+    needs: [lint]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -83,6 +100,7 @@ jobs:
 
   # ── Web export (static build) ──────────────────────────────
   web:
+    needs: [lint]
     if: >-
       github.event_name == 'push' ||
       github.event.inputs.platform == 'all' ||
@@ -112,6 +130,7 @@ jobs:
 
   # ── Android build (free — Gradle on runner) ────────────────
   android:
+    needs: [lint]
     if: >-
       github.event_name == 'push' ||
       github.event.inputs.platform == 'all' ||
