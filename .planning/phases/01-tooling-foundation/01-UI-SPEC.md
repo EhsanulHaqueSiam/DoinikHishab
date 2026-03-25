@@ -35,13 +35,13 @@ Declared values (must be multiples of 4):
 |-------|-------|-------|
 | xs | 4px | Icon gaps, inline padding |
 | sm | 8px | Compact element spacing, Settings row icon margin |
-| md | 16px | Default element spacing, section padding-x |
+| md | 16px | Default element spacing, section padding-x, SettingRow vertical padding (`py-4`) |
 | lg | 24px | Section padding, Settings section margin-bottom |
 | xl | 32px | Layout gaps |
 | 2xl | 48px | Major section breaks |
 | 3xl | 64px | Page-level spacing |
 
-Exceptions: 14px (py-3.5) used in SettingRow vertical padding -- existing pattern, preserve as-is.
+Exceptions: None. All spacing values are multiples of 4.
 
 **Source:** tailwind.config.js default Tailwind spacing scale, existing Settings screen patterns.
 
@@ -53,10 +53,12 @@ Exceptions: 14px (py-3.5) used in SettingRow vertical padding -- existing patter
 |------|------|--------|-------------|----------------|
 | Body | 14px | 400 (regular) | 1.5 | `text-sm` |
 | Label | 10px | 600 (semibold) | 1.4 | `text-2xs font-semibold` |
-| Heading | 18px | 700 (bold) | 1.2 | `text-lg font-bold` |
-| Hero | 36px | 700 (bold) | 1.1 | `text-hero font-bold` |
+| Heading | 18px | 600 (semibold) | 1.2 | `text-lg font-semibold` |
+| Hero | 36px | 600 (semibold) | 1.1 | `text-hero font-semibold` |
 
-**Phase 1 scope:** No new typography is introduced. The i18n migration replaces string values, not visual treatment. All existing typography classes remain unchanged.
+Weights declared: 400 (regular) and 600 (semibold). Semibold at 18px and 36px is visually strong enough for heading hierarchy -- no bold (700) needed.
+
+**Phase 1 scope:** No new typography is introduced. The i18n migration replaces string values, not visual treatment. All existing typography classes remain unchanged. If any existing component uses `font-bold`, update it to `font-semibold` to conform to the 2-weight contract.
 
 **Bengali text note:** SpaceMono does not contain Bengali glyphs. The system will fall back to the device's default Bengali font (e.g., Noto Sans Bengali on Android, Kohinoor Bangla on iOS). This is correct behavior -- do not attempt to bundle a Bengali font. Verify that fallback rendering produces acceptable line heights for mixed Bengali/English strings.
 
@@ -101,6 +103,10 @@ Phase 1 does not introduce new components. The i18n migration modifies text cont
 | All tab screens | `app/(tabs)/*.tsx` | Any visible text wrapped in `t()` calls |
 | All components using `useTranslation` | `src/components/**/*.tsx` | Import changes from custom `@lib/i18n` to `react-i18next` |
 
+### Visual Hierarchy (Settings Screen)
+
+The Settings screen is a flat list of grouped rows with no strong visual differentiation between items. The Language row in the General section is the only visually differentiated element -- teal accent (`text-primary-700`) on the active language value text serves as the focal cue, distinguishing it from other rows that display neutral/muted value text. This accent draws the user's eye to the interactive language toggle, reinforcing that it is the primary actionable element in the General section.
+
 ### Language Toggle Interaction (Settings Screen)
 
 The language toggle is the only interactive UI element affected by this phase. It exists at `settings.tsx` line 67.
@@ -115,7 +121,7 @@ The language toggle is the only interactive UI element affected by this phase. I
 5. Zustand `locale` state stays in sync with i18next for any non-i18next consumers
 
 **Interaction contract:**
-- Tap target: Full width of SettingRow (existing `active:bg-surface-400/30` press feedback)
+- Tap target: Full width of SettingRow, vertical padding `py-4` (16px) ensures minimum 48px touch target height
 - State feedback: Value text shows `"English"` or `"বাংলা"` in the target language
 - Transition: Instant re-render (< 16ms) -- no loading spinner, no flash of untranslated keys
 - Persistence: Language preference persists across app restarts (stored in Zustand/MMKV)
