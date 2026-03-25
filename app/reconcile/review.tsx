@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { View, Text, ScrollView, Pressable, FlatList } from "react-native";
-import { useRouter } from "expo-router";
 import { useQuery } from "convex/react";
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import { FlatList, Pressable, ScrollView, Text, View } from "react-native";
 import { api } from "../../convex/_generated/api";
-import { useAppStore } from "../../src/stores/app-store";
+import type { Id } from "../../convex/_generated/dataModel";
 import { Card } from "../../src/components/ui/Card";
 import { formatCurrency } from "../../src/lib/currency";
 import { formatDate } from "../../src/lib/date";
-import type { Id } from "../../convex/_generated/dataModel";
+import { useAppStore } from "../../src/stores/app-store";
 
 const RESOLUTION_LABELS: Record<string, string> = {
   adjustment: "Adjustment created",
@@ -45,27 +45,33 @@ export default function ReconcileReviewScreen() {
       </View>
 
       {/* Account Selector */}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} className="px-4 py-3 bg-surface-100 border-b border-border">
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        className="px-4 py-3 bg-surface-100 border-b border-border"
+      >
         <View className="flex-row gap-2">
-          {accounts?.filter((a) => !a.isClosed).map((account) => (
-            <Pressable key={account._id} onPress={() => setSelectedAccountId(account._id)}>
-              <View
-                className={`px-4 py-2 rounded-full border ${
-                  selectedAccountId === account._id
-                    ? "bg-primary-500 border-primary-500"
-                    : "bg-surface-200 border-border/40"
-                }`}
-              >
-                <Text
-                  className={`text-xs font-semibold ${
-                    selectedAccountId === account._id ? "text-white" : "text-foreground"
+          {accounts
+            ?.filter((a) => !a.isClosed)
+            .map((account) => (
+              <Pressable key={account._id} onPress={() => setSelectedAccountId(account._id)}>
+                <View
+                  className={`px-4 py-2 rounded-full border ${
+                    selectedAccountId === account._id
+                      ? "bg-primary-500 border-primary-500"
+                      : "bg-surface-200 border-border/40"
                   }`}
                 >
-                  {account.name}
-                </Text>
-              </View>
-            </Pressable>
-          ))}
+                  <Text
+                    className={`text-xs font-semibold ${
+                      selectedAccountId === account._id ? "text-white" : "text-foreground"
+                    }`}
+                  >
+                    {account.name}
+                  </Text>
+                </View>
+              </Pressable>
+            ))}
         </View>
       </ScrollView>
 
@@ -96,7 +102,9 @@ export default function ReconcileReviewScreen() {
                 <View className="flex-row items-center justify-between py-3">
                   <Text className="text-xs font-bold text-foreground">{formatDate(item.date)}</Text>
                   {item.resolution && (
-                    <Text className={`text-2xs font-bold uppercase tracking-wider ${RESOLUTION_COLORS[item.resolution] ?? "text-surface-800"}`}>
+                    <Text
+                      className={`text-2xs font-bold uppercase tracking-wider ${RESOLUTION_COLORS[item.resolution] ?? "text-surface-800"}`}
+                    >
                       {RESOLUTION_LABELS[item.resolution] ?? item.resolution}
                     </Text>
                   )}
@@ -104,17 +112,25 @@ export default function ReconcileReviewScreen() {
                 <View className="h-px bg-border/15" />
                 <View className="flex-row justify-between py-2.5">
                   <Text className="text-2xs text-surface-800">Expected</Text>
-                  <Text className="text-2xs font-bold text-foreground">{formatCurrency(item.expectedBalance)}</Text>
+                  <Text className="text-2xs font-bold text-foreground">
+                    {formatCurrency(item.expectedBalance)}
+                  </Text>
                 </View>
                 <View className="flex-row justify-between py-2.5">
                   <Text className="text-2xs text-surface-800">Actual</Text>
-                  <Text className="text-2xs font-bold text-foreground">{formatCurrency(item.endingBalance)}</Text>
+                  <Text className="text-2xs font-bold text-foreground">
+                    {formatCurrency(item.endingBalance)}
+                  </Text>
                 </View>
                 <View className="h-px bg-border/15" />
                 <View className="flex-row justify-between py-3">
                   <Text className="text-xs font-bold text-foreground">Gap</Text>
-                  <Text className={`text-xs font-bold ${item.gap === 0 ? "text-success" : item.gap > 0 ? "text-primary-700" : "text-danger"}`}>
-                    {item.gap === 0 ? "No gap" : `${item.gap > 0 ? "+" : ""}${formatCurrency(item.gap)}`}
+                  <Text
+                    className={`text-xs font-bold ${item.gap === 0 ? "text-success" : item.gap > 0 ? "text-primary-700" : "text-danger"}`}
+                  >
+                    {item.gap === 0
+                      ? "No gap"
+                      : `${item.gap > 0 ? "+" : ""}${formatCurrency(item.gap)}`}
                   </Text>
                 </View>
               </Card>

@@ -11,8 +11,7 @@
 export function encrypt(plaintext: string, secret: string): string {
   const bytes: number[] = [];
   for (let i = 0; i < plaintext.length; i++) {
-    const charCode =
-      plaintext.charCodeAt(i) ^ secret.charCodeAt(i % secret.length);
+    const charCode = plaintext.charCodeAt(i) ^ secret.charCodeAt(i % secret.length);
     bytes.push(charCode);
   }
   // Convert to base64-safe string
@@ -26,8 +25,7 @@ export function decrypt(encrypted: string, secret: string): string {
   const decoded = atob(encrypted);
   const chars: string[] = [];
   for (let i = 0; i < decoded.length; i++) {
-    const charCode =
-      decoded.charCodeAt(i) ^ secret.charCodeAt(i % secret.length);
+    const charCode = decoded.charCodeAt(i) ^ secret.charCodeAt(i % secret.length);
     chars.push(String.fromCharCode(charCode));
   }
   return chars.join("");

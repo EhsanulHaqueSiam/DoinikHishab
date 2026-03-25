@@ -1,5 +1,4 @@
-import React from "react";
-import { View, Text } from "react-native";
+import { Text, View } from "react-native";
 import { formatCurrency } from "../../lib/currency";
 
 interface MonthlyData {
@@ -16,8 +15,18 @@ interface IncomeExpenseChartProps {
 function formatMonth(month: string): string {
   const [year, m] = month.split("-");
   const months = [
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
   ];
   return `${months[parseInt(m, 10) - 1]} '${year.slice(2)}`;
 }
@@ -34,10 +43,7 @@ export function IncomeExpenseChart({ data }: IncomeExpenseChartProps) {
   // Take last 6 months
   const recent = data.slice(-6);
 
-  const maxValue = Math.max(
-    ...recent.map((d) => Math.max(d.income, d.expense)),
-    1
-  );
+  const maxValue = Math.max(...recent.map((d) => Math.max(d.income, d.expense)), 1);
   const BAR_MAX_HEIGHT = 100;
 
   // Totals for the period
@@ -75,15 +81,10 @@ export function IncomeExpenseChart({ data }: IncomeExpenseChartProps) {
       </View>
 
       {/* Chart area */}
-      <View
-        className="flex-row items-end justify-between gap-2"
-        style={{ height: BAR_MAX_HEIGHT }}
-      >
+      <View className="flex-row items-end justify-between gap-2" style={{ height: BAR_MAX_HEIGHT }}>
         {recent.map((monthData) => {
-          const incomeHeight =
-            Math.max((monthData.income / maxValue) * BAR_MAX_HEIGHT, 2);
-          const expenseHeight =
-            Math.max((monthData.expense / maxValue) * BAR_MAX_HEIGHT, 2);
+          const incomeHeight = Math.max((monthData.income / maxValue) * BAR_MAX_HEIGHT, 2);
+          const expenseHeight = Math.max((monthData.expense / maxValue) * BAR_MAX_HEIGHT, 2);
 
           return (
             <View

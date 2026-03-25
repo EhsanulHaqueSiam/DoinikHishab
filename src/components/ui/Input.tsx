@@ -1,5 +1,4 @@
-import React from "react";
-import { TextInput, View, Text, type TextInputProps } from "react-native";
+import { Text, TextInput, type TextInputProps, View } from "react-native";
 
 interface InputProps extends TextInputProps {
   label?: string;

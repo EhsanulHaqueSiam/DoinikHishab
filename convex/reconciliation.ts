@@ -28,11 +28,7 @@ export const completeReconciliation = mutation({
   args: {
     id: v.id("reconciliations"),
     actualBalance: v.number(), // paisa — user's counted amount
-    resolution: v.union(
-      v.literal("adjustment"),
-      v.literal("untracked"),
-      v.literal("accepted"),
-    ),
+    resolution: v.union(v.literal("adjustment"), v.literal("untracked"), v.literal("accepted")),
   },
   handler: async (ctx, args) => {
     const recon = await ctx.db.get(args.id);

@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import { View, Text, ScrollView, Pressable, Modal } from "react-native";
 import { useRouter } from "expo-router";
-import { useBudget } from "../../src/hooks/use-budget";
-import { useAppStore } from "../../src/stores/app-store";
-import { BudgetRow } from "../../src/components/budget/BudgetRow";
-import { AssignMoney } from "../../src/components/budget/AssignMoney";
-import { Card } from "../../src/components/ui/Card";
-import { formatCurrency } from "../../src/lib/currency";
-import { shadow } from "../../src/lib/platform";
-import { getMonthLabel, previousMonth, nextMonth } from "../../src/lib/date";
+import { useState } from "react";
+import { Modal, Pressable, ScrollView, Text, View } from "react-native";
 import type { Id } from "../../convex/_generated/dataModel";
+import { AssignMoney } from "../../src/components/budget/AssignMoney";
+import { BudgetRow } from "../../src/components/budget/BudgetRow";
+import { Card } from "../../src/components/ui/Card";
+import { useBudget } from "../../src/hooks/use-budget";
+import { formatCurrency } from "../../src/lib/currency";
+import { getMonthLabel, nextMonth, previousMonth } from "../../src/lib/date";
+import { shadow } from "../../src/lib/platform";
+import { useAppStore } from "../../src/stores/app-store";
 
 interface AssignTarget {
   categoryId: Id<"categories">;
@@ -50,7 +50,10 @@ export default function BudgetScreen() {
     <View className="flex-1 bg-background">
       {/* Month Navigator */}
       <View className="flex-row items-center justify-between px-4 py-3 bg-surface-100 border-b border-border">
-        <Pressable onPress={() => setCurrentMonth(previousMonth(currentMonth))} className="px-3 py-1">
+        <Pressable
+          onPress={() => setCurrentMonth(previousMonth(currentMonth))}
+          className="px-3 py-1"
+        >
           <Text className="text-primary-700 font-bold text-base">‹</Text>
         </Pressable>
         <Text className="text-sm font-bold text-foreground tracking-wide">
@@ -65,7 +68,11 @@ export default function BudgetScreen() {
       <Pressable className="mx-4 mt-3">
         <Card
           className={`items-center py-3.5 ${
-            readyToAssign > 0 ? "border-success/20" : readyToAssign < 0 ? "border-danger/20" : "border-primary-400/15"
+            readyToAssign > 0
+              ? "border-success/20"
+              : readyToAssign < 0
+                ? "border-danger/20"
+                : "border-primary-400/15"
           }`}
           style={
             readyToAssign > 0
@@ -80,7 +87,11 @@ export default function BudgetScreen() {
           </Text>
           <Text
             className={`text-2xl font-bold mt-0.5 tracking-tight ${
-              readyToAssign > 0 ? "text-success" : readyToAssign < 0 ? "text-danger" : "text-primary-700"
+              readyToAssign > 0
+                ? "text-success"
+                : readyToAssign < 0
+                  ? "text-danger"
+                  : "text-primary-700"
             }`}
           >
             {formatCurrency(readyToAssign)}
@@ -104,10 +115,18 @@ export default function BudgetScreen() {
       >
         {/* Column Headers */}
         <View className="flex-row px-4 py-2.5 border-b border-border bg-surface-200">
-          <Text className="flex-1 text-2xs font-semibold text-surface-800 uppercase tracking-widest">Category</Text>
-          <Text className="w-24 text-2xs font-semibold text-surface-800 uppercase text-right tracking-wider">Assigned</Text>
-          <Text className="w-24 text-2xs font-semibold text-surface-800 uppercase text-right tracking-wider">Activity</Text>
-          <Text className="w-24 text-2xs font-semibold text-surface-800 uppercase text-right tracking-wider">Available</Text>
+          <Text className="flex-1 text-2xs font-semibold text-surface-800 uppercase tracking-widest">
+            Category
+          </Text>
+          <Text className="w-24 text-2xs font-semibold text-surface-800 uppercase text-right tracking-wider">
+            Assigned
+          </Text>
+          <Text className="w-24 text-2xs font-semibold text-surface-800 uppercase text-right tracking-wider">
+            Activity
+          </Text>
+          <Text className="w-24 text-2xs font-semibold text-surface-800 uppercase text-right tracking-wider">
+            Available
+          </Text>
         </View>
 
         {groupedBudgets?.map((group: any) => {
@@ -123,12 +142,22 @@ export default function BudgetScreen() {
                 className="flex-row items-center px-4 py-2.5 bg-surface-300 border-b border-border/20"
               >
                 <View className="flex-1 flex-row items-center">
-                  <Text className="text-2xs mr-1.5 text-surface-800">{isCollapsed ? "▸" : "▾"}</Text>
-                  <Text className="text-xs font-bold text-foreground tracking-wide">{group.name}</Text>
+                  <Text className="text-2xs mr-1.5 text-surface-800">
+                    {isCollapsed ? "▸" : "▾"}
+                  </Text>
+                  <Text className="text-xs font-bold text-foreground tracking-wide">
+                    {group.name}
+                  </Text>
                 </View>
-                <Text className="w-24 text-2xs font-medium text-surface-800 text-right">{formatCurrency(groupAssigned)}</Text>
-                <Text className="w-24 text-2xs font-medium text-surface-800 text-right">{formatCurrency(groupActivity)}</Text>
-                <Text className={`w-24 text-2xs font-bold text-right ${groupAvailable < 0 ? "text-danger" : "text-foreground"}`}>
+                <Text className="w-24 text-2xs font-medium text-surface-800 text-right">
+                  {formatCurrency(groupAssigned)}
+                </Text>
+                <Text className="w-24 text-2xs font-medium text-surface-800 text-right">
+                  {formatCurrency(groupActivity)}
+                </Text>
+                <Text
+                  className={`w-24 text-2xs font-bold text-right ${groupAvailable < 0 ? "text-danger" : "text-foreground"}`}
+                >
                   {formatCurrency(groupAvailable)}
                 </Text>
               </Pressable>
@@ -158,9 +187,13 @@ export default function BudgetScreen() {
             <Card className="border-danger/20">
               <View className="flex-row items-center justify-between">
                 <Text className="text-xs font-semibold text-danger">Total Overspent</Text>
-                <Text className="text-xs font-bold text-danger">{formatCurrency(-summary.overspent)}</Text>
+                <Text className="text-xs font-bold text-danger">
+                  {formatCurrency(-summary.overspent)}
+                </Text>
               </View>
-              <Text className="text-2xs text-surface-800 mt-1">Move money from other categories to cover</Text>
+              <Text className="text-2xs text-surface-800 mt-1">
+                Move money from other categories to cover
+              </Text>
             </Card>
           </View>
         )}
@@ -169,7 +202,9 @@ export default function BudgetScreen() {
           <View className="items-center py-20">
             <Text className="text-4xl mb-3">📊</Text>
             <Text className="text-sm font-bold text-surface-900">Budget will appear here</Text>
-            <Text className="text-xs text-surface-800 mt-1 text-center px-8">Add accounts and income to start budgeting</Text>
+            <Text className="text-xs text-surface-800 mt-1 text-center px-8">
+              Add accounts and income to start budgeting
+            </Text>
           </View>
         )}
 
@@ -177,8 +212,16 @@ export default function BudgetScreen() {
       </ScrollView>
 
       {assignTarget && userId && (
-        <Modal visible transparent animationType="fade" onRequestClose={() => setAssignTarget(null)}>
-          <Pressable className="flex-1 bg-black/60 justify-center" onPress={() => setAssignTarget(null)}>
+        <Modal
+          visible
+          transparent
+          animationType="fade"
+          onRequestClose={() => setAssignTarget(null)}
+        >
+          <Pressable
+            className="flex-1 bg-black/60 justify-center"
+            onPress={() => setAssignTarget(null)}
+          >
             <Pressable onPress={() => {}}>
               <AssignMoney
                 userId={userId}

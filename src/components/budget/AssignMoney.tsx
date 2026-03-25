@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, Pressable } from "react-native";
 import { useMutation } from "convex/react";
+import { useState } from "react";
+import { Pressable, Text, TextInput, View } from "react-native";
 import { api } from "../../../convex/_generated/api";
+import type { Id } from "../../../convex/_generated/dataModel";
+import { formatCurrency, paisaToTaka, takaToPaisa } from "../../lib/currency";
 import { Button } from "../ui/Button";
 import { Card } from "../ui/Card";
-import { formatCurrency, takaToPaisa, paisaToTaka } from "../../lib/currency";
-import type { Id } from "../../../convex/_generated/dataModel";
 
 interface AssignMoneyProps {
   userId: Id<"users">;
@@ -19,8 +19,14 @@ interface AssignMoneyProps {
 }
 
 export function AssignMoney({
-  userId, categoryId, categoryName, month,
-  currentAssigned, available, readyToAssign, onClose,
+  userId,
+  categoryId,
+  categoryName,
+  month,
+  currentAssigned,
+  available: _available,
+  readyToAssign,
+  onClose,
 }: AssignMoneyProps) {
   const [inputValue, setInputValue] = useState(
     currentAssigned === 0 ? "" : String(paisaToTaka(currentAssigned))
@@ -38,9 +44,7 @@ export function AssignMoney({
 
   return (
     <Card className="mx-4" variant="elevated">
-      <Text className="text-sm font-bold text-foreground mb-0.5">
-        Assign to {categoryName}
-      </Text>
+      <Text className="text-sm font-bold text-foreground mb-0.5">Assign to {categoryName}</Text>
       <Text className="text-2xs text-primary-700 mb-4 font-medium">
         Ready to Assign: {formatCurrency(readyToAssign)}
       </Text>
@@ -65,21 +69,23 @@ export function AssignMoney({
             onPress={() => setInputValue(String(paisaToTaka(amount)))}
             className="flex-1 bg-surface-300 rounded-lg py-2 items-center border border-border/20 active:bg-surface-500"
           >
-            <Text className="text-2xs font-bold text-foreground">
-              {formatCurrency(amount)}
-            </Text>
+            <Text className="text-2xs font-bold text-foreground">{formatCurrency(amount)}</Text>
           </Pressable>
         ))}
       </View>
 
       <View className="flex-row justify-between mb-4">
         <Text className="text-2xs text-surface-800">Currently assigned</Text>
-        <Text className="text-2xs font-bold text-foreground">{formatCurrency(currentAssigned)}</Text>
+        <Text className="text-2xs font-bold text-foreground">
+          {formatCurrency(currentAssigned)}
+        </Text>
       </View>
 
       <View className="flex-row gap-3">
         <View className="flex-1">
-          <Button variant="ghost" onPress={onClose}>Cancel</Button>
+          <Button variant="ghost" onPress={onClose}>
+            Cancel
+          </Button>
         </View>
         <View className="flex-1">
           <Button onPress={handleAssign}>Assign</Button>

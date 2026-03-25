@@ -1,5 +1,5 @@
-import React from "react";
-import { Pressable, Text, type PressableProps, ActivityIndicator } from "react-native";
+import type React from "react";
+import { ActivityIndicator, Pressable, type PressableProps, Text } from "react-native";
 import { shadow } from "../../lib/platform";
 
 interface ButtonProps extends PressableProps {
@@ -60,9 +60,7 @@ export function Button({
         />
       )}
       {typeof children === "string" ? (
-        <Text
-          className={`${variantTextStyles[variant]} ${sizeTextStyles[size]} tracking-wide`}
-        >
+        <Text className={`${variantTextStyles[variant]} ${sizeTextStyles[size]} tracking-wide`}>
           {children}
         </Text>
       ) : (

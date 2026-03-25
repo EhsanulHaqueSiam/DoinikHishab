@@ -1,6 +1,5 @@
-import React from "react";
 import { Tabs } from "expo-router";
-import { Platform, View, Text } from "react-native";
+import { Platform, Text, View } from "react-native";
 import { shadow } from "../../src/lib/platform";
 
 const TAB_ICONS: Record<string, string> = {
@@ -20,9 +19,7 @@ export default function TabsLayout() {
         headerStyle: {
           backgroundColor: "#0c1021",
           elevation: 0,
-          ...(Platform.OS === "web"
-            ? { boxShadow: "none" }
-            : { shadowOpacity: 0 }),
+          ...(Platform.OS === "web" ? { boxShadow: "none" } : { shadowOpacity: 0 }),
           borderBottomWidth: 1,
           borderBottomColor: "#1e2a3a",
         },
@@ -67,26 +64,11 @@ export default function TabsLayout() {
           headerTitle: "দৈনিক হিসাব",
         }}
       />
-      <Tabs.Screen
-        name="transactions"
-        options={{ title: "Transactions" }}
-      />
-      <Tabs.Screen
-        name="budget"
-        options={{ title: "Budget" }}
-      />
-      <Tabs.Screen
-        name="accounts"
-        options={{ title: "Accounts" }}
-      />
-      <Tabs.Screen
-        name="reports"
-        options={{ title: "Reports" }}
-      />
-      <Tabs.Screen
-        name="settings"
-        options={{ title: "Settings" }}
-      />
+      <Tabs.Screen name="transactions" options={{ title: "Transactions" }} />
+      <Tabs.Screen name="budget" options={{ title: "Budget" }} />
+      <Tabs.Screen name="accounts" options={{ title: "Accounts" }} />
+      <Tabs.Screen name="reports" options={{ title: "Reports" }} />
+      <Tabs.Screen name="settings" options={{ title: "Settings" }} />
     </Tabs>
   );
 }

@@ -1,15 +1,15 @@
-import React, { useState, useCallback } from "react";
-import { View, Text, ScrollView, Pressable, Platform } from "react-native";
-import { useRouter } from "expo-router";
 import { useMutation, useQuery } from "convex/react";
+import { useRouter } from "expo-router";
+import { useCallback, useState } from "react";
+import { Platform, Pressable, ScrollView, Text, View } from "react-native";
 import { api } from "../../convex/_generated/api";
-import { useAppStore } from "../../src/stores/app-store";
+import type { Id } from "../../convex/_generated/dataModel";
 import { AmountPad } from "../../src/components/transaction/AmountPad";
 import { CategoryGrid } from "../../src/components/transaction/CategoryGrid";
 import { Button } from "../../src/components/ui/Button";
-import { today } from "../../src/lib/date";
 import { formatCurrency } from "../../src/lib/currency";
-import type { Id } from "../../convex/_generated/dataModel";
+import { today } from "../../src/lib/date";
+import { useAppStore } from "../../src/stores/app-store";
 
 type Step = "amount" | "category" | "confirm";
 
@@ -143,8 +143,12 @@ export default function AddTransactionScreen() {
               )}
             </View>
             <View className="w-full gap-3">
-              <Button onPress={handleSave} size="lg">Save Transaction</Button>
-              <Button variant="ghost" onPress={() => setStep("category")}>Change Category</Button>
+              <Button onPress={handleSave} size="lg">
+                Save Transaction
+              </Button>
+              <Button variant="ghost" onPress={() => setStep("category")}>
+                Change Category
+              </Button>
             </View>
           </View>
         )}

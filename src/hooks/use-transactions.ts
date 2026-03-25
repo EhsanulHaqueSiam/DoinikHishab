@@ -1,5 +1,5 @@
-import { useQuery, useMutation } from "convex/react";
-import { useMemo, useCallback } from "react";
+import { useMutation, useQuery } from "convex/react";
+import { useCallback, useMemo } from "react";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
 
@@ -28,10 +28,7 @@ export function useFilteredTransactions(
   accountId?: Id<"accounts">,
   filters?: TransactionFilters
 ) {
-  const transactions = useQuery(
-    api.transactions.list,
-    userId ? { userId, accountId } : "skip"
-  );
+  const transactions = useQuery(api.transactions.list, userId ? { userId, accountId } : "skip");
 
   const filtered = useMemo(() => {
     if (!transactions || !filters) return transactions ?? [];
@@ -44,7 +41,8 @@ export function useFilteredTransactions(
       if (filters.flag && txn.flag !== filters.flag) return false;
 
       if (filters.isCleared !== undefined && txn.isCleared !== filters.isCleared) return false;
-      if (filters.isReconciled !== undefined && txn.isReconciled !== filters.isReconciled) return false;
+      if (filters.isReconciled !== undefined && txn.isReconciled !== filters.isReconciled)
+        return false;
 
       if (filters.amountMin !== undefined && txn.amount < filters.amountMin) return false;
       if (filters.amountMax !== undefined && txn.amount > filters.amountMax) return false;
@@ -73,14 +71,8 @@ export function useFilteredTransactions(
 
 // --- Search hook ---
 
-export function useTransactionSearch(
-  userId: Id<"users"> | null,
-  searchQuery: string
-) {
-  const transactions = useQuery(
-    api.transactions.list,
-    userId ? { userId } : "skip"
-  );
+export function useTransactionSearch(userId: Id<"users"> | null, searchQuery: string) {
+  const transactions = useQuery(api.transactions.list, userId ? { userId } : "skip");
 
   const results = useMemo(() => {
     if (!transactions || !searchQuery.trim()) return [];
@@ -115,18 +107,14 @@ export function useBulkTransactionOps() {
 
   const bulkClear = useCallback(
     async (ids: Id<"transactions">[]) => {
-      await Promise.all(
-        ids.map((id) => updateTransaction({ id, isCleared: true }))
-      );
+      await Promise.all(ids.map((id) => updateTransaction({ id, isCleared: true })));
     },
     [updateTransaction]
   );
 
   const bulkApprove = useCallback(
     async (ids: Id<"transactions">[]) => {
-      await Promise.all(
-        ids.map((id) => updateTransaction({ id, isApproved: true }))
-      );
+      await Promise.all(ids.map((id) => updateTransaction({ id, isApproved: true })));
     },
     [updateTransaction]
   );
@@ -140,9 +128,7 @@ export function useBulkTransactionOps() {
 
   const bulkSetCategory = useCallback(
     async (ids: Id<"transactions">[], categoryId: Id<"categories">) => {
-      await Promise.all(
-        ids.map((id) => updateTransaction({ id, categoryId }))
-      );
+      await Promise.all(ids.map((id) => updateTransaction({ id, categoryId })));
     },
     [updateTransaction]
   );

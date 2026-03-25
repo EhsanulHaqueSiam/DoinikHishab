@@ -30,7 +30,7 @@ export const set = mutation({
       v.literal("weekly_spending"),
       v.literal("spending_by_date"),
       v.literal("savings_balance"),
-      v.literal("monthly_savings"),
+      v.literal("monthly_savings")
     ),
     amount: v.number(),
     targetDate: v.optional(v.string()),

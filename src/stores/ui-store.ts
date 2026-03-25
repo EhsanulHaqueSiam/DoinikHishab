@@ -30,8 +30,7 @@ export const useUIStore = create<UIState>((set) => ({
   isCategoryPickerOpen: false,
   isAccountPickerOpen: false,
 
-  openQuickAdd: (type = "expense") =>
-    set({ isQuickAddOpen: true, quickAddType: type }),
+  openQuickAdd: (type = "expense") => set({ isQuickAddOpen: true, quickAddType: type }),
   closeQuickAdd: () => set({ isQuickAddOpen: false }),
   setEditingTransaction: (id) => set({ editingTransactionId: id }),
   setCategoryPickerOpen: (open) => set({ isCategoryPickerOpen: open }),

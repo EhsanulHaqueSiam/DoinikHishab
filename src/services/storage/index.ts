@@ -87,9 +87,7 @@ export function setLocale(locale: "en" | "bn"): void {
 }
 
 export function getTheme(): "light" | "dark" | "system" {
-  return (
-    (getStorage().getString("theme") as "light" | "dark" | "system") || "system"
-  );
+  return (getStorage().getString("theme") as "light" | "dark" | "system") || "system";
 }
 
 export function setTheme(theme: "light" | "dark" | "system"): void {

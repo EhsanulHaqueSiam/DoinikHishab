@@ -1,8 +1,8 @@
 import React from "react";
-import { View, Text, Pressable } from "react-native";
-import { formatCurrency } from "../../lib/currency";
-import { FLAG_COLORS, type FlagColor } from "../../lib/constants";
+import { Pressable, Text, View } from "react-native";
 import type { Doc } from "../../../convex/_generated/dataModel";
+import { FLAG_COLORS, type FlagColor } from "../../lib/constants";
+import { formatCurrency } from "../../lib/currency";
 
 interface TransactionCardProps {
   transaction: Doc<"transactions">;
@@ -13,13 +13,33 @@ interface TransactionCardProps {
 }
 
 const ICON_EMOJI: Record<string, string> = {
-  home: "🏠", zap: "⚡", flame: "🔥", droplets: "💧", wifi: "📶",
-  smartphone: "📱", "shopping-cart": "🛒", utensils: "🍽️", bus: "🚌",
-  bike: "🚲", banknote: "💵", package: "📦", tv: "📺",
-  "shopping-bag": "🛍️", stethoscope: "🏥", "graduation-cap": "🎓",
-  gift: "🎁", briefcase: "💼", code: "💻", building: "🏢",
-  "plus-circle": "➕", moon: "🌙", plane: "✈️", lamp: "💡",
-  heart: "❤️", shirt: "👔", "shield-alert": "🛡️",
+  home: "🏠",
+  zap: "⚡",
+  flame: "🔥",
+  droplets: "💧",
+  wifi: "📶",
+  smartphone: "📱",
+  "shopping-cart": "🛒",
+  utensils: "🍽️",
+  bus: "🚌",
+  bike: "🚲",
+  banknote: "💵",
+  package: "📦",
+  tv: "📺",
+  "shopping-bag": "🛍️",
+  stethoscope: "🏥",
+  "graduation-cap": "🎓",
+  gift: "🎁",
+  briefcase: "💼",
+  code: "💻",
+  building: "🏢",
+  "plus-circle": "➕",
+  moon: "🌙",
+  plane: "✈️",
+  lamp: "💡",
+  heart: "❤️",
+  shirt: "👔",
+  "shield-alert": "🛡️",
 };
 
 export const TransactionCard = React.memo(function TransactionCard({
@@ -41,8 +61,7 @@ export const TransactionCard = React.memo(function TransactionCard({
         <View
           className="w-0.5 h-8 rounded-full mr-2.5"
           style={{
-            backgroundColor:
-              FLAG_COLORS[transaction.flag as FlagColor] || "#4e6381",
+            backgroundColor: FLAG_COLORS[transaction.flag as FlagColor] || "#4e6381",
           }}
         />
       )}

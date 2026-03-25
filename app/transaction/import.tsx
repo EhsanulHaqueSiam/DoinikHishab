@@ -1,19 +1,12 @@
-import React, { useState, useCallback } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  Pressable,
-  Alert,
-  FlatList,
-} from "react-native";
-import { useRouter } from "expo-router";
-import { useMutation, useAction } from "convex/react";
-import { api } from "../../convex/_generated/api";
-import { Card } from "../../src/components/ui/Card";
-import { Button } from "../../src/components/ui/Button";
+import { useAction } from "convex/react";
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
+import { useRouter } from "expo-router";
+import { useCallback, useState } from "react";
+import { Alert, FlatList, Pressable, Text, View } from "react-native";
+import { api } from "../../convex/_generated/api";
+import { Button } from "../../src/components/ui/Button";
+import { Card } from "../../src/components/ui/Card";
 
 interface ParsedRow {
   date: string;
@@ -57,7 +50,16 @@ export default function ImportScreen() {
       const categories = await categorize({ descriptions });
 
       const enriched: ParsedRow[] = parsed.map(
-        (r: { date: string; description: string; amount: number; reference: string; type: "expense" | "income" }, i: number) => ({
+        (
+          r: {
+            date: string;
+            description: string;
+            amount: number;
+            reference: string;
+            type: "expense" | "income";
+          },
+          i: number
+        ) => ({
           ...r,
           suggestedCategory: categories[i]?.categoryName ?? "Uncategorized",
           confidence: categories[i]?.confidence ?? 0,
@@ -66,7 +68,7 @@ export default function ImportScreen() {
       );
 
       setRows(enriched);
-    } catch (error) {
+    } catch (_error) {
       Alert.alert("Error", "Failed to parse file. Please check the format.");
     } finally {
       setLoading(false);
@@ -74,11 +76,7 @@ export default function ImportScreen() {
   }, [parseCSV, categorize]);
 
   const toggleRow = useCallback((index: number) => {
-    setRows((prev) =>
-      prev.map((r, i) =>
-        i === index ? { ...r, approved: !r.approved } : r
-      )
-    );
+    setRows((prev) => prev.map((r, i) => (i === index ? { ...r, approved: !r.approved } : r)));
   }, []);
 
   const importAll = useCallback(async () => {
@@ -91,12 +89,10 @@ export default function ImportScreen() {
     setImporting(true);
     try {
       // In production, this would batch-create transactions via a Convex mutation
-      Alert.alert(
-        "Success",
-        `${approved.length} transaction(s) imported successfully.`,
-        [{ text: "OK", onPress: () => router.back() }]
-      );
-    } catch (error) {
+      Alert.alert("Success", `${approved.length} transaction(s) imported successfully.`, [
+        { text: "OK", onPress: () => router.back() },
+      ]);
+    } catch (_error) {
       Alert.alert("Error", "Failed to import transactions.");
     } finally {
       setImporting(false);
@@ -127,9 +123,7 @@ export default function ImportScreen() {
             </Text>
             <View className="flex-row items-center mt-1 gap-1">
               <View className="bg-surface-300 px-2 py-0.5 rounded-full">
-                <Text className="text-xs text-primary-700">
-                  {item.suggestedCategory}
-                </Text>
+                <Text className="text-xs text-primary-700">{item.suggestedCategory}</Text>
               </View>
               {item.confidence > 0 && (
                 <Text className="text-xs text-muted-foreground">
@@ -148,16 +142,10 @@ export default function ImportScreen() {
             </Text>
             <View
               className={`w-5 h-5 rounded-full border-2 mt-1 items-center justify-center ${
-                item.approved
-                  ? "bg-primary-600 border-primary-600"
-                  : "border-border bg-transparent"
+                item.approved ? "bg-primary-600 border-primary-600" : "border-border bg-transparent"
               }`}
             >
-              {item.approved && (
-                <Text className="text-white text-xs font-bold">
-                  {"\u2713"}
-                </Text>
-              )}
+              {item.approved && <Text className="text-white text-xs font-bold">{"\u2713"}</Text>}
             </View>
           </View>
         </View>
@@ -173,9 +161,7 @@ export default function ImportScreen() {
           <Pressable onPress={() => router.back()}>
             <Text className="text-primary-600 text-base">Cancel</Text>
           </Pressable>
-          <Text className="text-lg font-bold text-foreground">
-            Import Transactions
-          </Text>
+          <Text className="text-lg font-bold text-foreground">Import Transactions</Text>
           <View className="w-14" />
         </View>
       </View>
@@ -187,12 +173,10 @@ export default function ImportScreen() {
             <View className="w-20 h-20 rounded-full bg-surface-300 items-center justify-center">
               <Text className="text-3xl">📄</Text>
             </View>
-            <Text className="text-lg font-semibold text-foreground">
-              Import from CSV
-            </Text>
+            <Text className="text-lg font-semibold text-foreground">Import from CSV</Text>
             <Text className="text-sm text-muted-foreground text-center px-8">
-              Upload a CSV file from your bank statement. Supported columns:
-              Date, Description, Amount, Reference.
+              Upload a CSV file from your bank statement. Supported columns: Date, Description,
+              Amount, Reference.
             </Text>
             <Button onPress={pickFile} loading={loading} size="lg">
               Choose File
@@ -204,9 +188,7 @@ export default function ImportScreen() {
             <Card className="mb-3">
               <View className="flex-row items-center justify-between">
                 <View>
-                  <Text className="text-sm font-medium text-foreground">
-                    {fileName}
-                  </Text>
+                  <Text className="text-sm font-medium text-foreground">{fileName}</Text>
                   <Text className="text-xs text-muted-foreground mt-0.5">
                     {approvedCount} of {rows.length} transactions selected
                   </Text>

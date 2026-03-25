@@ -38,22 +38,22 @@ export function formatDateShort(dateStr: string): string {
 }
 
 export function getMonthLabel(month: string): string {
-  const year = parseInt(month.substring(0, 4));
-  const m = parseInt(month.substring(4, 6)) - 1;
+  const year = parseInt(month.substring(0, 4), 10);
+  const m = parseInt(month.substring(4, 6), 10) - 1;
   const d = new Date(year, m, 1);
   return d.toLocaleDateString("en-US", { month: "long", year: "numeric" });
 }
 
 export function previousMonth(month: string): string {
-  const year = parseInt(month.substring(0, 4));
-  const m = parseInt(month.substring(4, 6));
+  const year = parseInt(month.substring(0, 4), 10);
+  const m = parseInt(month.substring(4, 6), 10);
   if (m === 1) return `${year - 1}12`;
   return `${year}${String(m - 1).padStart(2, "0")}`;
 }
 
 export function nextMonth(month: string): string {
-  const year = parseInt(month.substring(0, 4));
-  const m = parseInt(month.substring(4, 6));
+  const year = parseInt(month.substring(0, 4), 10);
+  const m = parseInt(month.substring(4, 6), 10);
   if (m === 12) return `${year + 1}01`;
   return `${year}${String(m + 1).padStart(2, "0")}`;
 }

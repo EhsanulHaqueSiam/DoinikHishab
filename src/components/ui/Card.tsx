@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import { View, type ViewProps } from "react-native";
 import { shadow } from "../../lib/platform";
 
@@ -25,9 +25,7 @@ export function Card({
     <View
       className={`rounded-2xl p-4 ${variantClasses[variant]} ${className}`}
       style={[
-        variant === "elevated"
-          ? shadow("#000", 0, 8, 0.4, 16, 8)
-          : shadow("#000", 0, 2, 0.2, 8, 3),
+        variant === "elevated" ? shadow("#000", 0, 8, 0.4, 16, 8) : shadow("#000", 0, 2, 0.2, 8, 3),
         style,
       ]}
       {...props}

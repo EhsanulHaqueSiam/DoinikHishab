@@ -18,8 +18,7 @@ export function matchCategory(
   if (!description) return null;
 
   const lower = description.toLowerCase().trim();
-  let bestMatch: { categoryId: Id<"categories">; confidence: number } | null =
-    null;
+  let bestMatch: { categoryId: Id<"categories">; confidence: number } | null = null;
 
   for (const rule of rules) {
     const pattern = rule.pattern.toLowerCase();
@@ -41,35 +40,54 @@ export function matchCategory(
  */
 export const BD_CATEGORY_KEYWORDS: Record<string, string[]> = {
   "Food & Groceries": [
-    "agora", "shwapno", "meena bazar", "unimart", "groceries",
-    "bazar", "bazaar", "chaldal", "pandamart",
+    "agora",
+    "shwapno",
+    "meena bazar",
+    "unimart",
+    "groceries",
+    "bazar",
+    "bazaar",
+    "chaldal",
+    "pandamart",
   ],
   "Eating Out": [
-    "foodpanda", "pathao food", "hungrynaki", "restaurant",
-    "cafe", "coffee", "tea", "cha", "hotel",
+    "foodpanda",
+    "pathao food",
+    "hungrynaki",
+    "restaurant",
+    "cafe",
+    "coffee",
+    "tea",
+    "cha",
+    "hotel",
   ],
-  Transport: [
-    "uber", "pathao", "obhai", "bus", "train",
-    "railway", "launch", "fare",
-  ],
+  Transport: ["uber", "pathao", "obhai", "bus", "train", "railway", "launch", "fare"],
   Rickshaw: ["rickshaw", "riksha", "cng", "auto"],
   "Mobile Recharge": [
-    "flexiload", "recharge", "grameenphone", "gp", "robi",
-    "banglalink", "teletalk", "airtel",
+    "flexiload",
+    "recharge",
+    "grameenphone",
+    "gp",
+    "robi",
+    "banglalink",
+    "teletalk",
+    "airtel",
   ],
   bKash: ["bkash", "bikash"],
   Nagad: ["nagad"],
-  "Online Shopping": [
-    "daraz", "evaly", "ajkerdeal", "amazon", "aliexpress",
-    "shopify", "ebay",
-  ],
+  "Online Shopping": ["daraz", "evaly", "ajkerdeal", "amazon", "aliexpress", "shopify", "ebay"],
   Electricity: ["desco", "dpdc", "bpdb", "nesco", "electricity", "bidyut"],
   Gas: ["titas", "gas"],
   Water: ["wasa", "water", "pani"],
   Internet: ["link3", "amber it", "carnival", "isp", "internet", "wifi"],
   "Health & Medical": [
-    "pharmacy", "doctor", "hospital", "clinic", "lab test",
-    "pathology", "medicine",
+    "pharmacy",
+    "doctor",
+    "hospital",
+    "clinic",
+    "lab test",
+    "pathology",
+    "medicine",
   ],
   Education: ["tuition", "school", "college", "university", "coaching"],
   Entertainment: ["netflix", "youtube", "spotify", "cinema", "binge"],
@@ -85,9 +103,7 @@ export function learnFromCorrection(
 
   // Check if rule already exists
   const existing = existingRules.find(
-    (r) =>
-      r.pattern.toLowerCase() === description.toLowerCase() &&
-      r.categoryId === categoryId
+    (r) => r.pattern.toLowerCase() === description.toLowerCase() && r.categoryId === categoryId
   );
 
   if (existing) return null;

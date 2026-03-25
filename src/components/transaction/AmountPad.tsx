@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from "react";
-import { View, Text, Pressable } from "react-native";
+import { useCallback, useState } from "react";
+import { Pressable, Text, View } from "react-native";
 import { formatCurrency } from "../../lib/currency";
 
 interface AmountPadProps {
@@ -32,7 +32,7 @@ export function AmountPad({ value, onChange, type }: AmountPadProps) {
         newDisplay = display.slice(0, -1);
       } else if (key === ".") {
         if (display.includes(".")) return;
-        newDisplay = display + ".";
+        newDisplay = `${display}.`;
       } else {
         const parts = display.split(".");
         if (parts[1] && parts[1].length >= 2) return;
@@ -67,17 +67,15 @@ export function AmountPad({ value, onChange, type }: AmountPadProps) {
 
       {/* Keypad */}
       <View className="w-full px-4 gap-2">
-        {KEYS.map((row, i) => (
-          <View key={i} className="flex-row gap-2">
+        {KEYS.map((row) => (
+          <View key={row.join("-")} className="flex-row gap-2">
             {row.map((key) => (
               <Pressable
                 key={key}
                 onPress={() => handleKey(key)}
                 className="flex-1 items-center justify-center py-4 rounded-xl bg-surface-200 active:bg-surface-400 border border-border/20"
               >
-                <Text className="text-xl font-bold text-foreground">
-                  {key}
-                </Text>
+                <Text className="text-xl font-bold text-foreground">{key}</Text>
               </Pressable>
             ))}
           </View>

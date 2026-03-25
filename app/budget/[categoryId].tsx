@@ -1,16 +1,16 @@
-import React, { useState } from "react";
-import { View, Text, ScrollView, Pressable, TextInput } from "react-native";
+import { useMutation, useQuery } from "convex/react";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useQuery, useMutation } from "convex/react";
+import { useState } from "react";
+import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { api } from "../../convex/_generated/api";
-import { useAppStore } from "../../src/stores/app-store";
-import { Card } from "../../src/components/ui/Card";
-import { Button } from "../../src/components/ui/Button";
+import type { Id } from "../../convex/_generated/dataModel";
 import { GoalProgress } from "../../src/components/budget/GoalProgress";
-import { formatCurrency, takaToPaisa, paisaToTaka } from "../../src/lib/currency";
+import { Button } from "../../src/components/ui/Button";
+import { Card } from "../../src/components/ui/Card";
+import { formatCurrency, takaToPaisa } from "../../src/lib/currency";
 import { getMonthLabel } from "../../src/lib/date";
 import { calculateTargetProgress } from "../../src/services/budget-engine";
-import type { Id } from "../../convex/_generated/dataModel";
+import { useAppStore } from "../../src/stores/app-store";
 
 const TARGET_TYPES = [
   { key: "needed_for_spending", label: "Monthly Spending", desc: "Need this much each month" },
@@ -20,7 +20,15 @@ const TARGET_TYPES = [
   { key: "monthly_savings", label: "Monthly Savings", desc: "Save a fixed amount monthly" },
 ] as const;
 
-function SummaryRow({ label, value, valueClass }: { label: string; value: string; valueClass?: string }) {
+function SummaryRow({
+  label,
+  value,
+  valueClass,
+}: {
+  label: string;
+  value: string;
+  valueClass?: string;
+}) {
   return (
     <View className="flex-row justify-between py-2.5">
       <Text className="text-xs text-surface-800">{label}</Text>
@@ -34,9 +42,18 @@ export default function CategoryDetailScreen() {
   const router = useRouter();
   const { userId, currentMonth } = useAppStore();
 
-  const category = useQuery(api.categories.getById, categoryId ? { id: categoryId as Id<"categories"> } : "skip");
-  const target = useQuery(api.targets.getByCategory, categoryId ? { categoryId: categoryId as Id<"categories"> } : "skip");
-  const budgets = useQuery(api.budgets.getByMonth, userId ? { userId, month: currentMonth } : "skip");
+  const category = useQuery(
+    api.categories.getById,
+    categoryId ? { id: categoryId as Id<"categories"> } : "skip"
+  );
+  const target = useQuery(
+    api.targets.getByCategory,
+    categoryId ? { categoryId: categoryId as Id<"categories"> } : "skip"
+  );
+  const budgets = useQuery(
+    api.budgets.getByMonth,
+    userId ? { userId, month: currentMonth } : "skip"
+  );
 
   const setTarget = useMutation(api.targets.set);
   const removeTarget = useMutation(api.targets.remove);
@@ -98,7 +115,12 @@ export default function CategoryDetailScreen() {
         </Text>
       </View>
 
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false} scrollEventThrottle={8} decelerationRate="fast">
+      <ScrollView
+        className="flex-1"
+        showsVerticalScrollIndicator={false}
+        scrollEventThrottle={8}
+        decelerationRate="fast"
+      >
         {/* Budget Summary */}
         <View className="px-4 mt-5">
           <Card className="px-4 py-0">
@@ -112,9 +134,15 @@ export default function CategoryDetailScreen() {
             <View className="h-px bg-border/15" />
             <View className="flex-row justify-between py-3">
               <Text className="text-sm font-bold text-foreground">Available</Text>
-              <Text className={`text-sm font-bold ${
-                available < 0 ? "text-danger" : available > 0 ? "text-success" : "text-surface-800"
-              }`}>
+              <Text
+                className={`text-sm font-bold ${
+                  available < 0
+                    ? "text-danger"
+                    : available > 0
+                      ? "text-success"
+                      : "text-surface-800"
+                }`}
+              >
                 {formatCurrency(available)}
               </Text>
             </View>
@@ -139,7 +167,9 @@ export default function CategoryDetailScreen() {
                   placeholderTextColor="#4e6381"
                 />
               </View>
-              <Button onPress={handleQuickAssign} size="md">Assign</Button>
+              <Button onPress={handleQuickAssign} size="md">
+                Assign
+              </Button>
             </View>
           </Card>
         </View>
@@ -158,15 +188,25 @@ export default function CategoryDetailScreen() {
               />
               <View className="flex-row gap-3 mt-4">
                 <View className="flex-1">
-                  <Button variant="outline" size="sm" onPress={() => setShowTargetForm(true)}>Edit Goal</Button>
+                  <Button variant="outline" size="sm" onPress={() => setShowTargetForm(true)}>
+                    Edit Goal
+                  </Button>
                 </View>
                 <View className="flex-1">
-                  <Button variant="ghost" size="sm" onPress={() => removeTarget({ categoryId: categoryId as Id<"categories"> })}>Remove</Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onPress={() => removeTarget({ categoryId: categoryId as Id<"categories"> })}
+                  >
+                    Remove
+                  </Button>
                 </View>
               </View>
             </Card>
           ) : !showTargetForm ? (
-            <Button variant="outline" onPress={() => setShowTargetForm(true)}>+ Set a Target</Button>
+            <Button variant="outline" onPress={() => setShowTargetForm(true)}>
+              + Set a Target
+            </Button>
           ) : null}
 
           {showTargetForm && (
@@ -178,10 +218,14 @@ export default function CategoryDetailScreen() {
                     key={tt.key}
                     onPress={() => setTargetType(tt.key)}
                     className={`px-3 py-2.5 rounded-xl border ${
-                      targetType === tt.key ? "border-primary-500 bg-surface-300" : "border-border/40"
+                      targetType === tt.key
+                        ? "border-primary-500 bg-surface-300"
+                        : "border-border/40"
                     }`}
                   >
-                    <Text className={`text-xs font-semibold ${targetType === tt.key ? "text-primary-700" : "text-foreground"}`}>
+                    <Text
+                      className={`text-xs font-semibold ${targetType === tt.key ? "text-primary-700" : "text-foreground"}`}
+                    >
                       {tt.label}
                     </Text>
                     <Text className="text-2xs text-surface-800 mt-0.5">{tt.desc}</Text>
@@ -213,7 +257,9 @@ export default function CategoryDetailScreen() {
 
               <View className="flex-row gap-3">
                 <View className="flex-1">
-                  <Button variant="ghost" onPress={() => setShowTargetForm(false)}>Cancel</Button>
+                  <Button variant="ghost" onPress={() => setShowTargetForm(false)}>
+                    Cancel
+                  </Button>
                 </View>
                 <View className="flex-1">
                   <Button onPress={handleSetTarget}>Save Target</Button>

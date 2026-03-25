@@ -1,7 +1,15 @@
-import React, { useState, useRef, useCallback } from "react";
-import { View, Text, FlatList, KeyboardAvoidingView, Platform, Pressable, TextInput } from "react-native";
-import { useRouter } from "expo-router";
 import { useAction } from "convex/react";
+import { useRouter } from "expo-router";
+import React, { useCallback, useRef, useState } from "react";
+import {
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import { api } from "../../convex/_generated/api";
 import { Button } from "../../src/components/ui/Button";
 
@@ -44,7 +52,8 @@ export default function AIChatScreen() {
     {
       id: "welcome",
       role: "bot",
-      content: "Hi! I can help you understand your finances. Ask me about your spending, categories, or savings.",
+      content:
+        "Hi! I can help you understand your finances. Ask me about your spending, categories, or savings.",
       timestamp: Date.now(),
     },
   ]);
@@ -57,15 +66,40 @@ export default function AIChatScreen() {
     async (text?: string) => {
       const content = text ?? input.trim();
       if (!content || loading) return;
-      setMessages((prev) => [...prev, { id: `user-${Date.now()}`, role: "user", content, timestamp: Date.now() }]);
+      setMessages((prev) => [
+        ...prev,
+        { id: `user-${Date.now()}`, role: "user", content, timestamp: Date.now() },
+      ]);
       setInput("");
       setLoading(true);
       try {
-        const response = await routeAI({ provider: "stub", model: "stub", apiKey: "stub", prompt: content, fn: "nlq" });
+        const response = await routeAI({
+          provider: "stub",
+          model: "stub",
+          apiKey: "stub",
+          prompt: content,
+          fn: "nlq",
+        });
         const parsed = JSON.parse(response.result);
-        setMessages((prev) => [...prev, { id: `bot-${Date.now()}`, role: "bot", content: parsed.answer || parsed.advice || response.result, timestamp: Date.now() }]);
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: `bot-${Date.now()}`,
+            role: "bot",
+            content: parsed.answer || parsed.advice || response.result,
+            timestamp: Date.now(),
+          },
+        ]);
       } catch {
-        setMessages((prev) => [...prev, { id: `err-${Date.now()}`, role: "bot", content: "Sorry, I couldn't process that. Please try again.", timestamp: Date.now() }]);
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: `err-${Date.now()}`,
+            role: "bot",
+            content: "Sorry, I couldn't process that. Please try again.",
+            timestamp: Date.now(),
+          },
+        ]);
       } finally {
         setLoading(false);
       }
@@ -73,11 +107,17 @@ export default function AIChatScreen() {
     [input, loading, routeAI]
   );
 
-  const renderMessage = useCallback(({ item }: { item: Message }) => <MessageBubble item={item} />, []);
+  const renderMessage = useCallback(
+    ({ item }: { item: Message }) => <MessageBubble item={item} />,
+    []
+  );
   const showSuggestions = messages.length <= 1;
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} className="flex-1 bg-background">
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      className="flex-1 bg-background"
+    >
       {/* Header */}
       <View className="bg-surface-100 border-b border-border px-4 pt-14 pb-4">
         <View className="flex-row items-center justify-between">

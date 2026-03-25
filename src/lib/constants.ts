@@ -1,5 +1,3 @@
-import type { Id } from "../../convex/_generated/dataModel";
-
 export const APP_NAME = "DoinikHishab";
 export const APP_NAME_BN = "দৈনিক হিসাব";
 

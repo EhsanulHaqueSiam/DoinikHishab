@@ -1,17 +1,17 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
-import { View, Text, Pressable, Platform } from "react-native";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { useMutation, useQuery } from "convex/react";
+import { useCallback, useMemo, useRef, useState } from "react";
+import { Platform, Pressable, Text, View } from "react-native";
 import { api } from "../../../convex/_generated/api";
+import type { Id } from "../../../convex/_generated/dataModel";
+import { formatCurrency } from "../../lib/currency";
+import { today } from "../../lib/date";
+import { shadow } from "../../lib/platform";
 import { useAppStore } from "../../stores/app-store";
 import { useUIStore } from "../../stores/ui-store";
-import { shadow } from "../../lib/platform";
-import { formatCurrency } from "../../lib/currency";
+import { Button } from "../ui/Button";
 import { AmountPad } from "./AmountPad";
 import { CategoryGrid } from "./CategoryGrid";
-import { Button } from "../ui/Button";
-import { today } from "../../lib/date";
-import type { Id } from "../../../convex/_generated/dataModel";
 
 type Step = "amount" | "category" | "confirm";
 
@@ -68,7 +68,16 @@ export function QuickAdd() {
     } catch (error) {
       console.error("Failed to save transaction:", error);
     }
-  }, [userId, defaultAccount, amount, selectedCategory, description, quickAddType, createTransaction, closeQuickAdd]);
+  }, [
+    userId,
+    defaultAccount,
+    amount,
+    selectedCategory,
+    description,
+    quickAddType,
+    createTransaction,
+    closeQuickAdd,
+  ]);
 
   const handleCategorySelect = useCallback((id: Id<"categories">) => {
     setSelectedCategory(id);
@@ -111,9 +120,7 @@ export function QuickAdd() {
                 quickAddType === type ? "bg-surface-400" : ""
               }`}
               style={
-                quickAddType === type
-                  ? shadow(TYPE_COLORS[type].shadow, 0, 0, 0.25, 8)
-                  : undefined
+                quickAddType === type ? shadow(TYPE_COLORS[type].shadow, 0, 0, 0.25, 8) : undefined
               }
             >
               <Text

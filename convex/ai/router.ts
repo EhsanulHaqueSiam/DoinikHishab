@@ -18,11 +18,7 @@ export const route = action({
     model: v.string(),
     apiKey: v.string(),
     prompt: v.string(),
-    fn: v.union(
-      v.literal("categorize"),
-      v.literal("nlq"),
-      v.literal("advisor")
-    ),
+    fn: v.union(v.literal("categorize"), v.literal("nlq"), v.literal("advisor")),
     context: v.optional(v.string()),
   },
   handler: async (_ctx, args): Promise<AIResponse> => {
@@ -70,7 +66,7 @@ function stubCategorize(prompt: string): string {
   return JSON.stringify({ category, confidence: 0.75 });
 }
 
-function stubNLQ(prompt: string, context?: string): string {
+function stubNLQ(prompt: string, _context?: string): string {
   const lower = prompt.toLowerCase();
 
   if (lower.includes("how much") && lower.includes("food")) {
@@ -81,26 +77,30 @@ function stubNLQ(prompt: string, context?: string): string {
   }
   if (lower.includes("top") && lower.includes("expense")) {
     return JSON.stringify({
-      answer: "Your top expenses this month are: 1) Rent - 15,000 BDT, 2) Food & Groceries - 8,000 BDT, 3) Transport - 3,500 BDT",
+      answer:
+        "Your top expenses this month are: 1) Rent - 15,000 BDT, 2) Food & Groceries - 8,000 BDT, 3) Transport - 3,500 BDT",
       type: "top_expenses",
     });
   }
   if (lower.includes("save") || lower.includes("saving")) {
     return JSON.stringify({
-      answer: "You have saved approximately 5,000 BDT this month compared to last month's spending patterns.",
+      answer:
+        "You have saved approximately 5,000 BDT this month compared to last month's spending patterns.",
       type: "savings",
     });
   }
 
   return JSON.stringify({
-    answer: "I can help you understand your spending. Try asking about specific categories, monthly totals, or savings tips!",
+    answer:
+      "I can help you understand your spending. Try asking about specific categories, monthly totals, or savings tips!",
     type: "general",
   });
 }
 
-function stubAdvisor(prompt: string, context?: string): string {
+function stubAdvisor(_prompt: string, _context?: string): string {
   return JSON.stringify({
-    advice: "Based on your spending patterns, consider setting a budget for eating out. Your food expenses have been 20% above the recommended allocation for your income level.",
+    advice:
+      "Based on your spending patterns, consider setting a budget for eating out. Your food expenses have been 20% above the recommended allocation for your income level.",
     tips: [
       "Track daily small purchases - they add up quickly",
       "Set weekly spending limits for variable categories",

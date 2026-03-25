@@ -1,5 +1,4 @@
-import React from "react";
-import { View, Text } from "react-native";
+import { Text, View } from "react-native";
 import { formatCurrency } from "../../lib/currency";
 
 interface MonthSnapshot {
@@ -14,8 +13,18 @@ interface NetWorthChartProps {
 function formatMonth(month: string): string {
   const [year, m] = month.split("-");
   const months = [
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
   ];
   return `${months[parseInt(m, 10) - 1]} '${year.slice(2)}`;
 }
@@ -46,9 +55,7 @@ export function NetWorthChart({ snapshots }: NetWorthChartProps) {
       <View className="flex-row items-baseline justify-between">
         <View>
           <Text className="text-sm text-muted-foreground">Net Worth</Text>
-          <Text className="text-2xl font-bold text-foreground">
-            {formatCurrency(last)}
-          </Text>
+          <Text className="text-2xl font-bold text-foreground">{formatCurrency(last)}</Text>
         </View>
         <View className="items-end">
           <Text
@@ -68,8 +75,7 @@ export function NetWorthChart({ snapshots }: NetWorthChartProps) {
       {/* Bar chart */}
       <View className="flex-row items-end justify-between gap-1" style={{ height: BAR_MAX_HEIGHT }}>
         {snapshots.map((snapshot, index) => {
-          const normalizedHeight =
-            ((snapshot.balance - minVal) / range) * BAR_MAX_HEIGHT;
+          const normalizedHeight = ((snapshot.balance - minVal) / range) * BAR_MAX_HEIGHT;
           const barHeight = Math.max(normalizedHeight, 4);
           const isPositive = snapshot.balance >= 0;
 
@@ -94,9 +100,7 @@ export function NetWorthChart({ snapshots }: NetWorthChartProps) {
       <View className="flex-row justify-between">
         {snapshots.map((snapshot) => (
           <View key={snapshot.month} className="flex-1 items-center">
-            <Text className="text-[10px] text-muted-foreground">
-              {formatMonth(snapshot.month)}
-            </Text>
+            <Text className="text-[10px] text-muted-foreground">{formatMonth(snapshot.month)}</Text>
           </View>
         ))}
       </View>

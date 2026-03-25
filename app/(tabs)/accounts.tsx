@@ -1,21 +1,38 @@
-import React, { useState } from "react";
-import { View, Text, ScrollView, Pressable, TextInput } from "react-native";
-import { useQuery, useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { useRouter } from "expo-router";
+import { useState } from "react";
+import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { api } from "../../convex/_generated/api";
-import { useAppStore } from "../../src/stores/app-store";
-import { Card } from "../../src/components/ui/Card";
 import { Button } from "../../src/components/ui/Button";
+import { Card } from "../../src/components/ui/Card";
+import { ACCOUNT_TYPE_LABELS } from "../../src/lib/constants";
 import { formatCurrency, takaToPaisa } from "../../src/lib/currency";
 import { shadow } from "../../src/lib/platform";
-import { ACCOUNT_TYPE_LABELS } from "../../src/lib/constants";
+import { useAppStore } from "../../src/stores/app-store";
 
-type AccountType = "checking" | "savings" | "cash" | "credit_card" | "line_of_credit" | "mortgage" | "auto_loan" | "student_loan" | "other_debt" | "other_asset";
+type AccountType =
+  | "checking"
+  | "savings"
+  | "cash"
+  | "credit_card"
+  | "line_of_credit"
+  | "mortgage"
+  | "auto_loan"
+  | "student_loan"
+  | "other_debt"
+  | "other_asset";
 
 const ACCOUNT_ICONS: Record<string, string> = {
-  checking: "🏧", savings: "🏦", cash: "💵", credit_card: "💳",
-  line_of_credit: "💳", mortgage: "🏠", auto_loan: "🚗",
-  student_loan: "🎓", other_debt: "📄", other_asset: "💎",
+  checking: "🏧",
+  savings: "🏦",
+  cash: "💵",
+  credit_card: "💳",
+  line_of_credit: "💳",
+  mortgage: "🏠",
+  auto_loan: "🚗",
+  student_loan: "🎓",
+  other_debt: "📄",
+  other_asset: "💎",
 };
 
 export default function AccountsScreen() {
@@ -34,7 +51,9 @@ export default function AccountsScreen() {
   const handleAdd = async () => {
     if (!userId || !newName.trim()) return;
     await createAccount({
-      userId, name: newName.trim(), type: newType,
+      userId,
+      name: newName.trim(),
+      type: newType,
       balance: takaToPaisa(parseFloat(newBalance) || 0),
     });
     setNewName("");
@@ -54,9 +73,7 @@ export default function AccountsScreen() {
           <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest">
             {title}
           </Text>
-          <Text className="text-xs font-bold text-accent-500">
-            {formatCurrency(total)}
-          </Text>
+          <Text className="text-xs font-bold text-accent-500">{formatCurrency(total)}</Text>
         </View>
         <Card className="mx-4 p-0 overflow-hidden">
           {accts.map((account, idx) => (
@@ -70,9 +87,13 @@ export default function AccountsScreen() {
               </View>
               <View className="flex-1">
                 <Text className="text-sm font-semibold text-foreground">{account.name}</Text>
-                <Text className="text-2xs text-surface-800 mt-0.5">{ACCOUNT_TYPE_LABELS[account.type]}</Text>
+                <Text className="text-2xs text-surface-800 mt-0.5">
+                  {ACCOUNT_TYPE_LABELS[account.type]}
+                </Text>
               </View>
-              <Text className={`text-sm font-bold tracking-tight ${account.balance >= 0 ? "text-foreground" : "text-danger"}`}>
+              <Text
+                className={`text-sm font-bold tracking-tight ${account.balance >= 0 ? "text-foreground" : "text-danger"}`}
+              >
                 {formatCurrency(account.balance)}
               </Text>
               {idx < accts.length - 1 && (
@@ -87,7 +108,12 @@ export default function AccountsScreen() {
 
   return (
     <View className="flex-1 bg-background">
-      <ScrollView showsVerticalScrollIndicator={false} scrollEventThrottle={8} decelerationRate="fast" removeClippedSubviews>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        scrollEventThrottle={8}
+        decelerationRate="fast"
+        removeClippedSubviews
+      >
         {/* Net Worth Hero */}
         <View className="px-4 py-5">
           <Card
@@ -97,7 +123,10 @@ export default function AccountsScreen() {
             <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest">
               Net Worth
             </Text>
-            <Text className="text-hero font-bold text-foreground mt-1 tracking-tight" style={{ lineHeight: 42 }}>
+            <Text
+              className="text-hero font-bold text-foreground mt-1 tracking-tight"
+              style={{ lineHeight: 42 }}
+            >
               {formatCurrency(balances?.total ?? 0)}
             </Text>
           </Card>
@@ -127,18 +156,22 @@ export default function AccountsScreen() {
               />
 
               <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-3">
-                {(Object.entries(ACCOUNT_TYPE_LABELS) as [AccountType, string][]).map(([type, label]) => (
-                  <Pressable
-                    key={type}
-                    onPress={() => setNewType(type)}
-                    className={`px-3 py-2 rounded-lg mr-2 ${newType === type ? "bg-primary-500" : "bg-surface-300"}`}
-                    style={newType === type ? shadow("#0d9488", 0, 0, 0.3, 6) : undefined}
-                  >
-                    <Text className={`text-xs font-medium ${newType === type ? "text-white" : "text-foreground"}`}>
-                      {ACCOUNT_ICONS[type]} {label}
-                    </Text>
-                  </Pressable>
-                ))}
+                {(Object.entries(ACCOUNT_TYPE_LABELS) as [AccountType, string][]).map(
+                  ([type, label]) => (
+                    <Pressable
+                      key={type}
+                      onPress={() => setNewType(type)}
+                      className={`px-3 py-2 rounded-lg mr-2 ${newType === type ? "bg-primary-500" : "bg-surface-300"}`}
+                      style={newType === type ? shadow("#0d9488", 0, 0, 0.3, 6) : undefined}
+                    >
+                      <Text
+                        className={`text-xs font-medium ${newType === type ? "text-white" : "text-foreground"}`}
+                      >
+                        {ACCOUNT_ICONS[type]} {label}
+                      </Text>
+                    </Pressable>
+                  )
+                )}
               </ScrollView>
 
               <TextInput
@@ -152,10 +185,14 @@ export default function AccountsScreen() {
 
               <View className="flex-row gap-3">
                 <View className="flex-1">
-                  <Button variant="ghost" onPress={() => setShowAddForm(false)}>Cancel</Button>
+                  <Button variant="ghost" onPress={() => setShowAddForm(false)}>
+                    Cancel
+                  </Button>
                 </View>
                 <View className="flex-1">
-                  <Button onPress={handleAdd} disabled={!newName.trim()}>Add</Button>
+                  <Button onPress={handleAdd} disabled={!newName.trim()}>
+                    Add
+                  </Button>
                 </View>
               </View>
             </Card>

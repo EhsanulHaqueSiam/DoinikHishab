@@ -1,15 +1,15 @@
-import React, { useEffect, useCallback } from "react";
-import { View, Text, ScrollView, RefreshControl, Pressable } from "react-native";
-import { useQuery, useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
+import React, { useCallback, useEffect } from "react";
+import { Pressable, RefreshControl, ScrollView, Text, View } from "react-native";
 import { api } from "../../convex/_generated/api";
-import { useAppStore } from "../../src/stores/app-store";
-import { useUIStore } from "../../src/stores/ui-store";
 import { BalanceCard } from "../../src/components/dashboard/BalanceCard";
-import { TransactionCard } from "../../src/components/transaction/TransactionCard";
-import { QuickAdd } from "../../src/components/transaction/QuickAdd";
 import { FAB } from "../../src/components/platform/FAB";
+import { QuickAdd } from "../../src/components/transaction/QuickAdd";
+import { TransactionCard } from "../../src/components/transaction/TransactionCard";
 import { Card } from "../../src/components/ui/Card";
 import { formatCurrency } from "../../src/lib/currency";
+import { useAppStore } from "../../src/stores/app-store";
+import { useUIStore } from "../../src/stores/ui-store";
 
 function SectionHeader({ title }: { title: string }) {
   return (
@@ -20,8 +20,12 @@ function SectionHeader({ title }: { title: string }) {
 }
 
 const ACCOUNT_ICON: Record<string, string> = {
-  cash: "💵", savings: "🏦", credit_card: "💳",
-  checking: "🏧", line_of_credit: "💳", mortgage: "🏠",
+  cash: "💵",
+  savings: "🏦",
+  credit_card: "💳",
+  checking: "🏧",
+  line_of_credit: "💳",
+  mortgage: "🏠",
 };
 
 export default function DashboardScreen() {
@@ -51,22 +55,28 @@ export default function DashboardScreen() {
           }
         });
     }
-  }, [userId, deviceId]);
+  }, [userId, deviceId, createOrGetUser, seedCategories, setUserId]);
 
   const balances = useQuery(api.accounts.getTotalBalance, userId ? { userId } : "skip");
   const transactions = useQuery(api.transactions.list, userId ? { userId, limit: 10 } : "skip");
   const categories = useQuery(api.categories.listCategories, userId ? { userId } : "skip");
   const accounts = useQuery(api.accounts.list, userId ? { userId } : "skip");
 
-  const getCategoryInfo = useCallback((categoryId: string | undefined) => {
-    if (!categoryId || !categories) return { name: undefined, icon: undefined };
-    const cat = categories.find((c) => c._id === categoryId);
-    return { name: cat?.name, icon: cat?.icon || undefined };
-  }, [categories]);
+  const getCategoryInfo = useCallback(
+    (categoryId: string | undefined) => {
+      if (!categoryId || !categories) return { name: undefined, icon: undefined };
+      const cat = categories.find((c) => c._id === categoryId);
+      return { name: cat?.name, icon: cat?.icon || undefined };
+    },
+    [categories]
+  );
 
-  const getAccountName = useCallback((accountId: string) => {
-    return accounts?.find((a) => a._id === accountId)?.name;
-  }, [accounts]);
+  const getAccountName = useCallback(
+    (accountId: string) => {
+      return accounts?.find((a) => a._id === accountId)?.name;
+    },
+    [accounts]
+  );
 
   return (
     <View className="flex-1 bg-background">
@@ -132,13 +142,9 @@ export default function DashboardScreen() {
                     <View className="flex-row items-center justify-between py-3 px-4">
                       <View className="flex-row items-center gap-3">
                         <View className="w-9 h-9 rounded-lg bg-surface-300 items-center justify-center">
-                          <Text className="text-sm">
-                            {ACCOUNT_ICON[account.type] || "🏧"}
-                          </Text>
+                          <Text className="text-sm">{ACCOUNT_ICON[account.type] || "🏧"}</Text>
                         </View>
-                        <Text className="text-sm font-medium text-foreground">
-                          {account.name}
-                        </Text>
+                        <Text className="text-sm font-medium text-foreground">{account.name}</Text>
                       </View>
                       <Text
                         className={`text-sm font-bold tracking-tight ${
@@ -148,9 +154,7 @@ export default function DashboardScreen() {
                         {formatCurrency(account.balance)}
                       </Text>
                     </View>
-                    {idx < arr.length - 1 && (
-                      <View className="h-px bg-border/20 ml-16" />
-                    )}
+                    {idx < arr.length - 1 && <View className="h-px bg-border/20 ml-16" />}
                   </View>
                 ))}
             </Card>
@@ -162,9 +166,7 @@ export default function DashboardScreen() {
           <View className="px-4 mt-6">
             <Card className="items-center py-10">
               <Text className="text-4xl mb-3">🏦</Text>
-              <Text className="text-base font-bold text-foreground">
-                Add Your First Account
-              </Text>
+              <Text className="text-base font-bold text-foreground">Add Your First Account</Text>
               <Text className="text-xs text-surface-800 text-center mt-1.5 px-4 leading-5">
                 Start by adding a cash wallet or bank account to begin tracking
               </Text>
@@ -187,9 +189,7 @@ export default function DashboardScreen() {
                       categoryIcon={icon}
                       accountName={getAccountName(txn.accountId)}
                     />
-                    {idx < transactions.length - 1 && (
-                      <View className="h-px bg-border/15 ml-16" />
-                    )}
+                    {idx < transactions.length - 1 && <View className="h-px bg-border/15 ml-16" />}
                   </React.Fragment>
                 );
               })}
