@@ -1,13 +1,12 @@
 import React from "react";
 import { View, Text, Pressable, ScrollView } from "react-native";
 import { shadow } from "../../lib/platform";
-import type { Doc, Id } from "../../../convex/_generated/dataModel";
 
 interface CategoryGridProps {
-  categories: Doc<"categories">[];
-  groups: Doc<"categoryGroups">[];
-  selectedId: Id<"categories"> | null;
-  onSelect: (id: Id<"categories">) => void;
+  categories: any[];
+  groups: any[];
+  selectedId: string | null;
+  onSelect: (id: string) => void;
   type: "expense" | "income";
 }
 

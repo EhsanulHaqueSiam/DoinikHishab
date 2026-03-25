@@ -1,19 +1,21 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { View, Text, Pressable, Platform } from "react-native";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
-import { useMutation, useQuery } from "convex/react";
-import { api } from "../../../convex/_generated/api";
+import { useTranslation } from "react-i18next";
 import { useAppStore } from "../../stores/app-store";
 import { useUIStore } from "../../stores/ui-store";
+import { useQuickAdd } from "../../hooks/use-quick-add";
+import { useCategoryFrequency } from "../../hooks/use-category-frequency";
 import { shadow } from "../../lib/platform";
-import { formatCurrency } from "../../lib/currency";
+import { today } from "../../lib/date";
 import { AmountPad } from "./AmountPad";
 import { CategoryGrid } from "./CategoryGrid";
+import { CategoryFrequent } from "./CategoryFrequent";
+import { ExpandableDetails } from "./ExpandableDetails";
 import { Button } from "../ui/Button";
-import { today } from "../../lib/date";
-import type { Id } from "../../../convex/_generated/dataModel";
+import type { DetailsValues } from "./ExpandableDetails";
 
-type Step = "amount" | "category" | "confirm";
+type Step = "amount" | "category";
 
 const TYPE_COLORS = {
   expense: { active: "text-danger", shadow: "#f87171" },
@@ -21,67 +23,107 @@ const TYPE_COLORS = {
   transfer: { active: "text-primary-700", shadow: "#0d9488" },
 };
 
+function makeDefaultDetails(): DetailsValues {
+  return { payee: "", memo: "", flag: "", accountId: "", date: today() };
+}
+
 export function QuickAdd() {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const { isQuickAddOpen, quickAddType, closeQuickAdd } = useUIStore();
-  const { userId } = useAppStore();
+  const { locale } = useAppStore();
+  const { categories, groups, accounts, defaultAccount, saveTransaction } =
+    useQuickAdd();
+  const { frequentIds, increment } = useCategoryFrequency();
+  const { t } = useTranslation();
 
   const [step, setStep] = useState<Step>("amount");
   const [amount, setAmount] = useState(0);
-  const [selectedCategory, setSelectedCategory] = useState<Id<"categories"> | null>(null);
-  const [description, setDescription] = useState("");
+  const [details, setDetails] = useState<DetailsValues>(makeDefaultDetails());
+  const savingRef = useRef(false);
 
   const snapPoints = useMemo(() => ["85%"], []);
 
-  const categories = useQuery(api.categories.listCategories, userId ? { userId } : "skip");
-  const groups = useQuery(api.categories.listGroups, userId ? { userId } : "skip");
-  const accounts = useQuery(api.accounts.list, userId ? { userId } : "skip");
-  const createTransaction = useMutation(api.transactions.create);
+  const handleDetailsChange = useCallback(
+    (field: keyof DetailsValues, value: string) => {
+      setDetails((prev) => ({ ...prev, [field]: value }));
+    },
+    []
+  );
 
-  const defaultAccount = accounts?.find((a) => a.isDefault) ?? accounts?.[0];
+  const handleCategorySelect = useCallback(
+    async (categoryId: string) => {
+      if (savingRef.current || amount === 0) return;
+      savingRef.current = true;
 
-  const handleSave = useCallback(async () => {
-    if (!userId || !defaultAccount || amount === 0) return;
-    try {
-      await createTransaction({
-        userId,
-        accountId: defaultAccount._id,
-        categoryId: selectedCategory ?? undefined,
-        amount,
-        type: quickAddType,
-        description: description || undefined,
-        date: today(),
-        source: "manual",
-        isCleared: false,
-      });
-      setAmount(0);
-      setSelectedCategory(null);
-      setDescription("");
-      setStep("amount");
-      closeQuickAdd();
+      // 1. Haptic feedback (per D-05)
       if (Platform.OS !== "web") {
         try {
           const Haptics = require("expo-haptics");
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
         } catch {}
       }
-    } catch (error) {
-      console.error("Failed to save transaction:", error);
-    }
-  }, [userId, defaultAccount, amount, selectedCategory, description, quickAddType, createTransaction, closeQuickAdd]);
 
-  const handleCategorySelect = useCallback((id: Id<"categories">) => {
-    setSelectedCategory(id);
-    setStep("confirm");
-  }, []);
+      // 2. Increment frequency counter
+      increment(categoryId);
+
+      // 3. Save transaction
+      const accountId = details.accountId || defaultAccount?._id || "";
+      await saveTransaction({
+        amount,
+        categoryId,
+        accountId,
+        type: quickAddType,
+        date: details.date || today(),
+        description: details.payee || undefined,
+        memo: details.memo || undefined,
+        flag: details.flag || undefined,
+      });
+
+      // 4. After flash animation (~350ms), reset form for batch mode (per D-03)
+      setTimeout(() => {
+        setAmount(0);
+        setDetails(makeDefaultDetails());
+        setStep("amount");
+        savingRef.current = false;
+      }, 350);
+    },
+    [amount, details, defaultAccount, quickAddType, saveTransaction, increment]
+  );
+
+  const handleSkip = useCallback(async () => {
+    if (savingRef.current || amount === 0) return;
+    savingRef.current = true;
+
+    const accountId = details.accountId || defaultAccount?._id || "";
+    await saveTransaction({
+      amount,
+      accountId,
+      type: quickAddType,
+      date: details.date || today(),
+      description: details.payee || undefined,
+      memo: details.memo || undefined,
+      flag: details.flag || undefined,
+    });
+
+    setTimeout(() => {
+      setAmount(0);
+      setDetails(makeDefaultDetails());
+      setStep("amount");
+      savingRef.current = false;
+    }, 350);
+  }, [amount, details, defaultAccount, quickAddType, saveTransaction]);
 
   const handleClose = useCallback(() => {
     setAmount(0);
-    setSelectedCategory(null);
-    setDescription("");
+    setDetails(makeDefaultDetails());
     setStep("amount");
+    savingRef.current = false;
     closeQuickAdd();
   }, [closeQuickAdd]);
+
+  // Map transfer type to expense for category display
+  const categoryType =
+    quickAddType === "transfer" ? "expense" : quickAddType;
 
   if (!isQuickAddOpen) return null;
 
@@ -118,7 +160,9 @@ export function QuickAdd() {
             >
               <Text
                 className={`text-xs font-bold uppercase tracking-wider ${
-                  quickAddType === type ? TYPE_COLORS[type].active : "text-surface-800"
+                  quickAddType === type
+                    ? TYPE_COLORS[type].active
+                    : "text-surface-800"
                 }`}
               >
                 {type}
@@ -129,10 +173,28 @@ export function QuickAdd() {
 
         {step === "amount" && (
           <View className="flex-1">
-            <AmountPad value={amount} onChange={setAmount} type={quickAddType} />
+            <AmountPad
+              value={amount}
+              onChange={setAmount}
+              type={quickAddType}
+              locale={locale}
+            />
+            <ExpandableDetails
+              values={details}
+              onChange={handleDetailsChange}
+              accounts={accounts.map((a: any) => ({
+                _id: a._id,
+                name: a.name,
+              }))}
+              defaultAccountId={defaultAccount?._id || ""}
+            />
             <View className="px-4 pb-4 mt-4">
-              <Button onPress={() => setStep("category")} disabled={amount === 0} size="lg">
-                Next — Pick Category
+              <Button
+                onPress={() => setStep("category")}
+                disabled={amount === 0}
+                size="lg"
+              >
+                {t("quickAdd.nextCategory")}
               </Button>
             </View>
           </View>
@@ -142,60 +204,37 @@ export function QuickAdd() {
           <View className="flex-1">
             <View className="flex-row items-center justify-between mb-3">
               <Pressable onPress={() => setStep("amount")}>
-                <Text className="text-primary-700 font-semibold text-xs">← Back</Text>
+                <Text className="text-primary-700 font-semibold text-xs">
+                  {t("quickAdd.back")}
+                </Text>
               </Pressable>
               <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest">
-                Pick a category
+                {t("quickAdd.pickCategory")}
               </Text>
-              <Pressable onPress={handleSave}>
-                <Text className="text-accent-500 font-semibold text-xs">Skip →</Text>
+              <Pressable onPress={handleSkip}>
+                <Text className="text-accent-500 font-semibold text-xs">
+                  {t("quickAdd.skip")}
+                </Text>
               </Pressable>
             </View>
             <BottomSheetScrollView>
-              <CategoryGrid
-                categories={categories ?? []}
-                groups={groups ?? []}
-                selectedId={selectedCategory}
+              <CategoryFrequent
+                categories={[...categories]}
+                frequentIds={frequentIds}
                 onSelect={handleCategorySelect}
-                type={quickAddType === "transfer" ? "expense" : quickAddType}
+                type={categoryType}
+              />
+              <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest px-2 mt-4 mb-2">
+                All Categories
+              </Text>
+              <CategoryGrid
+                categories={[...categories]}
+                groups={[...groups]}
+                selectedId={null}
+                onSelect={handleCategorySelect}
+                type={categoryType}
               />
             </BottomSheetScrollView>
-          </View>
-        )}
-
-        {step === "confirm" && (
-          <View className="flex-1 justify-center items-center gap-8">
-            <View className="items-center">
-              <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest">
-                {quickAddType === "expense" ? "Spending" : "Receiving"}
-              </Text>
-              <Text
-                className={`text-hero font-bold mt-2 tracking-tight ${
-                  quickAddType === "expense" ? "text-danger" : "text-success"
-                }`}
-                style={{ lineHeight: 44 }}
-              >
-                {formatCurrency(Math.abs(amount))}
-              </Text>
-              {selectedCategory && categories && (
-                <Text className="text-sm text-surface-900 mt-3 font-medium">
-                  {categories.find((c) => c._id === selectedCategory)?.name}
-                </Text>
-              )}
-              {defaultAccount && (
-                <Text className="text-2xs text-surface-700 mt-1 uppercase tracking-wider">
-                  from {defaultAccount.name}
-                </Text>
-              )}
-            </View>
-            <View className="w-full gap-3 px-4">
-              <Button onPress={handleSave} size="lg">
-                Save Transaction
-              </Button>
-              <Button variant="ghost" onPress={() => setStep("category")} size="md">
-                Change Category
-              </Button>
-            </View>
           </View>
         )}
       </View>

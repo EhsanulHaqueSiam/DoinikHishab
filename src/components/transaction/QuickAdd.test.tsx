@@ -92,10 +92,10 @@ describe("QuickAdd", () => {
   it("renders amount step when isQuickAddOpen is true", () => {
     render(<QuickAdd />);
 
-    // Should show the type toggle with expense/income/transfer
-    expect(screen.getByText("expense")).toBeTruthy();
-    expect(screen.getByText("income")).toBeTruthy();
-    expect(screen.getByText("transfer")).toBeTruthy();
+    // Should show the type toggle with expense/income/transfer (multiple matches ok)
+    expect(screen.getAllByText("expense").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("income").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("transfer").length).toBeGreaterThanOrEqual(1);
 
     // Should show the Next button
     expect(screen.getByText("quickAdd.nextCategory")).toBeTruthy();
@@ -139,9 +139,10 @@ describe("QuickAdd", () => {
 
     // CategoryFrequent should render the frequent categories
     // Food & Groceries, Transport, Rickshaw are in frequentIds
-    expect(screen.getByText("Food & Groceries")).toBeTruthy();
-    expect(screen.getByText("Transport")).toBeTruthy();
-    expect(screen.getByText("Rickshaw")).toBeTruthy();
+    // They appear in both CategoryFrequent and CategoryGrid, so use getAllByText
+    expect(screen.getAllByText("Food & Groceries").length).toBeGreaterThanOrEqual(2);
+    expect(screen.getAllByText("Transport").length).toBeGreaterThanOrEqual(2);
+    expect(screen.getAllByText("Rickshaw").length).toBeGreaterThanOrEqual(2);
   });
 
   it("renders CategoryGrid in category step", () => {
