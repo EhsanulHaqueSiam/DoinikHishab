@@ -109,53 +109,53 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TOOL-01 | - | Pending |
-| TOOL-02 | - | Pending |
-| TOOL-03 | - | Pending |
-| TOOL-04 | - | Pending |
-| TOOL-05 | - | Pending |
-| TRAN-01 | - | Pending |
-| TRAN-02 | - | Pending |
-| TRAN-03 | - | Pending |
-| TRAN-04 | - | Pending |
-| TRAN-05 | - | Pending |
-| BUDG-01 | - | Pending |
-| BUDG-02 | - | Pending |
-| BUDG-03 | - | Pending |
-| BUDG-04 | - | Pending |
-| BUDG-05 | - | Pending |
-| ONBD-01 | - | Pending |
-| ONBD-02 | - | Pending |
-| ONBD-03 | - | Pending |
-| ONBD-04 | - | Pending |
-| RPRT-01 | - | Pending |
-| RPRT-02 | - | Pending |
-| RPRT-03 | - | Pending |
-| RPRT-04 | - | Pending |
-| RPRT-05 | - | Pending |
-| RPRT-06 | - | Pending |
-| RECR-01 | - | Pending |
-| RECR-02 | - | Pending |
-| RECR-03 | - | Pending |
-| RECR-04 | - | Pending |
-| RECR-05 | - | Pending |
-| RECR-06 | - | Pending |
-| GOAL-01 | - | Pending |
-| GOAL-02 | - | Pending |
-| GOAL-03 | - | Pending |
-| GOAL-04 | - | Pending |
-| GOAL-05 | - | Pending |
-| IMPT-01 | - | Pending |
-| IMPT-02 | - | Pending |
-| IMPT-03 | - | Pending |
-| IMPT-04 | - | Pending |
-| IMPT-05 | - | Pending |
+| TOOL-01 | Phase 1 | Pending |
+| TOOL-02 | Phase 1 | Pending |
+| TOOL-05 | Phase 1 | Pending |
+| TRAN-01 | Phase 2 | Pending |
+| TRAN-02 | Phase 2 | Pending |
+| TRAN-03 | Phase 2 | Pending |
+| TRAN-04 | Phase 2 | Pending |
+| TRAN-05 | Phase 2 | Pending |
+| BUDG-01 | Phase 3 | Pending |
+| BUDG-02 | Phase 3 | Pending |
+| BUDG-03 | Phase 3 | Pending |
+| BUDG-04 | Phase 3 | Pending |
+| BUDG-05 | Phase 3 | Pending |
+| ONBD-01 | Phase 3 | Pending |
+| ONBD-02 | Phase 3 | Pending |
+| ONBD-03 | Phase 3 | Pending |
+| ONBD-04 | Phase 3 | Pending |
+| RPRT-01 | Phase 4 | Pending |
+| RPRT-02 | Phase 4 | Pending |
+| RPRT-03 | Phase 4 | Pending |
+| RPRT-04 | Phase 4 | Pending |
+| RPRT-05 | Phase 4 | Pending |
+| RPRT-06 | Phase 4 | Pending |
+| RECR-01 | Phase 5 | Pending |
+| RECR-02 | Phase 5 | Pending |
+| RECR-03 | Phase 5 | Pending |
+| RECR-04 | Phase 5 | Pending |
+| RECR-05 | Phase 5 | Pending |
+| RECR-06 | Phase 5 | Pending |
+| GOAL-01 | Phase 6 | Pending |
+| GOAL-02 | Phase 6 | Pending |
+| GOAL-03 | Phase 6 | Pending |
+| GOAL-04 | Phase 6 | Pending |
+| GOAL-05 | Phase 6 | Pending |
+| IMPT-01 | Phase 6 | Pending |
+| IMPT-02 | Phase 6 | Pending |
+| IMPT-03 | Phase 6 | Pending |
+| IMPT-04 | Phase 6 | Pending |
+| IMPT-05 | Phase 6 | Pending |
+| TOOL-03 | Phase 7 | Pending |
+| TOOL-04 | Phase 7 | Pending |
 
 **Coverage:**
 - v1.1 requirements: 41 total
-- Mapped to phases: 0
-- Unmapped: 41 ⚠️
+- Mapped to phases: 41
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-25*
-*Last updated: 2026-03-25 after initial definition*
+*Last updated: 2026-03-25 after roadmap creation*
