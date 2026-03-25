@@ -54,13 +54,13 @@ Exceptions:
 | Role | Size | Weight | Line Height | Tailwind Class | Phase 3 Usage |
 |------|------|--------|-------------|----------------|---------------|
 | Body | 14px | 400 (regular) | 1.5 | `text-sm` | Rule card descriptions, onboarding step body text, auto-suggest text |
-| Label | 10px | 600 (semibold) | 1.4 | `text-2xs font-semibold` | Section headers ("True Expenses"), metric labels ("AGE OF MONEY"), stepper labels, status badges |
+| Label | 10px | 700 (bold) | 1.4 | `text-2xs font-bold` | Section headers ("True Expenses"), metric labels ("AGE OF MONEY"), stepper labels, status badges |
 | Heading | 18px | 700 (bold) | 1.2 | `text-lg font-bold` | Rule card titles, onboarding step headings, sinking fund names |
 | Hero | 36px | 700 (bold) | 1.1 | `text-hero font-bold` | Ready to Assign amount |
 
 Weights declared: 400 (regular) and 700 (bold).
 
-**Weight rationale:** The existing codebase uses `font-bold` extensively (BalanceCard hero, BudgetRow amounts, GoalProgress percentage, BudgetScreen group headers). Phase 1 UI-SPEC recommended 600 (semibold) but the actual codebase implementations use `font-bold` (700). This contract aligns with the codebase reality. Two weights: 400 for body/description text, 700 for headings, amounts, and emphasis.
+**Weight rationale:** The existing codebase uses `font-bold` extensively (BalanceCard hero, BudgetRow amounts, GoalProgress percentage, BudgetScreen group headers). Phase 1 UI-SPEC recommended 600 (semibold) but the actual codebase implementations use `font-bold` (700). This contract aligns with the codebase reality. Two weights: 400 for body/description text, 700 for headings, amounts, labels, and emphasis.
 
 **Bengali text note:** SpaceMono lacks Bengali glyphs. System falls back to device default (Noto Sans Bengali on Android, Kohinoor Bangla on iOS). Bengali strings are approximately 1.3x longer than English equivalents. All text containers must use flex layouts, not fixed widths. Apply `numberOfLines={1}` with `ellipsizeMode="tail"` for single-line constrained labels (sinking fund names in progress rows). Multi-line text (rule descriptions, onboarding body) must not be line-clamped.
 
@@ -111,7 +111,7 @@ Weights declared: 400 (regular) and 700 (bold).
 | Component | File | Visual Contract |
 |-----------|------|-----------------|
 | ReadyToAssignHero | `src/components/budget/ReadyToAssignHero.tsx` | Full-width banner, `text-hero font-bold` amount, teal glow when positive, red glow when negative, "Give every taka a job" subtitle in `text-2xs text-surface-800`, tappable to navigate to assignment view |
-| SinkingFundSection | `src/components/budget/SinkingFundSection.tsx` | Container with "True Expenses" label header in `text-2xs font-semibold uppercase tracking-widest`, sits above regular category groups in budget screen, `bg-surface-200` background, `rounded-2xl` corners |
+| SinkingFundSection | `src/components/budget/SinkingFundSection.tsx` | Container with "True Expenses" label header in `text-2xs font-bold uppercase tracking-widest`, sits above regular category groups in budget screen, `bg-surface-200` background, `rounded-2xl` corners |
 | SinkingFundRow | `src/components/budget/SinkingFundRow.tsx` | Icon + name on left, progress bar center, percentage + amount on right. Progress bar: 8px height (`h-2`), `rounded-full`, teal fill on-track / saffron fill behind. "Suggested: X/month" text below bar in `text-2xs text-surface-800` |
 | RuleTip | `src/components/budget/RuleTip.tsx` | Inline card below relevant budget row, `bg-primary-50 border border-primary-400/20 rounded-xl`, rule title in `text-xs font-bold text-primary-700`, description in `text-2xs text-surface-900`, "Got it" dismiss pressable aligned right, `hitSlop={8}` |
 | MetricsCard | `src/components/dashboard/MetricsCard.tsx` | Two-column card with vertical divider. Left: "AGE OF MONEY" label + value + trend arrow icon. Right: "BUFFER" label + value + settings gear. Card: `bg-surface-200 border border-primary-400/15 rounded-2xl p-4`, teal shadow via `shadow()` |
@@ -381,6 +381,7 @@ At any point, "Skip Setup" sets `onboarding_complete: true` and navigates to das
 | Ready to Assign hero role | `accessibilityRole="button"` with `accessibilityLabel={t("budget.readyToAssign") + ": " + formattedAmount}` |
 | Sinking fund progress | `accessibilityLabel={fundName + ", " + percentage + "% " + t("sinkingFunds.ofTarget") + ", " + statusLabel}` |
 | Age of Money trend | `accessibilityLabel={t("metrics.ageOfMoney") + ": " + value + " " + t("metrics.days") + ", " + trendLabel}` |
+| MetricsCard settings gear | `accessibilityRole="button"` with `accessibilityLabel={t("metrics.lookbackSettings")}` on the icon-only Pressable (12px `settings` Lucide icon has no visible text label) |
 | Carousel navigation | `accessibilityRole="adjustable"` on ScrollView, screen reader announces "Rule X of 4" |
 | Stepper dots | `accessibilityLabel={stepLabel + (isComplete ? ", completed" : isActive ? ", current" : "")}` |
 | Rule tip dismiss | `accessibilityRole="button"` with `accessibilityLabel={t("tips.dismiss")}` |
