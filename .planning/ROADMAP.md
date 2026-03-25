@@ -64,13 +64,13 @@ Plans:
   3. User sees Age of Money on the dashboard card with a trend arrow, and Days of Buffering alongside it with a configurable lookback period
   4. First-time user completes a guided onboarding flow: YNAB 4 Rules education carousel (Bengali/English toggle), add first account, create categories from pre-populated Bangladeshi templates, assign first money, enter first transaction, with a progress indicator showing completion status
   5. Contextual rule tips surface at the right moment (first overspend triggers Rule 3 tip, first sinking fund triggers Rule 2 tip)
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 03-01: Sinking funds UI with Bengali templates and progress visualization
-- [ ] 03-02: YNAB language integration and Ready to Assign prominence
-- [ ] 03-03: Age of Money FIFO algorithm and Days of Buffering metric
-- [ ] 03-04: Onboarding flow with YNAB 4 Rules education and guided setup
+- [ ] 03-01-PLAN.md -- Data foundation: budget engine extensions, mock data templates, onboarding service, YNAB rules data, hooks, i18n keys
+- [ ] 03-02-PLAN.md -- Budget screen UI: ReadyToAssignHero, SinkingFundSection, SinkingFundRow, RuleTip components and integration
+- [ ] 03-03-PLAN.md -- Dashboard MetricsCard, onboarding UI components (RuleCarousel, StepIndicator, CategoryTemplateSelector), settings integration
+- [ ] 03-04-PLAN.md -- Onboarding flow: 5-step guided setup screens, root layout onboarding gate, human verification
 **UI hint**: yes
 
 ### Phase 4: Mobile Reports & Sankey
