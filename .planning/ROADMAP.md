@@ -47,11 +47,11 @@ Plans:
   2. The category grid shows the user's most frequently used categories first, not alphabetical order
   3. Account, date, and transaction type are pre-filled with smart defaults (last-used account, today, expense) so the user does not need to touch them
   4. Optional fields (payee, memo, flag) are hidden by default and only appear when the user explicitly expands them
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 02-01: Custom numeric keypad with BDT live formatting
-- [ ] 02-02: Frequency-sorted category grid with smart defaults and auto-save
+- [ ] 02-01-PLAN.md -- Foundation: mock data, frequency service, storage helpers, hooks, AmountPad Bengali extension, ExpandableDetails component
+- [ ] 02-02-PLAN.md -- Integration: CategoryFrequent strip, CategoryGrid generalization, QuickAdd 2-step auto-save refactor with batch mode
 **UI hint**: yes
 
 ### Phase 3: Budget Ideology & Onboarding
