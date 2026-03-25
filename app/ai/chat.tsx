@@ -151,6 +151,9 @@ export default function AIChatScreen() {
         onContentSizeChange={() =>
           flatListRef.current?.scrollToEnd({ animated: true })
         }
+        removeClippedSubviews
+        scrollEventThrottle={8}
+        decelerationRate="fast"
         ListFooterComponent={
           <>
             {loading && (

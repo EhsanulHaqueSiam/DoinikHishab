@@ -22,7 +22,7 @@ const ICON_EMOJI: Record<string, string> = {
   heart: "❤️", shirt: "👔", "shield-alert": "🛡️",
 };
 
-export function TransactionCard({
+export const TransactionCard = React.memo(function TransactionCard({
   transaction,
   categoryName,
   categoryIcon,
@@ -81,4 +81,4 @@ export function TransactionCard({
       </View>
     </Pressable>
   );
-}
+});

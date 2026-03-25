@@ -109,7 +109,7 @@ export default function ReportsScreen() {
         ))}
       </View>
 
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+      <ScrollView className="flex-1" showsVerticalScrollIndicator={false} scrollEventThrottle={8} decelerationRate="fast" removeClippedSubviews>
         {/* Spending Report */}
         {activeReport === "spending" && (
           <View className="px-4 mt-4">

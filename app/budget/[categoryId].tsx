@@ -114,7 +114,7 @@ export default function CategoryDetailScreen() {
         </Text>
       </View>
 
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+      <ScrollView className="flex-1" showsVerticalScrollIndicator={false} scrollEventThrottle={8} decelerationRate="fast">
         {/* Budget Summary */}
         <View className="px-4 mt-4">
           <Card>

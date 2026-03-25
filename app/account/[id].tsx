@@ -73,7 +73,7 @@ export default function AccountDetailScreen() {
         <Text className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-2">
           Transactions
         </Text>
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView showsVerticalScrollIndicator={false} scrollEventThrottle={8} decelerationRate="fast" removeClippedSubviews>
           {transactions && transactions.length > 0 ? (
             <Card className="p-0 overflow-hidden">
               {transactions.map((txn, idx) => {

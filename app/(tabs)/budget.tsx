@@ -120,6 +120,9 @@ export default function BudgetScreen() {
 
       {/* Budget Grid */}
       <ScrollView
+        scrollEventThrottle={8}
+        decelerationRate="fast"
+        removeClippedSubviews
         className="flex-1 mt-3"
         showsVerticalScrollIndicator={false}
       >

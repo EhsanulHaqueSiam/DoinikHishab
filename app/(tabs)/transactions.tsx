@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useCallback } from "react";
 import { View, Text, SectionList, Pressable } from "react-native";
 import { useQuery } from "convex/react";
 import { useRouter } from "expo-router";
@@ -10,6 +10,20 @@ import { QuickAdd } from "../../src/components/transaction/QuickAdd";
 import { FAB } from "../../src/components/platform/FAB";
 import { formatDateShort, groupByDate } from "../../src/lib/date";
 import { formatCurrency } from "../../src/lib/currency";
+
+const ItemSeparator = () => <View className="h-px bg-border/20 mx-4" />;
+
+const ListEmpty = () => (
+  <View className="flex-1 items-center justify-center py-20">
+    <Text className="text-4xl mb-3">📝</Text>
+    <Text className="text-base font-medium text-muted-foreground">
+      No transactions yet
+    </Text>
+    <Text className="text-sm text-surface-700 mt-1">
+      Tap + to add your first transaction
+    </Text>
+  </View>
+);
 
 export default function TransactionsScreen() {
   const { userId } = useAppStore();
@@ -41,67 +55,76 @@ export default function TransactionsScreen() {
     }));
   }, [transactions]);
 
-  const getCategoryInfo = (categoryId: string | undefined) => {
-    if (!categoryId || !categories) return { name: undefined, icon: undefined };
-    const cat = categories.find((c) => c._id === categoryId);
-    return { name: cat?.name, icon: cat?.icon || undefined };
-  };
+  // Pre-build lookup maps for O(1) access in renderItem
+  const categoryMap = useMemo(() => {
+    if (!categories) return new Map();
+    return new Map(categories.map((c) => [c._id, { name: c.name, icon: c.icon || undefined }]));
+  }, [categories]);
 
-  const getAccountName = (accountId: string) => {
-    return accounts?.find((a) => a._id === accountId)?.name;
-  };
+  const accountMap = useMemo(() => {
+    if (!accounts) return new Map();
+    return new Map(accounts.map((a) => [a._id, a.name]));
+  }, [accounts]);
+
+  const handlePress = useCallback(
+    (id: string) => router.push(`/transaction/${id}` as any),
+    [router]
+  );
+
+  const renderItem = useCallback(
+    ({ item }: { item: any }) => {
+      const cat = categoryMap.get(item.categoryId);
+      return (
+        <View className="bg-card">
+          <TransactionCard
+            transaction={item}
+            categoryName={cat?.name}
+            categoryIcon={cat?.icon}
+            accountName={accountMap.get(item.accountId)}
+            onPress={() => handlePress(item._id)}
+          />
+        </View>
+      );
+    },
+    [categoryMap, accountMap, handlePress]
+  );
+
+  const renderSectionHeader = useCallback(
+    ({ section }: { section: { title: string; total: number } }) => (
+      <View className="flex-row items-center justify-between px-4 py-2 bg-surface-100 border-b border-border/20">
+        <Text className="text-sm font-semibold text-muted-foreground tracking-wide">
+          {formatDateShort(section.title)}
+        </Text>
+        <Text
+          className={`text-sm font-medium ${
+            section.total < 0 ? "text-danger" : "text-success"
+          }`}
+        >
+          {formatCurrency(section.total)}
+        </Text>
+      </View>
+    ),
+    []
+  );
 
   return (
     <View className="flex-1 bg-background">
       <SectionList
         sections={sections}
         keyExtractor={(item) => item._id}
-        renderSectionHeader={({ section }) => (
-          <View className="flex-row items-center justify-between px-4 py-2 bg-surface-100 border-b border-border/20">
-            <Text className="text-sm font-semibold text-muted-foreground tracking-wide">
-              {formatDateShort(section.title)}
-            </Text>
-            <Text
-              className={`text-sm font-medium ${
-                section.total < 0 ? "text-danger" : "text-success"
-              }`}
-            >
-              {formatCurrency(section.total)}
-            </Text>
-          </View>
-        )}
-        renderItem={({ item }) => {
-          const { name, icon } = getCategoryInfo(item.categoryId ?? undefined);
-          return (
-            <View className="bg-card">
-              <TransactionCard
-                transaction={item}
-                categoryName={name}
-                categoryIcon={icon}
-                accountName={getAccountName(item.accountId)}
-                onPress={() =>
-                  router.push(`/transaction/${item._id}` as any)
-                }
-              />
-            </View>
-          );
-        }}
-        ItemSeparatorComponent={() => (
-          <View className="h-px bg-border/20 mx-4" />
-        )}
-        ListEmptyComponent={() => (
-          <View className="flex-1 items-center justify-center py-20">
-            <Text className="text-4xl mb-3">📝</Text>
-            <Text className="text-base font-medium text-muted-foreground">
-              No transactions yet
-            </Text>
-            <Text className="text-sm text-surface-700 mt-1">
-              Tap + to add your first transaction
-            </Text>
-          </View>
-        )}
+        renderSectionHeader={renderSectionHeader}
+        renderItem={renderItem}
+        ItemSeparatorComponent={ItemSeparator}
+        ListEmptyComponent={ListEmpty}
         contentContainerStyle={{ paddingBottom: 100 }}
         stickySectionHeadersEnabled
+        // Performance optimizations
+        removeClippedSubviews
+        maxToRenderPerBatch={15}
+        windowSize={7}
+        initialNumToRender={15}
+        scrollEventThrottle={8}
+        decelerationRate="fast"
       />
 
       <FAB onPress={() => openQuickAdd("expense")} />

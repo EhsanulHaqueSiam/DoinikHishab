@@ -119,7 +119,7 @@ export default function AccountsScreen() {
 
   return (
     <View className="flex-1 bg-background">
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false} scrollEventThrottle={8} decelerationRate="fast" removeClippedSubviews>
         {/* Total Balance */}
         <View className="px-4 py-4">
           <Card

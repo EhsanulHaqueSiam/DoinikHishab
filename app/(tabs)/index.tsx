@@ -75,6 +75,9 @@ export default function DashboardScreen() {
     <View className="flex-1 bg-background">
       <ScrollView
         showsVerticalScrollIndicator={false}
+        scrollEventThrottle={8}
+        decelerationRate="fast"
+        removeClippedSubviews
         refreshControl={
           <RefreshControl
             refreshing={refreshing}

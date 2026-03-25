@@ -79,7 +79,7 @@ export default function TransactionDetailScreen() {
         </Pressable>
       </View>
 
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+      <ScrollView className="flex-1" showsVerticalScrollIndicator={false} scrollEventThrottle={8} decelerationRate="fast">
         {/* Amount */}
         <View className="items-center py-8 bg-card">
           <Text

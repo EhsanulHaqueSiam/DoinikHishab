@@ -37,7 +37,7 @@ export default function SettingsScreen() {
 
   return (
     <View className="flex-1 bg-background">
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false} scrollEventThrottle={8} decelerationRate="fast">
         {/* App Info */}
         <View className="items-center py-6">
           <View style={shadow("#0d9488", 0, 0, 0.4, 20)}>

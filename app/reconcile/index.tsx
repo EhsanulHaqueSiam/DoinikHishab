@@ -88,7 +88,7 @@ export default function ReconcileScreen() {
         </Pressable>
       </View>
 
-      <ScrollView className="flex-1 px-4 pt-4">
+      <ScrollView className="flex-1 px-4 pt-4" scrollEventThrottle={8} decelerationRate="fast">
         {/* Step 1: Select Account */}
         {step === "select-account" && (
           <View className="gap-3">

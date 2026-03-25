@@ -35,7 +35,7 @@ function TargetIndicator({
   );
 }
 
-export function BudgetRow({ budget, onPress, onAssign }: BudgetRowProps) {
+export const BudgetRow = React.memo(function BudgetRow({ budget, onPress, onAssign }: BudgetRowProps) {
   const availableColor =
     budget.available < 0
       ? "text-danger"
@@ -101,4 +101,4 @@ export function BudgetRow({ budget, onPress, onAssign }: BudgetRowProps) {
       </View>
     </Pressable>
   );
-}
+});

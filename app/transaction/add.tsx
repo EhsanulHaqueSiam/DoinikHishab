@@ -103,7 +103,7 @@ export default function AddTransactionScreen() {
       </View>
 
       {/* Content */}
-      <ScrollView className="flex-1">
+      <ScrollView className="flex-1" scrollEventThrottle={8} decelerationRate="fast">
         {step === "amount" && (
           <View className="flex-1">
             <AmountPad value={amount} onChange={setAmount} type={type} />
