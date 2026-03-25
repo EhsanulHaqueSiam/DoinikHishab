@@ -1,5 +1,4 @@
 import { Tabs } from "expo-router";
-import React from "react";
 import { useTranslation } from "react-i18next";
 import { Platform, Text, View } from "react-native";
 import { shadow } from "../../src/lib/platform";

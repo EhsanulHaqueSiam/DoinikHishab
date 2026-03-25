@@ -1,8 +1,8 @@
 import { useQuery } from "convex/react";
 import { useRouter } from "expo-router";
-import React, { useCallback, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Pressable, SectionList, Text, View } from "react-native";
+import { SectionList, Text, View } from "react-native";
 import { api } from "../../convex/_generated/api";
 import { FAB } from "../../src/components/platform/FAB";
 import { QuickAdd } from "../../src/components/transaction/QuickAdd";

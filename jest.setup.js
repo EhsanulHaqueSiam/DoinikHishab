@@ -28,6 +28,12 @@ jest.mock("convex/react", () => ({
   ConvexProvider: ({ children }) => children,
 }));
 
+// Mock i18n module (prevents @formatjs polyfill from failing in Jest)
+jest.mock("./src/lib/i18n", () => ({
+  __esModule: true,
+  default: { language: "en", changeLanguage: jest.fn(), t: jest.fn((key) => key) },
+}));
+
 // Mock platform utility (shadow helper uses Platform.OS)
 jest.mock("./src/lib/platform", () => ({
   shadow: jest.fn().mockReturnValue({}),

@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "convex/react";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { api } from "../../convex/_generated/api";
