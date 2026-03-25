@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Force dark background on web to prevent expo-router white wrapper flash */
+html, body, #root {
+  background-color: #060a13;
+  min-height: 100%;
+}
+
+/* Override expo-router Stack screen wrapper default light background */
+[data-testid="stack-screen-content"],
+[style*="background-color: rgb(242, 242, 242)"] {
+  background-color: #060a13 !important;
+}

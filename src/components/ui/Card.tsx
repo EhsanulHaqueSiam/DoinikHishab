@@ -1,21 +1,16 @@
 import React from "react";
 import { View, type ViewProps } from "react-native";
+import { shadow } from "../../lib/platform";
 
 interface CardProps extends ViewProps {
   children: React.ReactNode;
 }
 
-export function Card({ children, className = "", ...props }: CardProps) {
+export function Card({ children, className = "", style, ...props }: CardProps) {
   return (
     <View
       className={`bg-card rounded-2xl p-4 border border-border/60 ${className}`}
-      style={{
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 12,
-        elevation: 6,
-      }}
+      style={[shadow("#000", 0, 4, 0.3, 12, 6), style]}
       {...props}
     >
       {children}

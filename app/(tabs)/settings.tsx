@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, ScrollView, Pressable, Switch } from "react-native";
 import { useAppStore } from "../../src/stores/app-store";
 import { Card } from "../../src/components/ui/Card";
+import { shadow } from "../../src/lib/platform";
 import { APP_NAME, APP_NAME_BN } from "../../src/lib/constants";
 
 interface SettingRowProps {
@@ -39,14 +40,7 @@ export default function SettingsScreen() {
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* App Info */}
         <View className="items-center py-6">
-          <View
-            style={{
-              shadowColor: "#0d9488",
-              shadowOffset: { width: 0, height: 0 },
-              shadowOpacity: 0.4,
-              shadowRadius: 20,
-            }}
-          >
+          <View style={shadow("#0d9488", 0, 0, 0.4, 20)}>
             <Text className="text-4xl mb-2">💰</Text>
           </View>
           <Text className="text-xl font-bold text-foreground">{APP_NAME}</Text>

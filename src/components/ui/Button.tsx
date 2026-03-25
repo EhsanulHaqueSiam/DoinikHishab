@@ -1,5 +1,6 @@
 import React from "react";
 import { Pressable, Text, type PressableProps, ActivityIndicator } from "react-native";
+import { shadow } from "../../lib/platform";
 
 interface ButtonProps extends PressableProps {
   variant?: "default" | "secondary" | "outline" | "ghost" | "danger";
@@ -48,17 +49,7 @@ export function Button({
     <Pressable
       className={`flex-row items-center justify-center ${variantStyles[variant]} ${sizeStyles[size]} ${disabled || loading ? "opacity-40" : ""}`}
       disabled={disabled || loading}
-      style={
-        variant === "default"
-          ? {
-              shadowColor: "#0d9488",
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.35,
-              shadowRadius: 8,
-              elevation: 4,
-            }
-          : undefined
-      }
+      style={variant === "default" ? shadow("#0d9488", 0, 2, 0.35, 8, 4) : undefined}
       {...props}
     >
       {loading && (

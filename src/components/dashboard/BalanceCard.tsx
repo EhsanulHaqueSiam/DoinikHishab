@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text } from "react-native";
 import { Card } from "../ui/Card";
 import { formatCurrency } from "../../lib/currency";
+import { shadow } from "../../lib/platform";
 
 interface BalanceCardProps {
   totalBalance: number;
@@ -17,13 +18,7 @@ export function BalanceCard({
   return (
     <Card
       className="mx-4 mt-4 border-primary-200/20"
-      style={{
-        shadowColor: "#0d9488",
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.15,
-        shadowRadius: 20,
-        elevation: 8,
-      }}
+      style={shadow("#0d9488", 0, 4, 0.15, 20, 8)}
     >
       <Text className="text-sm text-muted-foreground font-medium tracking-wider uppercase">
         Total Balance

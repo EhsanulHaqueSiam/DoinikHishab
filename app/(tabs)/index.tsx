@@ -18,12 +18,24 @@ export default function DashboardScreen() {
   const createOrGetUser = useMutation(api.users.createOrGet);
   const seedCategories = useMutation(api.categories.seedDefaults);
 
+  const [backendError, setBackendError] = React.useState<string | null>(null);
+
   useEffect(() => {
     if (!userId) {
-      createOrGetUser({ deviceId }).then((id) => {
-        setUserId(id);
-        seedCategories({ userId: id });
-      });
+      createOrGetUser({ deviceId })
+        .then((id) => {
+          setUserId(id);
+          seedCategories({ userId: id });
+          setBackendError(null);
+        })
+        .catch((err: Error) => {
+          const msg = err.message || String(err);
+          if (msg.includes("free plan") || msg.includes("disabled")) {
+            setBackendError("Backend unavailable — Convex free plan limit reached. Data will sync when the backend is restored.");
+          } else {
+            setBackendError("Unable to connect to server. Please check your connection.");
+          }
+        });
     }
   }, [userId, deviceId]);
 
@@ -74,6 +86,15 @@ export default function DashboardScreen() {
           />
         }
       >
+        {/* Backend Error Banner */}
+        {backendError && (
+          <View className="mx-4 mt-4 bg-accent-100 border border-accent-300 rounded-xl p-3">
+            <Text className="text-sm text-accent-500 font-medium">
+              {backendError}
+            </Text>
+          </View>
+        )}
+
         {/* Balance Card */}
         <BalanceCard
           totalBalance={balances?.total ?? 0}

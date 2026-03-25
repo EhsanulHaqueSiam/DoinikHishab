@@ -7,6 +7,7 @@ import { BudgetRow } from "../../src/components/budget/BudgetRow";
 import { AssignMoney } from "../../src/components/budget/AssignMoney";
 import { Card } from "../../src/components/ui/Card";
 import { formatCurrency } from "../../src/lib/currency";
+import { shadow } from "../../src/lib/platform";
 import { getMonthLabel, previousMonth, nextMonth } from "../../src/lib/date";
 import type { Id } from "../../convex/_generated/dataModel";
 
@@ -84,19 +85,9 @@ export default function BudgetScreen() {
           }`}
           style={
             readyToAssign > 0
-              ? {
-                  shadowColor: "#22c55e",
-                  shadowOffset: { width: 0, height: 0 },
-                  shadowOpacity: 0.15,
-                  shadowRadius: 16,
-                }
+              ? shadow("#22c55e", 0, 0, 0.15, 16)
               : readyToAssign < 0
-                ? {
-                    shadowColor: "#ef4444",
-                    shadowOffset: { width: 0, height: 0 },
-                    shadowOpacity: 0.15,
-                    shadowRadius: 16,
-                  }
+                ? shadow("#ef4444", 0, 0, 0.15, 16)
                 : undefined
           }
         >

@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, Pressable, ScrollView } from "react-native";
+import { shadow } from "../../lib/platform";
 import type { Doc, Id } from "../../../convex/_generated/dataModel";
 
 interface CategoryGridProps {
@@ -28,17 +29,7 @@ function CategoryIcon({ icon, isSelected }: { icon?: string; isSelected: boolean
       className={`w-12 h-12 rounded-xl items-center justify-center ${
         isSelected ? "bg-primary-600" : "bg-surface-300"
       }`}
-      style={
-        isSelected
-          ? {
-              shadowColor: "#0d9488",
-              shadowOffset: { width: 0, height: 0 },
-              shadowOpacity: 0.5,
-              shadowRadius: 10,
-              elevation: 6,
-            }
-          : undefined
-      }
+      style={isSelected ? shadow("#0d9488", 0, 0, 0.5, 10, 6) : undefined}
     >
       <Text className="text-xl">{emoji}</Text>
     </View>

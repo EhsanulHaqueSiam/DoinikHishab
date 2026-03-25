@@ -5,6 +5,7 @@ import { api } from "../../convex/_generated/api";
 import { useAppStore } from "../../src/stores/app-store";
 import { Card } from "../../src/components/ui/Card";
 import { formatCurrency } from "../../src/lib/currency";
+import { shadow } from "../../src/lib/platform";
 
 type ReportType = "spending" | "income_expense" | "net_worth";
 
@@ -255,12 +256,7 @@ export default function ReportsScreen() {
           <View className="px-4 mt-4">
             <Card
               className="items-center border-accent-200/20"
-              style={{
-                shadowColor: "#e6a444",
-                shadowOffset: { width: 0, height: 0 },
-                shadowOpacity: 0.12,
-                shadowRadius: 16,
-              }}
+              style={shadow("#e6a444", 0, 0, 0.12, 16)}
             >
               <Text className="text-sm text-muted-foreground tracking-wider uppercase">
                 Current Net Worth

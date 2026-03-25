@@ -5,6 +5,7 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useAppStore } from "../../stores/app-store";
 import { useUIStore } from "../../stores/ui-store";
+import { shadow } from "../../lib/platform";
 import { AmountPad } from "./AmountPad";
 import { CategoryGrid } from "./CategoryGrid";
 import { Button } from "../ui/Button";
@@ -116,17 +117,10 @@ export function QuickAdd() {
               }`}
               style={
                 quickAddType === type
-                  ? {
-                      shadowColor:
-                        type === "expense"
-                          ? "#ef4444"
-                          : type === "income"
-                            ? "#22c55e"
-                            : "#0d9488",
-                      shadowOffset: { width: 0, height: 0 },
-                      shadowOpacity: 0.3,
-                      shadowRadius: 8,
-                    }
+                  ? shadow(
+                      type === "expense" ? "#ef4444" : type === "income" ? "#22c55e" : "#0d9488",
+                      0, 0, 0.3, 8
+                    )
                   : undefined
               }
             >

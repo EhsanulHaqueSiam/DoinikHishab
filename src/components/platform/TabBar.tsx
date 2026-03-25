@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, Pressable } from "react-native";
+import { shadow } from "../../lib/platform";
 
 interface TabBarItem {
   key: string;
@@ -25,16 +26,7 @@ export function TabBar({ items, activeKey, onPress }: TabBarProps) {
             className="flex-1 items-center py-1"
           >
             <View
-              style={
-                isActive
-                  ? {
-                      shadowColor: "#0d9488",
-                      shadowOffset: { width: 0, height: 0 },
-                      shadowOpacity: 0.5,
-                      shadowRadius: 6,
-                    }
-                  : undefined
-              }
+              style={isActive ? shadow("#0d9488", 0, 0, 0.5, 6) : undefined}
             >
               <Text className={`text-xl ${isActive ? "" : "opacity-30"}`}>
                 {item.icon}

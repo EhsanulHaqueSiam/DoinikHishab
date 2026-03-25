@@ -7,6 +7,7 @@ import { useAppStore } from "../../src/stores/app-store";
 import { Card } from "../../src/components/ui/Card";
 import { Button } from "../../src/components/ui/Button";
 import { formatCurrency, takaToPaisa } from "../../src/lib/currency";
+import { shadow } from "../../src/lib/platform";
 import { ACCOUNT_TYPE_LABELS } from "../../src/lib/constants";
 
 type AccountType = "checking" | "savings" | "cash" | "credit_card" | "line_of_credit" | "mortgage" | "auto_loan" | "student_loan" | "other_debt" | "other_asset";
@@ -123,13 +124,7 @@ export default function AccountsScreen() {
         <View className="px-4 py-4">
           <Card
             className="items-center border-accent-200/20"
-            style={{
-              shadowColor: "#e6a444",
-              shadowOffset: { width: 0, height: 0 },
-              shadowOpacity: 0.12,
-              shadowRadius: 20,
-              elevation: 8,
-            }}
+            style={shadow("#e6a444", 0, 0, 0.12, 20, 8)}
           >
             <Text className="text-sm text-muted-foreground tracking-wider uppercase">
               Net Worth
@@ -194,16 +189,7 @@ export default function AccountsScreen() {
                         ? "bg-primary-600"
                         : "bg-surface-300"
                     }`}
-                    style={
-                      newType === type
-                        ? {
-                            shadowColor: "#0d9488",
-                            shadowOffset: { width: 0, height: 0 },
-                            shadowOpacity: 0.4,
-                            shadowRadius: 6,
-                          }
-                        : undefined
-                    }
+                    style={newType === type ? shadow("#0d9488", 0, 0, 0.4, 6) : undefined}
                   >
                     <Text
                       className={`text-xs font-medium ${

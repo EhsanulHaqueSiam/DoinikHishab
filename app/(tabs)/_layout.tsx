@@ -1,6 +1,7 @@
 import React from "react";
 import { Tabs } from "expo-router";
 import { Platform, View, Text } from "react-native";
+import { shadow } from "../../src/lib/platform";
 
 const TAB_ICONS: Record<string, string> = {
   index: "🏠",
@@ -19,7 +20,9 @@ export default function TabsLayout() {
         headerStyle: {
           backgroundColor: "#0a0f1c",
           elevation: 0,
-          shadowOpacity: 0,
+          ...(Platform.OS === "web"
+            ? { boxShadow: "none" }
+            : { shadowOpacity: 0 }),
           borderBottomWidth: 1,
           borderBottomColor: "#1a2744",
         },
@@ -39,20 +42,9 @@ export default function TabsLayout() {
         },
         tabBarActiveTintColor: "#2dd4bf",
         tabBarInactiveTintColor: "#3a5280",
+        tabBarShowLabel: true,
         tabBarIcon: ({ focused }) => (
-          <View
-            style={
-              focused
-                ? {
-                    shadowColor: "#0d9488",
-                    shadowOffset: { width: 0, height: 0 },
-                    shadowOpacity: 0.6,
-                    shadowRadius: 8,
-                    elevation: 4,
-                  }
-                : undefined
-            }
-          >
+          <View style={focused ? shadow("#0d9488", 0, 0, 0.6, 8, 4) : undefined}>
             <Text style={{ fontSize: 22, opacity: focused ? 1 : 0.4 }}>
               {TAB_ICONS[route.name] || "📌"}
             </Text>
