@@ -87,6 +87,19 @@
     "privacy": "Privacy Policy",
     "languageChanged": "Language changed"
   },
+  "quickAdd": {
+    "showDetails": "+ Details",
+    "hideDetails": "- Hide Details",
+    "payeePlaceholder": "Payee / Merchant",
+    "memoPlaceholder": "Note / Memo",
+    "flagTransaction": "Flag this transaction",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "pickCategory": "Pick a category",
+    "back": "Back",
+    "skip": "Skip",
+    "nextCategory": "Next \u2014 Pick Category"
+  },
   "common": {
     "cancel": "Cancel",
     "save": "Save",
