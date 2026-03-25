@@ -1,4 +1,6 @@
 import { Tabs } from "expo-router";
+import React from "react";
+import { useTranslation } from "react-i18next";
 import { Platform, Text, View } from "react-native";
 import { shadow } from "../../src/lib/platform";
 
@@ -12,6 +14,8 @@ const TAB_ICONS: Record<string, string> = {
 };
 
 export default function TabsLayout() {
+  const { t } = useTranslation();
+
   return (
     <Tabs
       screenOptions={({ route }) => ({
@@ -60,15 +64,15 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Dashboard",
-          headerTitle: "দৈনিক হিসাব",
+          title: t("tabs.dashboard"),
+          headerTitle: t("app.name"),
         }}
       />
-      <Tabs.Screen name="transactions" options={{ title: "Transactions" }} />
-      <Tabs.Screen name="budget" options={{ title: "Budget" }} />
-      <Tabs.Screen name="accounts" options={{ title: "Accounts" }} />
-      <Tabs.Screen name="reports" options={{ title: "Reports" }} />
-      <Tabs.Screen name="settings" options={{ title: "Settings" }} />
+      <Tabs.Screen name="transactions" options={{ title: t("tabs.transactions") }} />
+      <Tabs.Screen name="budget" options={{ title: t("tabs.budget") }} />
+      <Tabs.Screen name="accounts" options={{ title: t("tabs.accounts") }} />
+      <Tabs.Screen name="reports" options={{ title: t("tabs.reports") }} />
+      <Tabs.Screen name="settings" options={{ title: t("tabs.settings") }} />
     </Tabs>
   );
 }

@@ -1,5 +1,6 @@
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Modal, Pressable, ScrollView, Text, View } from "react-native";
 import type { Id } from "../../convex/_generated/dataModel";
 import { AssignMoney } from "../../src/components/budget/AssignMoney";
@@ -22,6 +23,7 @@ export default function BudgetScreen() {
   const { userId, currentMonth, setCurrentMonth } = useAppStore();
   const { summary, groups, isLoading } = useBudget();
   const router = useRouter();
+  const { t } = useTranslation();
 
   const [assignTarget, setAssignTarget] = useState<AssignTarget | null>(null);
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
@@ -83,7 +85,7 @@ export default function BudgetScreen() {
           }
         >
           <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest">
-            Ready to Assign
+            {t("budget.readyToAssign")}
           </Text>
           <Text
             className={`text-2xl font-bold mt-0.5 tracking-tight ${
@@ -116,16 +118,16 @@ export default function BudgetScreen() {
         {/* Column Headers */}
         <View className="flex-row px-4 py-2.5 border-b border-border bg-surface-200">
           <Text className="flex-1 text-2xs font-semibold text-surface-800 uppercase tracking-widest">
-            Category
+            {t("budget.category")}
           </Text>
           <Text className="w-24 text-2xs font-semibold text-surface-800 uppercase text-right tracking-wider">
-            Assigned
+            {t("budget.assigned")}
           </Text>
           <Text className="w-24 text-2xs font-semibold text-surface-800 uppercase text-right tracking-wider">
-            Activity
+            {t("budget.activity")}
           </Text>
           <Text className="w-24 text-2xs font-semibold text-surface-800 uppercase text-right tracking-wider">
-            Available
+            {t("budget.available")}
           </Text>
         </View>
 
@@ -186,7 +188,7 @@ export default function BudgetScreen() {
           <View className="mx-4 mt-4">
             <Card className="border-danger/20">
               <View className="flex-row items-center justify-between">
-                <Text className="text-xs font-semibold text-danger">Total Overspent</Text>
+                <Text className="text-xs font-semibold text-danger">{t("budget.overspent")}</Text>
                 <Text className="text-xs font-bold text-danger">
                   {formatCurrency(-summary.overspent)}
                 </Text>

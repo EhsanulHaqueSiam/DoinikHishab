@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import type { Id } from "../../convex/_generated/dataModel";
+import i18n from "../lib/i18n";
 
 interface AppState {
   // User
@@ -37,7 +38,7 @@ function generateDeviceId(): string {
 export const useAppStore = create<AppState>((set) => ({
   userId: null,
   deviceId: generateDeviceId(),
-  locale: "en",
+  locale: (i18n.language as "en" | "bn") || "en",
   theme: "system",
   hasCompletedOnboarding: false,
   currentMonth: getInitialMonth(),
