@@ -14,10 +14,10 @@ Deliver fully functional mobile-optimized financial reports with touch interacti
 ## Implementation Decisions
 
 ### Chart Library & Rendering
-- **D-01:** Use victory-native for line/bar/area charts — mature RN charting lib built on react-native-svg, supports touch interactions and animations natively
+- **D-01:** Use react-native-gifted-charts for line/bar/area charts — uses react-native-svg (already installed), supports web/iOS/Android, has onPress/focusBarOnPress/renderTooltip/areaChart/reference lines/gradient fills. [Research override: victory-native requires @shopify/react-native-skia and does NOT support web rendering — incompatible with project's web target]
 - **D-02:** Use d3-sankey for layout computation + custom react-native-svg rendering for Sankey diagram — d3-sankey computes node/link positions, we render with SVG Path/Rect components
 - **D-03:** Extend existing mock data hooks pattern — add useReportData() hook returning mock monthly data, matching Phase 2/3 pattern (mock_ prefix, hook-level fallback while Convex is offline)
-- **D-04:** Use react-native-reanimated for chart entrance animations — already installed, consistent with codebase patterns
+- **D-04:** Chart entrance animations via react-native-gifted-charts `isAnimated` prop (which uses reanimated internally) + react-native-reanimated for custom SwipeableChart transitions — already installed, consistent with codebase patterns
 
 ### Mobile Touch Interactions
 - **D-05:** Swipe left/right with react-native-gesture-handler PanGesture to navigate between months — shows current period label with animated transition
