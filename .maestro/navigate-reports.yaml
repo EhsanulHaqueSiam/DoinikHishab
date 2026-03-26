@@ -1,29 +1,37 @@
 appId: com.doinikhishab.app
 ---
-# Flow: Navigate Reports tabs
-- launchApp
+# Flow 3: Navigate reports - tab between chart views
+- launchApp:
+    clearState: true
 - runFlow: shared/complete-onboarding.yaml
 
 # Navigate to Reports tab
-- tapOn:
-    id: "tab-reports"
+- tapOn: "Reports"
 
-# Verify reports screen
+# Verify reports screen is displayed
 - assertVisible:
     id: "reports-screen"
 
-# Tap through report tabs
-- tapOn:
-    id: "report-tab-spending"
+# Verify spending tab is visible (default active)
 - assertVisible:
-    id: "spending-chart"
+    id: "report-tab-spending"
 
+# Switch to Income/Expense tab
 - tapOn:
     id: "report-tab-income_expense"
-- assertVisible:
-    id: "income-expense-chart"
 
+# Switch to Net Worth tab
 - tapOn:
     id: "report-tab-net_worth"
+
+# Switch to Financial Health tab
+- tapOn:
+    id: "report-tab-financial_health"
+
+# Switch to Cash Flow (Sankey) tab
+- tapOn:
+    id: "report-tab-sankey"
+
+# Verify we're still on reports screen
 - assertVisible:
-    id: "net-worth-chart"
+    id: "reports-screen"

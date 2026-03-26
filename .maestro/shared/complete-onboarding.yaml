@@ -1,17 +1,49 @@
 appId: com.doinikhishab.app
 ---
-# Shared sub-flow: Complete onboarding if shown
+# Complete onboarding flow for fresh app installs
+# This sub-flow is included by each test flow via runFlow
+# Onboarding screens: rules -> account -> categories -> assign -> transaction
+
+# Wait for the app to load
+- extendedWaitUntil:
+    visible:
+      text: ".*"
+    timeout: 10000
+
+# Step 1: Rules screen - tap "Skip Setup" to skip entire onboarding
 - runFlow:
     when:
-      visible: ".*onboarding.*"
+      visible: "Skip Setup"
     commands:
-      - tapOn:
-          id: "onboarding-skip"
-          optional: true
-      - tapOn:
-          id: "onboarding-next"
-          optional: true
-          repeat: 5
-      - tapOn:
-          id: "onboarding-complete"
-          optional: true
+      - tapOn: "Skip Setup"
+
+# If individual skip buttons appear (fallback for partial onboarding)
+- runFlow:
+    when:
+      visible: "Skip"
+    commands:
+      - tapOn: "Skip"
+
+- runFlow:
+    when:
+      visible: "Skip"
+    commands:
+      - tapOn: "Skip"
+
+- runFlow:
+    when:
+      visible: "Skip"
+    commands:
+      - tapOn: "Skip"
+
+- runFlow:
+    when:
+      visible: "Start Budgeting"
+    commands:
+      - tapOn: "Start Budgeting"
+
+# Wait for dashboard to be visible after onboarding
+- extendedWaitUntil:
+    visible:
+      id: "dashboard-screen"
+    timeout: 15000

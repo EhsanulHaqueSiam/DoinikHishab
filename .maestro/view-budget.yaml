@@ -1,15 +1,21 @@
 appId: com.doinikhishab.app
 ---
-# Flow: View Budget screen
-- launchApp
+# Flow 2: View budget - navigate to budget tab, check categories visible
+- launchApp:
+    clearState: true
 - runFlow: shared/complete-onboarding.yaml
 
-# Navigate to Budget tab
-- tapOn:
-    id: "tab-budget"
+# Navigate to Budget tab (tab labels use i18n text "Budget")
+- tapOn: "Budget"
 
-# Verify budget screen elements visible
+# Verify budget screen is displayed
+- assertVisible:
+    id: "budget-screen"
+
+# Verify Ready to Assign hero is visible
 - assertVisible:
     id: "ready-to-assign"
+
+# Verify month navigator is visible
 - assertVisible:
-    id: "budget-category-list"
+    id: "month-navigator"

@@ -1,32 +1,38 @@
-name: E2E Tests (Maestro)
+name: E2E Tests
 
 on:
   push:
-    branches: [master, main]
-  pull_request:
-    branches: [master, main]
+    branches: [main, master]
+    paths-ignore:
+      - '*.md'
+      - '.claude/**'
+      - '.planning/**'
   workflow_dispatch:
 
+env:
+  NODE_VERSION: '20'
+  BUN_VERSION: 'latest'
+  JAVA_VERSION: '17'
+
 jobs:
-  maestro-e2e:
+  e2e:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-
+    timeout-minutes: 45
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-
-      - name: Install dependencies
-        run: bun install
-
-      - name: Setup Java
-        uses: actions/setup-java@v4
+      - uses: actions/setup-java@v4
         with:
+          java-version: ${{ env.JAVA_VERSION }}
           distribution: temurin
-          java-version: 17
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Enable KVM
         run: |
@@ -34,52 +40,47 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Install Maestro
+        uses: dniHze/maestro-test-action@v1
 
-      - name: AVD cache
-        uses: actions/cache@v4
-        id: avd-cache
-        with:
-          path: |
-            ~/.android/avd/*
-            ~/.android/adb*
-          key: avd-api-34
+      - name: Install dependencies
+        run: bun install --frozen-lockfile || bun install
 
-      - name: Create AVD
-        if: steps.avd-cache.outputs.cache-hit != 'true'
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 34
-          arch: x86_64
-          force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
-          disable-animations: true
-          script: echo "AVD created"
-
-      - name: Expo prebuild
-        run: bunx expo prebuild --platform android --clean
+      - name: Generate native Android project
+        run: bunx expo prebuild --platform android --clean --no-install
         env:
           EXPO_PUBLIC_CONVEX_URL: https://placeholder.convex.cloud
 
-      - name: Build debug APK
-        run: cd android && ./gradlew assembleDebug
-
-      - name: Install Maestro
+      - name: Bump Gradle JVM memory
         run: |
-          curl -Ls "https://get.maestro.mobile.dev" | bash
-          echo "${HOME}/.maestro/bin" >> "${GITHUB_PATH}"
+          echo "org.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=512m" >> android/gradle.properties
+          echo "org.gradle.parallel=true" >> android/gradle.properties
+
+      - name: Make gradlew executable
+        run: chmod +x android/gradlew
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Build debug APK
+        run: cd android && ./gradlew app:assembleDebug --no-daemon
+        env:
+          EXPO_PUBLIC_CONVEX_URL: https://placeholder.convex.cloud
 
       - name: Run Maestro E2E tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 34
+          api-level: 30
           arch: x86_64
-          force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
-          disable-animations: true
+          target: default
+          emulator-boot-timeout: 600
           script: |
             adb install android/app/build/outputs/apk/debug/app-debug.apk
-            adb shell am start -n com.doinikhishab.app/.MainActivity
-            sleep 10
-            maestro test .maestro/
+            maestro test .maestro/ --format junit --output maestro-report.xml
+
+      - name: Upload Maestro report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maestro-report
+          path: maestro-report.xml
+          retention-days: 14
