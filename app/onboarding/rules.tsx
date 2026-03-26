@@ -1,12 +1,11 @@
-import React from "react";
-import { View, Text, Pressable } from "react-native";
-import { useRouter } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
 import * as Haptics from "expo-haptics";
+import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
-import i18n from "../../src/lib/i18n";
+import { Pressable, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { RuleCarousel } from "../../src/components/onboarding/RuleCarousel";
 import { useOnboarding } from "../../src/hooks/use-onboarding";
+import i18n from "../../src/lib/i18n";
 import { useAppStore } from "../../src/stores/app-store";
 
 export default function RulesScreen() {
@@ -62,9 +61,7 @@ export default function RulesScreen() {
           className="bg-primary-500 rounded-xl py-4 items-center"
           accessibilityRole="button"
         >
-          <Text className="text-base font-bold text-white">
-            {t("onboarding.letsGo")}
-          </Text>
+          <Text className="text-base font-bold text-white">{t("onboarding.letsGo")}</Text>
         </Pressable>
 
         <Pressable
@@ -72,9 +69,7 @@ export default function RulesScreen() {
           className="mt-3 items-center py-2"
           accessibilityRole="button"
         >
-          <Text className="text-sm text-surface-800">
-            {t("onboarding.skip")}
-          </Text>
+          <Text className="text-sm text-surface-800">{t("onboarding.skip")}</Text>
         </Pressable>
       </View>
     </SafeAreaView>

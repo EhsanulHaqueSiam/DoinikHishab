@@ -34,6 +34,35 @@ jest.mock("./src/lib/i18n", () => ({
   default: { language: "en", changeLanguage: jest.fn(), t: jest.fn((key) => key) },
 }));
 
+// Mock react-native-reanimated (no native worklets in test)
+jest.mock("react-native-reanimated", () => ({
+  default: { addWhitelistedNativeProps: jest.fn(), addWhitelistedUIProps: jest.fn() },
+  useSharedValue: jest.fn((v) => ({ value: v })),
+  useAnimatedStyle: jest.fn(() => ({})),
+  useDerivedValue: jest.fn((fn) => ({ value: fn() })),
+  withTiming: jest.fn((v) => v),
+  withSpring: jest.fn((v) => v),
+  withSequence: jest.fn((...args) => args[args.length - 1]),
+  interpolateColor: jest.fn(() => "#000000"),
+  Easing: { inOut: jest.fn(), bezier: jest.fn() },
+  createAnimatedComponent: jest.fn((c) => c),
+  View: require("react-native").View,
+  Text: require("react-native").Text,
+  ScrollView: require("react-native").ScrollView,
+  FlatList: require("react-native").FlatList,
+}));
+
+// Mock react-native-worklets (no native worklets in test)
+jest.mock("react-native-worklets", () => ({
+  createSerializable: jest.fn((v) => v),
+  defaultSerializer: jest.fn(),
+}));
+
+// Mock expo-localization
+jest.mock("expo-localization", () => ({
+  getLocales: jest.fn(() => [{ languageCode: "en" }]),
+}));
+
 // Mock platform utility (shadow helper uses Platform.OS)
 jest.mock("./src/lib/platform", () => ({
   shadow: jest.fn().mockReturnValue({}),

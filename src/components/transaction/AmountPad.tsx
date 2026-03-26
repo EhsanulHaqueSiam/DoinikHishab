@@ -30,7 +30,7 @@ export function AmountPad({ value, onChange, type, locale }: AmountPadProps) {
     if (value === 0 && display !== "") {
       setDisplay("");
     }
-  }, [value]);
+  }, [value, display]);
 
   const handleKey = useCallback(
     (key: string) => {
@@ -58,9 +58,7 @@ export function AmountPad({ value, onChange, type, locale }: AmountPadProps) {
 
   const displayAmount = Math.abs(value);
   const displayText =
-    displayAmount === 0
-      ? "\u09F30"
-      : formatCurrency(displayAmount, locale === "bn");
+    displayAmount === 0 ? "\u09F30" : formatCurrency(displayAmount, locale === "bn");
 
   return (
     <View className="items-center">

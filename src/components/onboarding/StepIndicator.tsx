@@ -1,11 +1,7 @@
-import React, { useEffect } from "react";
-import { View, Pressable } from "react-native";
 import { Check } from "lucide-react-native";
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-} from "react-native-reanimated";
+import { useEffect } from "react";
+import { Pressable, View } from "react-native";
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
 import { useTranslation } from "../../lib/i18n";
 
 interface StepIndicatorProps {
@@ -66,10 +62,7 @@ function StepDot({
     >
       <Animated.View style={animatedStyle}>
         {isActive ? (
-          <View
-            className="bg-primary-500 rounded-full"
-            style={{ width: 24, height: 12 }}
-          />
+          <View className="bg-primary-500 rounded-full" style={{ width: 24, height: 12 }} />
         ) : isCompleted ? (
           <View
             className="bg-primary-700 rounded-full items-center justify-center"
@@ -78,21 +71,14 @@ function StepDot({
             <Check size={8} color="#ffffff" strokeWidth={3} />
           </View>
         ) : (
-          <View
-            className="bg-surface-500 rounded-full"
-            style={{ width: 12, height: 12 }}
-          />
+          <View className="bg-surface-500 rounded-full" style={{ width: 12, height: 12 }} />
         )}
       </Animated.View>
     </Pressable>
   );
 }
 
-export function StepIndicator({
-  currentStep,
-  completedSteps,
-  onStepPress,
-}: StepIndicatorProps) {
+export function StepIndicator({ currentStep, completedSteps, onStepPress }: StepIndicatorProps) {
   const { t } = useTranslation();
 
   return (

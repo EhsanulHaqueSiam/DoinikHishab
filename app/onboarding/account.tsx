@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { View, Text, Pressable, TextInput, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useOnboarding } from "../../src/hooks/use-onboarding";
 import { setJSON } from "../../src/services/storage";
 
@@ -48,12 +48,8 @@ export default function AccountScreen() {
   return (
     <SafeAreaView edges={["bottom"]} className="flex-1 bg-background">
       <ScrollView className="flex-1 px-6" showsVerticalScrollIndicator={false}>
-        <Text className="text-lg font-bold text-foreground mt-4">
-          {t("onboarding.step2")}
-        </Text>
-        <Text className="text-sm text-surface-900 mt-2 mb-6">
-          {t("onboarding.step2Desc")}
-        </Text>
+        <Text className="text-lg font-bold text-foreground mt-4">{t("onboarding.step2")}</Text>
+        <Text className="text-sm text-surface-900 mt-2 mb-6">{t("onboarding.step2Desc")}</Text>
 
         {/* Account Options */}
         <View className="gap-3">
@@ -125,9 +121,7 @@ export default function AccountScreen() {
           className="bg-primary-500 rounded-xl py-4 items-center"
           accessibilityRole="button"
         >
-          <Text className="text-base font-bold text-white">
-            {t("onboarding.nextStep")}
-          </Text>
+          <Text className="text-base font-bold text-white">{t("onboarding.nextStep")}</Text>
         </Pressable>
 
         <Pressable
@@ -135,9 +129,7 @@ export default function AccountScreen() {
           className="mt-3 items-center py-2"
           accessibilityRole="button"
         >
-          <Text className="text-sm text-surface-800">
-            {t("onboarding.skip")}
-          </Text>
+          <Text className="text-sm text-surface-800">{t("onboarding.skip")}</Text>
         </Pressable>
 
         <Pressable
@@ -145,9 +137,7 @@ export default function AccountScreen() {
           className="mt-1 items-center py-2"
           accessibilityRole="button"
         >
-          <Text className="text-xs text-surface-700">
-            {t("onboarding.skip")}
-          </Text>
+          <Text className="text-xs text-surface-700">{t("onboarding.skip")}</Text>
         </Pressable>
       </View>
     </SafeAreaView>

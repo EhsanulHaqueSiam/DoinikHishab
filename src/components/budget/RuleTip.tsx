@@ -1,7 +1,7 @@
-import React, { useCallback, useState } from "react";
-import { View, Text, Pressable } from "react-native";
+import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { isTipDismissed, dismissTip } from "../../services/onboarding";
+import { Pressable, Text, View } from "react-native";
+import { dismissTip, isTipDismissed } from "../../services/onboarding";
 
 interface RuleTipProps {
   ruleId: string;
@@ -24,12 +24,8 @@ export function RuleTip({ ruleId, titleKey, bodyKey }: RuleTipProps) {
 
   return (
     <View className="mx-4 my-2 p-3 bg-primary-50 border border-primary-400/20 rounded-xl">
-      <Text className="text-xs font-bold text-primary-700">
-        {t(titleKey as any)}
-      </Text>
-      <Text className="text-2xs text-surface-900 leading-4 mt-1">
-        {t(bodyKey as any)}
-      </Text>
+      <Text className="text-xs font-bold text-primary-700">{t(titleKey as any)}</Text>
+      <Text className="text-2xs text-surface-900 leading-4 mt-1">{t(bodyKey as any)}</Text>
       <Pressable
         onPress={handleDismiss}
         hitSlop={8}
@@ -37,9 +33,7 @@ export function RuleTip({ ruleId, titleKey, bodyKey }: RuleTipProps) {
         accessibilityLabel={t("tips.dismiss" as any)}
         className="self-end mt-2"
       >
-        <Text className="text-2xs text-surface-800">
-          {t("tips.dismiss" as any)}
-        </Text>
+        <Text className="text-2xs text-surface-800">{t("tips.dismiss" as any)}</Text>
       </Pressable>
     </View>
   );

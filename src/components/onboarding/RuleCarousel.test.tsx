@@ -1,4 +1,3 @@
-import React from "react";
 import { render, screen } from "@testing-library/react-native";
 import { RuleCarousel } from "./RuleCarousel";
 
@@ -10,16 +9,7 @@ jest.mock("../../lib/i18n", () => ({
   }),
 }));
 
-// Mock Reanimated
-jest.mock("react-native-reanimated", () => {
-  const Reanimated = require("react-native-reanimated/mock");
-  return {
-    ...Reanimated,
-    useSharedValue: jest.fn((v) => ({ value: v })),
-    useAnimatedStyle: jest.fn((fn) => fn()),
-    withTiming: jest.fn((v) => v),
-  };
-});
+// Reanimated mock is in jest.setup.js — no per-file mock needed
 
 describe("RuleCarousel", () => {
   it("renders all 4 YNAB rule cards", () => {

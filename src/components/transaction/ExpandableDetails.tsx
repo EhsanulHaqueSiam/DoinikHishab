@@ -1,9 +1,9 @@
-import { useCallback, useState } from "react";
-import { Pressable, Text, View } from "react-native";
 import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import { ChevronDown, ChevronUp, Flag } from "lucide-react-native";
-import { today } from "../../lib/date";
+import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Pressable, Text, View } from "react-native";
+import { today } from "../../lib/date";
 
 export interface DetailsValues {
   payee: string;
@@ -53,9 +53,7 @@ export function ExpandableDetails({
         className="flex-row items-center justify-center py-3"
       >
         <Text className="text-xs text-surface-800 font-medium">
-          {isExpanded
-            ? t("quickAdd.hideDetails")
-            : t("quickAdd.showDetails")}
+          {isExpanded ? t("quickAdd.hideDetails") : t("quickAdd.showDetails")}
         </Text>
         {isExpanded ? (
           <ChevronUp size={14} color="#8899aa" style={{ marginLeft: 4 }} />
@@ -133,9 +131,7 @@ export function ExpandableDetails({
               >
                 <Text
                   className={`text-xs font-semibold ${
-                    values.accountId === acct._id
-                      ? "text-primary-700"
-                      : "text-surface-800"
+                    values.accountId === acct._id ? "text-primary-700" : "text-surface-800"
                   }`}
                 >
                   {acct.name}
@@ -161,9 +157,7 @@ export function ExpandableDetails({
               >
                 <Text
                   className={`text-xs font-semibold ${
-                    values.date === chip.value
-                      ? "text-primary-700"
-                      : "text-surface-800"
+                    values.date === chip.value ? "text-primary-700" : "text-surface-800"
                   }`}
                 >
                   {chip.label}
@@ -174,11 +168,7 @@ export function ExpandableDetails({
             <BottomSheetTextInput
               placeholder="YYYY-MM-DD"
               placeholderTextColor="#6b7b8d"
-              value={
-                values.date !== todayStr && values.date !== yesterdayStr
-                  ? values.date
-                  : ""
-              }
+              value={values.date !== todayStr && values.date !== yesterdayStr ? values.date : ""}
               onChangeText={(text: string) => onChange("date", text)}
               style={{
                 flex: 1,

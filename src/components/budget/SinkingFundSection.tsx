@@ -1,6 +1,5 @@
-import React from "react";
-import { View, Text } from "react-native";
 import { useTranslation } from "react-i18next";
+import { Text, View } from "react-native";
 import { SINKING_FUND_TEMPLATES } from "../../services/mock-data";
 import { SinkingFundRow } from "./SinkingFundRow";
 
@@ -45,7 +44,10 @@ export function SinkingFundSection() {
       </Text>
       <View className="bg-surface-200 rounded-2xl p-3 overflow-hidden">
         {preSelectedFunds.map((fund, index) => {
-          const mock = MOCK_ACCUMULATIONS[fund.id] ?? { accumulated: 0, monthsRemaining: fund.defaultMonths };
+          const mock = MOCK_ACCUMULATIONS[fund.id] ?? {
+            accumulated: 0,
+            monthsRemaining: fund.defaultMonths,
+          };
           return (
             <View key={fund.id}>
               {index > 0 && <View className="h-px bg-border/15 mx-2" />}

@@ -1,7 +1,5 @@
-import React from "react";
-import { render, screen, fireEvent, act } from "@testing-library/react-native";
+import { fireEvent, render, screen } from "@testing-library/react-native";
 import { QuickAdd } from "./QuickAdd";
-import { MOCK_CATEGORIES, MOCK_GROUPS, MOCK_ACCOUNTS } from "../../services/mock-data";
 
 // Mock hooks
 const mockSaveTransaction = jest.fn().mockResolvedValue(undefined);
@@ -17,11 +15,7 @@ jest.mock("../../hooks/use-quick-add", () => ({
 }));
 jest.mock("../../hooks/use-category-frequency", () => ({
   useCategoryFrequency: () => ({
-    frequentIds: [
-      "mock_cat_food_groceries",
-      "mock_cat_transport",
-      "mock_cat_rickshaw",
-    ],
+    frequentIds: ["mock_cat_food_groceries", "mock_cat_transport", "mock_cat_rickshaw"],
     increment: mockIncrement,
   }),
 }));
@@ -46,9 +40,7 @@ jest.mock("@gorhom/bottom-sheet", () => {
   const React = require("react");
   return {
     __esModule: true,
-    default: React.forwardRef(({ children }: any, ref: any) => (
-      <>{children}</>
-    )),
+    default: React.forwardRef(({ children }: any, _ref: any) => <>{children}</>),
     BottomSheetScrollView: ({ children }: any) => <>{children}</>,
     BottomSheetTextInput: "TextInput",
   };
@@ -61,9 +53,7 @@ jest.mock("react-native-reanimated", () => {
   return {
     __esModule: true,
     default: {
-      View: React.forwardRef((props: any, ref: any) => (
-        <View {...props} ref={ref} />
-      )),
+      View: React.forwardRef((props: any, ref: any) => <View {...props} ref={ref} />),
       createAnimatedComponent: (component: any) => component,
     },
     useSharedValue: jest.fn((val: any) => ({ value: val })),

@@ -1,4 +1,4 @@
-import { render, fireEvent } from "@testing-library/react-native";
+import { render } from "@testing-library/react-native";
 
 // Mock currency module to control Bengali numeral behavior
 jest.mock("../../lib/currency", () => ({
@@ -6,15 +6,37 @@ jest.mock("../../lib/currency", () => ({
     const taka = (paisa / 100).toFixed(2);
     if (useBengali) {
       // Simple Bengali numeral conversion for testing
-      const bengaliDigits = ["\u09E6", "\u09E7", "\u09E8", "\u09E9", "\u09EA", "\u09EB", "\u09EC", "\u09ED", "\u09EE", "\u09EF"];
-      const converted = taka.replace(/[0-9]/g, (d) => bengaliDigits[parseInt(d)]);
+      const bengaliDigits = [
+        "\u09E6",
+        "\u09E7",
+        "\u09E8",
+        "\u09E9",
+        "\u09EA",
+        "\u09EB",
+        "\u09EC",
+        "\u09ED",
+        "\u09EE",
+        "\u09EF",
+      ];
+      const converted = taka.replace(/[0-9]/g, (d) => bengaliDigits[parseInt(d, 10)]);
       return `\u09F3${converted}`;
     }
     return `\u09F3${taka}`;
   }),
   toBengaliNumerals: jest.fn((str: string) => {
-    const bengaliDigits = ["\u09E6", "\u09E7", "\u09E8", "\u09E9", "\u09EA", "\u09EB", "\u09EC", "\u09ED", "\u09EE", "\u09EF"];
-    return str.replace(/[0-9]/g, (d) => bengaliDigits[parseInt(d)]);
+    const bengaliDigits = [
+      "\u09E6",
+      "\u09E7",
+      "\u09E8",
+      "\u09E9",
+      "\u09EA",
+      "\u09EB",
+      "\u09EC",
+      "\u09ED",
+      "\u09EE",
+      "\u09EF",
+    ];
+    return str.replace(/[0-9]/g, (d) => bengaliDigits[parseInt(d, 10)]);
   }),
 }));
 
@@ -40,9 +62,7 @@ describe("AmountPad", () => {
     });
 
     it("renders display with Arabic numerals when locale is undefined", () => {
-      const { getByText } = render(
-        <AmountPad value={45000} onChange={jest.fn()} type="expense" />
-      );
+      const { getByText } = render(<AmountPad value={45000} onChange={jest.fn()} type="expense" />);
 
       expect(getByText(/\u09F3450\.00/)).toBeTruthy();
     });
@@ -77,9 +97,7 @@ describe("AmountPad", () => {
       expect(getByText(/\u09F3100\.00/)).toBeTruthy();
 
       // Simulate external reset: parent sets value to 0
-      rerender(
-        <AmountPad value={0} onChange={onChange} type="expense" />
-      );
+      rerender(<AmountPad value={0} onChange={onChange} type="expense" />);
 
       // Should now show ৳0
       expect(getByText("\u09F30")).toBeTruthy();
@@ -91,9 +109,7 @@ describe("AmountPad", () => {
         <AmountPad value={10000} onChange={onChange} type="expense" />
       );
 
-      rerender(
-        <AmountPad value={20000} onChange={onChange} type="expense" />
-      );
+      rerender(<AmountPad value={20000} onChange={onChange} type="expense" />);
 
       // Should show the new value
       expect(getByText(/\u09F3200\.00/)).toBeTruthy();

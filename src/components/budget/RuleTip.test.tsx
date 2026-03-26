@@ -1,5 +1,4 @@
-import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react-native";
+import { fireEvent, render, screen } from "@testing-library/react-native";
 import { RuleTip } from "./RuleTip";
 
 // Mock react-i18next
@@ -23,24 +22,18 @@ describe("RuleTip", () => {
   });
 
   it("renders tip title and body when not dismissed", () => {
-    render(
-      <RuleTip ruleId="rule_1" titleKey="tips.rule1Title" bodyKey="tips.rule1Body" />
-    );
+    render(<RuleTip ruleId="rule_1" titleKey="tips.rule1Title" bodyKey="tips.rule1Body" />);
     expect(screen.getByText("tips.rule1Title")).toBeTruthy();
     expect(screen.getByText("tips.rule1Body")).toBeTruthy();
   });
 
   it("renders dismiss button", () => {
-    render(
-      <RuleTip ruleId="rule_1" titleKey="tips.rule1Title" bodyKey="tips.rule1Body" />
-    );
+    render(<RuleTip ruleId="rule_1" titleKey="tips.rule1Title" bodyKey="tips.rule1Body" />);
     expect(screen.getByText("tips.dismiss")).toBeTruthy();
   });
 
   it("calls dismissTip when dismiss button is pressed", () => {
-    render(
-      <RuleTip ruleId="rule_2" titleKey="tips.rule2Title" bodyKey="tips.rule2Body" />
-    );
+    render(<RuleTip ruleId="rule_2" titleKey="tips.rule2Title" bodyKey="tips.rule2Body" />);
     fireEvent.press(screen.getByText("tips.dismiss"));
     expect(mockDismissTip).toHaveBeenCalledWith("rule_2");
   });
@@ -54,9 +47,7 @@ describe("RuleTip", () => {
   });
 
   it("has dismiss button with accessible role", () => {
-    render(
-      <RuleTip ruleId="rule_1" titleKey="tips.rule1Title" bodyKey="tips.rule1Body" />
-    );
+    render(<RuleTip ruleId="rule_1" titleKey="tips.rule1Title" bodyKey="tips.rule1Body" />);
     const buttons = screen.getAllByRole("button");
     expect(buttons.length).toBeGreaterThanOrEqual(1);
   });

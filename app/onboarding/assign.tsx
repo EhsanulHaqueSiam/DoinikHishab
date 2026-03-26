@@ -1,12 +1,12 @@
-import React, { useState, useMemo } from "react";
-import { View, Text, Pressable, TextInput, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useOnboarding } from "../../src/hooks/use-onboarding";
 import { formatCurrency } from "../../src/lib/currency";
-import { getJSON } from "../../src/services/storage";
 import { CATEGORY_TEMPLATE_SETS } from "../../src/services/mock-data";
+import { getJSON } from "../../src/services/storage";
 
 /** Fixed mock balance: 800000 paisa = Tk 8,000 */
 const MOCK_BALANCE = 800000;
@@ -37,7 +37,15 @@ const DEFAULT_SPLITS: Record<string, Record<string, number>> = {
   student: { tuition: 40, food: 25, transport: 15, books: 10, entertainment: 10 },
   professional: { rent: 35, groceries: 20, transport: 15, savings: 15, utilities: 10, dining: 5 },
   freelancer: { savings: 25, internet: 15, software: 15, taxes: 20, equipment: 15, groceries: 10 },
-  family: { rent: 30, groceries: 20, utilities: 10, education: 15, medical: 10, transport: 10, clothing: 5 },
+  family: {
+    rent: 30,
+    groceries: 20,
+    utilities: 10,
+    education: 15,
+    medical: 10,
+    transport: 10,
+    clothing: 5,
+  },
 };
 
 function getDefaultAssignments(
@@ -72,9 +80,7 @@ export default function AssignScreen() {
     if (!selectedTemplate) {
       return ["rent", "groceries", "transport", "savings"];
     }
-    const template = CATEGORY_TEMPLATE_SETS.find(
-      (tmpl) => tmpl.id === selectedTemplate
-    );
+    const template = CATEGORY_TEMPLATE_SETS.find((tmpl) => tmpl.id === selectedTemplate);
     return template?.categoryIds?.slice(0, 4) ?? ["rent", "groceries", "transport", "savings"];
   }, [selectedTemplate]);
 
@@ -113,12 +119,8 @@ export default function AssignScreen() {
   return (
     <SafeAreaView edges={["bottom"]} className="flex-1 bg-background">
       <ScrollView className="flex-1 px-6" showsVerticalScrollIndicator={false}>
-        <Text className="text-lg font-bold text-foreground mt-4">
-          {t("onboarding.step4")}
-        </Text>
-        <Text className="text-sm text-surface-900 mt-2 mb-6">
-          {t("onboarding.step4Desc")}
-        </Text>
+        <Text className="text-lg font-bold text-foreground mt-4">{t("onboarding.step4")}</Text>
+        <Text className="text-sm text-surface-900 mt-2 mb-6">{t("onboarding.step4Desc")}</Text>
 
         {/* Ready to Assign Hero */}
         <View className="rounded-xl bg-card border border-border/40 p-5 items-center mb-6">
@@ -155,13 +157,9 @@ export default function AssignScreen() {
 
         {/* Remaining Counter */}
         <View className="flex-row justify-between items-center py-3 border-t border-border/20">
-          <Text className="text-sm font-bold text-foreground">
-            {t("onboarding.remaining")}
-          </Text>
+          <Text className="text-sm font-bold text-foreground">{t("onboarding.remaining")}</Text>
           <Text
-            className={`text-lg font-bold ${
-              remaining >= 0 ? "text-primary-400" : "text-red-400"
-            }`}
+            className={`text-lg font-bold ${remaining >= 0 ? "text-primary-400" : "text-red-400"}`}
           >
             {formatCurrency(remaining)}
           </Text>
@@ -175,9 +173,7 @@ export default function AssignScreen() {
           className="bg-primary-500 rounded-xl py-4 items-center"
           accessibilityRole="button"
         >
-          <Text className="text-base font-bold text-white">
-            {t("onboarding.nextStep")}
-          </Text>
+          <Text className="text-base font-bold text-white">{t("onboarding.nextStep")}</Text>
         </Pressable>
 
         <Pressable
@@ -185,9 +181,7 @@ export default function AssignScreen() {
           className="mt-3 items-center py-2"
           accessibilityRole="button"
         >
-          <Text className="text-sm text-surface-800">
-            {t("onboarding.skip")}
-          </Text>
+          <Text className="text-sm text-surface-800">{t("onboarding.skip")}</Text>
         </Pressable>
 
         <Pressable
@@ -195,9 +189,7 @@ export default function AssignScreen() {
           className="mt-1 items-center py-2"
           accessibilityRole="button"
         >
-          <Text className="text-xs text-surface-700">
-            {t("onboarding.skip")}
-          </Text>
+          <Text className="text-xs text-surface-700">{t("onboarding.skip")}</Text>
         </Pressable>
       </View>
     </SafeAreaView>

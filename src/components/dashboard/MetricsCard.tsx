@@ -1,6 +1,5 @@
-import React from "react";
-import { View, Text, Pressable } from "react-native";
-import { TrendingUp, TrendingDown, Minus, Settings } from "lucide-react-native";
+import { Minus, Settings, TrendingDown, TrendingUp } from "lucide-react-native";
+import { Pressable, Text, View } from "react-native";
 import { useMetrics } from "../../hooks/use-metrics";
 import { useTranslation } from "../../lib/i18n";
 import { shadow } from "../../lib/platform";
@@ -23,9 +22,7 @@ export function MetricsCard({ onSettingsPress }: MetricsCardProps) {
           : "";
 
   const ageAccessibilityLabel = `${t("metrics.ageOfMoney")}: ${
-    ageOfMoney !== null
-      ? `${ageOfMoney} ${t("metrics.days")}`
-      : t("metrics.noDays")
+    ageOfMoney !== null ? `${ageOfMoney} ${t("metrics.days")}` : t("metrics.noDays")
   }${trendLabel ? `, ${trendLabel}` : ""}`;
 
   return (
@@ -42,9 +39,7 @@ export function MetricsCard({ onSettingsPress }: MetricsCardProps) {
           <View className="flex-row items-center mt-0.5">
             <Text className="text-lg font-bold text-foreground">
               {ageOfMoney !== null ? `${ageOfMoney}` : "--"}{" "}
-              <Text className="text-sm font-bold text-surface-800">
-                {t("metrics.days")}
-              </Text>
+              <Text className="text-sm font-bold text-surface-800">{t("metrics.days")}</Text>
             </Text>
             {ageOfMoneyTrend === "improving" && (
               <TrendingUp size={14} color="#34d399" style={{ marginLeft: 6 }} />
@@ -57,9 +52,7 @@ export function MetricsCard({ onSettingsPress }: MetricsCardProps) {
             )}
           </View>
           {ageOfMoney === null && (
-            <Text className="text-2xs text-surface-700 mt-1">
-              {t("metrics.noAgeDesc")}
-            </Text>
+            <Text className="text-2xs text-surface-700 mt-1">{t("metrics.noAgeDesc")}</Text>
           )}
         </View>
 
@@ -84,14 +77,10 @@ export function MetricsCard({ onSettingsPress }: MetricsCardProps) {
           </View>
           <Text className="text-lg font-bold text-foreground mt-0.5">
             {daysOfBuffering !== null ? `${daysOfBuffering}` : "--"}{" "}
-            <Text className="text-sm font-bold text-surface-800">
-              {t("metrics.days")}
-            </Text>
+            <Text className="text-sm font-bold text-surface-800">{t("metrics.days")}</Text>
           </Text>
           {daysOfBuffering === null && (
-            <Text className="text-2xs text-surface-700 mt-1">
-              {t("metrics.noBufferDesc")}
-            </Text>
+            <Text className="text-2xs text-surface-700 mt-1">{t("metrics.noBufferDesc")}</Text>
           )}
         </View>
       </View>

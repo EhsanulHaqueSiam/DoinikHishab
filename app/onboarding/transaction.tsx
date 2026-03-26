@@ -1,13 +1,13 @@
-import React, { useState, useMemo } from "react";
-import { View, Text, Pressable, TextInput, ScrollView } from "react-native";
-import { useRouter } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
 import * as Haptics from "expo-haptics";
+import { useRouter } from "expo-router";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useOnboarding } from "../../src/hooks/use-onboarding";
-import { useAppStore } from "../../src/stores/app-store";
-import { getJSON } from "../../src/services/storage";
 import { CATEGORY_TEMPLATE_SETS } from "../../src/services/mock-data";
+import { getJSON } from "../../src/services/storage";
+import { useAppStore } from "../../src/stores/app-store";
 
 /** Category display names */
 const CATEGORY_NAMES: Record<string, string> = {
@@ -65,17 +65,17 @@ export default function TransactionScreen() {
     if (!selectedTemplate) {
       return ["food", "transport", "groceries", "entertainment", "rent", "utilities"];
     }
-    const template = CATEGORY_TEMPLATE_SETS.find(
-      (tmpl) => tmpl.id === selectedTemplate
+    const template = CATEGORY_TEMPLATE_SETS.find((tmpl) => tmpl.id === selectedTemplate);
+    return (
+      template?.categoryIds?.slice(0, 6) ?? [
+        "food",
+        "transport",
+        "groceries",
+        "entertainment",
+        "rent",
+        "utilities",
+      ]
     );
-    return template?.categoryIds?.slice(0, 6) ?? [
-      "food",
-      "transport",
-      "groceries",
-      "entertainment",
-      "rent",
-      "utilities",
-    ];
   }, [selectedTemplate]);
 
   const handleStartBudgeting = () => {
@@ -91,12 +91,8 @@ export default function TransactionScreen() {
   return (
     <SafeAreaView edges={["bottom"]} className="flex-1 bg-background">
       <ScrollView className="flex-1 px-6" showsVerticalScrollIndicator={false}>
-        <Text className="text-lg font-bold text-foreground mt-4">
-          {t("onboarding.step5")}
-        </Text>
-        <Text className="text-sm text-surface-900 mt-2 mb-6">
-          {t("onboarding.step5Desc")}
-        </Text>
+        <Text className="text-lg font-bold text-foreground mt-4">{t("onboarding.step5")}</Text>
+        <Text className="text-sm text-surface-900 mt-2 mb-6">{t("onboarding.step5Desc")}</Text>
 
         {/* Amount Input */}
         <View className="items-center mb-6">
@@ -104,9 +100,7 @@ export default function TransactionScreen() {
             {t("transaction.amount")}
           </Text>
           <View className="flex-row items-center">
-            <Text className="text-3xl font-bold text-surface-700 mr-1">
-              {"\u09F3"}
-            </Text>
+            <Text className="text-3xl font-bold text-surface-700 mr-1">{"\u09F3"}</Text>
             <TextInput
               className="text-3xl font-bold text-foreground text-center min-w-20"
               keyboardType="numeric"
@@ -139,9 +133,7 @@ export default function TransactionScreen() {
                 accessibilityRole="button"
                 accessibilityState={{ selected: isSelected }}
               >
-                <Text className="text-xl mb-1">
-                  {CATEGORY_ICONS[catId] || "\uD83D\uDCCC"}
-                </Text>
+                <Text className="text-xl mb-1">{CATEGORY_ICONS[catId] || "\uD83D\uDCCC"}</Text>
                 <Text
                   className={`text-xs text-center ${
                     isSelected ? "text-primary-400 font-bold" : "text-surface-800"
@@ -163,9 +155,7 @@ export default function TransactionScreen() {
           className="bg-primary-500 rounded-xl py-4 items-center"
           accessibilityRole="button"
         >
-          <Text className="text-base font-bold text-white">
-            {t("onboarding.startBudgeting")}
-          </Text>
+          <Text className="text-base font-bold text-white">{t("onboarding.startBudgeting")}</Text>
         </Pressable>
       </View>
     </SafeAreaView>

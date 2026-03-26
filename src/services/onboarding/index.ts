@@ -3,7 +3,7 @@
  * Manages the 5-step guided setup flow and lookback period preference.
  */
 
-import { getSetting, setSetting, deleteSetting } from "../storage";
+import { deleteSetting, getSetting, setSetting } from "../storage";
 
 const ONBOARDING_COMPLETE_KEY = "onboarding_complete";
 const ONBOARDING_STEP_KEY = "onboarding_step";

@@ -1,6 +1,5 @@
-import React from "react";
-import { View } from "react-native";
 import { Stack } from "expo-router";
+import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StepIndicator } from "../../src/components/onboarding/StepIndicator";
 import { useOnboarding } from "../../src/hooks/use-onboarding";

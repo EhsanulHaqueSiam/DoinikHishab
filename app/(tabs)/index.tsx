@@ -75,7 +75,7 @@ export default function DashboardScreen() {
           }
         });
     }
-  }, [userId, deviceId]);
+  }, [userId, deviceId, createOrGetUser, seedCategories, setUserId]);
 
   const balances = useQuery(api.accounts.getTotalBalance, userId ? { userId } : "skip");
   const transactions = useQuery(api.transactions.list, userId ? { userId, limit: 10 } : "skip");

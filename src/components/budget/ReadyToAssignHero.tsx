@@ -1,6 +1,5 @@
-import React from "react";
-import { View, Text, Pressable } from "react-native";
 import { useTranslation } from "react-i18next";
+import { Pressable, Text, View } from "react-native";
 import { formatCurrency } from "../../lib/currency";
 import { shadow } from "../../lib/platform";
 
@@ -17,9 +16,7 @@ export function ReadyToAssignHero({ amount, onPress }: ReadyToAssignHeroProps) {
   const isNegative = amount < 0;
   const isZero = amount === 0;
 
-  const amountColorClass = isNegative
-    ? "text-danger"
-    : "text-primary-700";
+  const amountColorClass = isNegative ? "text-danger" : "text-primary-700";
 
   const subtitle = isPositive
     ? t("readyToAssign.positive")
@@ -53,9 +50,7 @@ export function ReadyToAssignHero({ amount, onPress }: ReadyToAssignHeroProps) {
         >
           {formattedAmount}
         </Text>
-        <Text className="text-2xs text-surface-800 mt-1">
-          {subtitle}
-        </Text>
+        <Text className="text-2xs text-surface-800 mt-1">{subtitle}</Text>
       </View>
     </Pressable>
   );

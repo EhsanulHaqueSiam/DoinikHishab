@@ -1,16 +1,11 @@
+import { useMutation, useQuery } from "convex/react";
 import { useCallback, useMemo } from "react";
-import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import type { MockAccount, MockCategory, MockCategoryGroup } from "../services/mock-data";
+import { MOCK_ACCOUNTS, MOCK_CATEGORIES, MOCK_GROUPS } from "../services/mock-data";
+import { getJSON, getSetting, setJSON, setSetting } from "../services/storage";
 import { useAppStore } from "../stores/app-store";
 import { useUIStore } from "../stores/ui-store";
-import { getSetting, setSetting, getJSON, setJSON } from "../services/storage";
-import {
-  MOCK_CATEGORIES,
-  MOCK_GROUPS,
-  MOCK_ACCOUNTS,
-} from "../services/mock-data";
-import { today } from "../lib/date";
-import type { MockAccount, MockCategory, MockCategoryGroup } from "../services/mock-data";
 
 interface TransactionInput {
   amount: number;
@@ -33,31 +28,23 @@ export function useQuickAdd() {
   const { quickAddType } = useUIStore();
 
   // Try Convex, fallback to mock
-  const convexCategories = useQuery(
-    api.categories.listCategories,
-    userId ? { userId } : "skip"
-  );
-  const convexGroups = useQuery(
-    api.categories.listGroups,
-    userId ? { userId } : "skip"
-  );
-  const convexAccounts = useQuery(
-    api.accounts.list,
-    userId ? { userId } : "skip"
-  );
+  const convexCategories = useQuery(api.categories.listCategories, userId ? { userId } : "skip");
+  const convexGroups = useQuery(api.categories.listGroups, userId ? { userId } : "skip");
+  const convexAccounts = useQuery(api.accounts.list, userId ? { userId } : "skip");
   const createTransaction = useMutation(api.transactions.create);
 
-  const categories: readonly MockCategory[] = (convexCategories as unknown as MockCategory[] | undefined) ?? MOCK_CATEGORIES;
-  const groups: readonly MockCategoryGroup[] = (convexGroups as unknown as MockCategoryGroup[] | undefined) ?? MOCK_GROUPS;
-  const accounts: readonly MockAccount[] = (convexAccounts as unknown as MockAccount[] | undefined) ?? MOCK_ACCOUNTS;
+  const categories: readonly MockCategory[] =
+    (convexCategories as unknown as MockCategory[] | undefined) ?? MOCK_CATEGORIES;
+  const groups: readonly MockCategoryGroup[] =
+    (convexGroups as unknown as MockCategoryGroup[] | undefined) ?? MOCK_GROUPS;
+  const accounts: readonly MockAccount[] =
+    (convexAccounts as unknown as MockAccount[] | undefined) ?? MOCK_ACCOUNTS;
 
   // Smart default account (D-16): last-used -> isDefault -> first
   const defaultAccount = useMemo(() => {
     const lastUsedId = getSetting("last_account_id");
     if (lastUsedId) {
-      const found = accounts.find(
-        (a) => a._id === lastUsedId && !a.isClosed
-      );
+      const found = accounts.find((a) => a._id === lastUsedId && !a.isClosed);
       if (found) return found;
     }
     return accounts.find((a) => a.isDefault) ?? accounts[0];

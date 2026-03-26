@@ -1,8 +1,8 @@
-import React from "react";
-import { View, Text, Pressable } from "react-native";
 import { BookOpen, Briefcase, Laptop, Users } from "lucide-react-native";
-import { CATEGORY_TEMPLATE_SETS } from "../../services/mock-data";
+import type React from "react";
+import { Pressable, Text, View } from "react-native";
 import { useTranslation } from "../../lib/i18n";
+import { CATEGORY_TEMPLATE_SETS } from "../../services/mock-data";
 
 const ICON_MAP: Record<string, React.ComponentType<{ size: number; color: string }>> = {
   BookOpen,
@@ -23,10 +23,7 @@ interface CategoryTemplateSelectorProps {
   onSelect: (templateId: string) => void;
 }
 
-export function CategoryTemplateSelector({
-  selectedId,
-  onSelect,
-}: CategoryTemplateSelectorProps) {
+export function CategoryTemplateSelector({ selectedId, onSelect }: CategoryTemplateSelectorProps) {
   const { t } = useTranslation();
 
   return (

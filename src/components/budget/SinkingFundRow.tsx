@@ -1,7 +1,7 @@
-import React, { useMemo } from "react";
-import { View, Text, Pressable } from "react-native";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import Animated, { useAnimatedStyle, withTiming, Easing } from "react-native-reanimated";
+import { Pressable, Text, View } from "react-native";
+import Animated, { Easing, useAnimatedStyle, withTiming } from "react-native-reanimated";
 import { formatCurrency } from "../../lib/currency";
 import { calculateSinkingFundSuggest } from "../../services/budget-engine";
 import type { SinkingFundTemplate } from "../../services/mock-data";
@@ -30,15 +30,10 @@ export function SinkingFundRow({
 
   // Determine status: funded if >= 100%, on track if >= expected fraction, behind otherwise
   const elapsedMonths = Math.max(template.defaultMonths - monthsRemaining, 0);
-  const expectedProgress = template.defaultMonths > 0
-    ? elapsedMonths / template.defaultMonths
-    : 0;
+  const expectedProgress = template.defaultMonths > 0 ? elapsedMonths / template.defaultMonths : 0;
 
-  const status: SinkingFundStatus = progress >= 1
-    ? "funded"
-    : progress >= expectedProgress
-      ? "on_track"
-      : "behind";
+  const status: SinkingFundStatus =
+    progress >= 1 ? "funded" : progress >= expectedProgress ? "on_track" : "behind";
 
   const suggestAmount = useMemo(
     () => calculateSinkingFundSuggest(targetAmount, accumulated, monthsRemaining),
@@ -47,7 +42,10 @@ export function SinkingFundRow({
 
   const fundName = t(template.nameKey as any);
 
-  const statusConfig: Record<SinkingFundStatus, { label: string; color: string; barColor: string }> = {
+  const statusConfig: Record<
+    SinkingFundStatus,
+    { label: string; color: string; barColor: string }
+  > = {
     funded: {
       label: t("sinkingFunds.funded" as any),
       color: "text-primary-700",
@@ -92,17 +90,12 @@ export function SinkingFundRow({
         >
           {fundName}
         </Text>
-        <Text className={`text-2xs font-bold ${config.color}`}>
-          {config.label}
-        </Text>
+        <Text className={`text-2xs font-bold ${config.color}`}>{config.label}</Text>
       </View>
 
       {/* Progress bar */}
       <View className="h-2 bg-surface-400 rounded-full overflow-hidden">
-        <Animated.View
-          className={`h-2 rounded-full ${config.barColor}`}
-          style={progressStyle}
-        />
+        <Animated.View className={`h-2 rounded-full ${config.barColor}`} style={progressStyle} />
       </View>
 
       {/* Bottom row: suggested + amounts */}

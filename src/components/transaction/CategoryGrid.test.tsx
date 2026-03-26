@@ -1,7 +1,6 @@
-import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react-native";
-import { CategoryGrid } from "./CategoryGrid";
+import { fireEvent, render, screen } from "@testing-library/react-native";
 import { MOCK_CATEGORIES, MOCK_GROUPS } from "../../services/mock-data";
+import { CategoryGrid } from "./CategoryGrid";
 
 // Mock platform shadow
 jest.mock("../../lib/platform", () => ({

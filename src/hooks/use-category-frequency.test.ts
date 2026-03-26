@@ -1,11 +1,9 @@
 import { renderHook } from "@testing-library/react-native";
 
 // Mock the frequency service
-const mockGetFrequentCategoryIds = jest.fn().mockReturnValue([
-  "mock_cat_food_groceries",
-  "mock_cat_transport",
-  "mock_cat_rickshaw",
-]);
+const mockGetFrequentCategoryIds = jest
+  .fn()
+  .mockReturnValue(["mock_cat_food_groceries", "mock_cat_transport", "mock_cat_rickshaw"]);
 const mockIncrementCategoryFrequency = jest.fn();
 const mockInitDefaultFrequencies = jest.fn();
 

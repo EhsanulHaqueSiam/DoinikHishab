@@ -1,11 +1,7 @@
 import React, { useCallback, useState } from "react";
-import { View, ScrollView, useWindowDimensions } from "react-native";
-import type { NativeSyntheticEvent, NativeScrollEvent } from "react-native";
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-} from "react-native-reanimated";
+import type { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
+import { ScrollView, useWindowDimensions, View } from "react-native";
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { YNAB_RULES } from "../../services/onboarding/rules";
 import { RuleCard } from "./RuleCard";
 
@@ -66,11 +62,7 @@ export function RuleCarousel({ onComplete }: RuleCarouselProps) {
         accessibilityRole="adjustable"
       >
         {YNAB_RULES.map((rule) => (
-          <RuleCard
-            key={rule.id}
-            rule={rule}
-            width={CARD_WIDTH - 32}
-          />
+          <RuleCard key={rule.id} rule={rule} width={CARD_WIDTH - 32} />
         ))}
       </ScrollView>
 

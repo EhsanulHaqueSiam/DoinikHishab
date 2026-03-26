@@ -1,5 +1,4 @@
-import { render, fireEvent } from "@testing-library/react-native";
-import { TextInput } from "react-native";
+import { fireEvent, render } from "@testing-library/react-native";
 
 // Mock @gorhom/bottom-sheet: BottomSheetTextInput -> regular TextInput
 jest.mock("@gorhom/bottom-sheet", () => ({
