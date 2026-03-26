@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: milestone
-status: Ready to plan
-stopped_at: Completed 04-04-PLAN.md
-last_updated: "2026-03-26T03:19:11.221Z"
+status: Ready to execute
+stopped_at: Completed 05-01-PLAN.md
+last_updated: "2026-03-26T04:30:54.183Z"
 progress:
   total_phases: 7
   completed_phases: 4
-  total_plans: 13
-  completed_plans: 13
+  total_plans: 17
+  completed_plans: 14
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-25)
 
 **Core value:** 3-tap manual transaction entry with envelope budgeting that changes how Bangladeshi users think about money.
-**Current focus:** Phase 04 — mobile-reports-sankey
+**Current focus:** Phase 05 — recurring-subscriptions
 
 ## Current Position
 
-Phase: 5
-Plan: Not started
+Phase: 05 (recurring-subscriptions) — EXECUTING
+Plan: 2 of 4
 
 ## Performance Metrics
 
@@ -56,6 +56,7 @@ Plan: Not started
 | Phase 04 P01 | 4min | 2 tasks | 15 files |
 | Phase 04 P02 | 6min | 2 tasks | 14 files |
 | Phase 04 P04 | 3min | 2 tasks | 2 files |
+| Phase 05 P01 | 5min | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -93,6 +94,9 @@ Recent decisions affecting current work:
 - [Phase 04]: Fixed jest mocks for gifted-charts using React.createElement (class component compat)
 - [Phase 04]: Added 8 i18n keys (totalIncome, totalExpense, trendUp, trendDown, improving, declining, flat, currentValue)
 - [Phase 04]: i18n init switched from .json to .ts imports to pick up keys added by Plans 01-03
+- [Phase 05]: 0.6 min confidence threshold for subscription detection (catches more true positives than 0.7)
+- [Phase 05]: Versioned MMKV storage (version: 1) for subscriptions and dismissed payees
+- [Phase 05]: Bills past due date marked as paid for demo (no payment confirmation mechanism)
 
 ### Pending Todos
 
@@ -106,6 +110,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-26T03:14:17.320Z
-Stopped at: Completed 04-04-PLAN.md
+Last session: 2026-03-26T04:30:54.181Z
+Stopped at: Completed 05-01-PLAN.md
 Resume file: None
