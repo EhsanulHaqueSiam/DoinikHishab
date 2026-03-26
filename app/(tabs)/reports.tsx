@@ -1,87 +1,96 @@
-import { useQuery } from "convex/react";
-import React, { useMemo } from "react";
+import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Pressable, ScrollView, Text, View } from "react-native";
-import { api } from "../../convex/_generated/api";
+import { AoMTrendChart } from "../../src/components/reports/AoMTrendChart";
+import { DoBTrendChart } from "../../src/components/reports/DoBTrendChart";
+import { IncomeExpenseBarChart } from "../../src/components/reports/IncomeExpenseBarChart";
+import { NetWorthLineChart } from "../../src/components/reports/NetWorthLineChart";
+import { ReportEmptyState } from "../../src/components/reports/ReportEmptyState";
+// Plan 01 components
+import type { ReportType, TimeRange } from "../../src/components/reports/report-types";
+// Plan 03 components
+import { SankeyDiagram } from "../../src/components/reports/SankeyDiagram";
+// Plan 02 components
+import { SpendingBarChart } from "../../src/components/reports/SpendingBarChart";
+import { SwipeableChart } from "../../src/components/reports/SwipeableChart";
+import { TimeRangeSelector } from "../../src/components/reports/TimeRangeSelector";
 import { Card } from "../../src/components/ui/Card";
-import { formatCurrency } from "../../src/lib/currency";
-import { shadow } from "../../src/lib/platform";
-import { useAppStore } from "../../src/stores/app-store";
-
-type ReportType = "spending" | "income_expense" | "net_worth";
+import { useReportData } from "../../src/hooks/use-report-data";
 
 export default function ReportsScreen() {
-  const { userId } = useAppStore();
   const { t } = useTranslation();
-  const [activeReport, setActiveReport] = React.useState<ReportType>("spending");
+  const [activeReport, setActiveReport] = useState<ReportType>("spending");
+  const [timeRange, setTimeRange] = useState<TimeRange>("1M");
+  const [currentPeriod, setCurrentPeriod] = useState(() => {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  });
 
-  const transactions = useQuery(api.transactions.list, userId ? { userId } : "skip");
-  const categories = useQuery(api.categories.listCategories, userId ? { userId } : "skip");
-  const accounts = useQuery(api.accounts.list, userId ? { userId } : "skip");
+  const { data, currentMonth } = useReportData(timeRange, currentPeriod);
 
-  const spendingByCategory = useMemo(() => {
-    if (!transactions || !categories) return [];
-    const spending = new Map<string, { name: string; total: number }>();
-    for (const txn of transactions as any[]) {
-      if (txn.type !== "expense" || !txn.categoryId) continue;
-      const cat = (categories as any[]).find((c) => c._id === txn.categoryId);
-      if (!cat) continue;
-      const existing = spending.get(txn.categoryId);
-      if (existing) existing.total += Math.abs(txn.amount);
-      else spending.set(txn.categoryId, { name: cat.name, total: Math.abs(txn.amount) });
-    }
-    return Array.from(spending.values())
-      .sort((a, b) => b.total - a.total)
-      .slice(0, 10);
-  }, [transactions, categories]);
+  // Month navigation via swipe
+  const navigateMonth = useCallback((direction: 1 | -1) => {
+    setCurrentPeriod((prev) => {
+      const [year, month] = prev.split("-").map(Number);
+      const date = new Date(year, month - 1 + direction, 1);
+      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+    });
+  }, []);
 
-  const incomeVsExpense = useMemo(() => {
-    if (!transactions) return { income: 0, expense: 0, net: 0 };
-    let income = 0,
-      expense = 0;
-    for (const txn of transactions as any[]) {
-      if (txn.type === "income") income += txn.amount;
-      else if (txn.type === "expense") expense += Math.abs(txn.amount);
-    }
-    return { income, expense, net: income - expense };
-  }, [transactions]);
+  const handleNext = useCallback(() => navigateMonth(1), [navigateMonth]);
+  const handlePrev = useCallback(() => navigateMonth(-1), [navigateMonth]);
 
-  const netWorth = useMemo(() => {
-    if (!accounts) return 0;
-    return (accounts as any[]).reduce((sum: number, a: any) => sum + a.balance, 0);
-  }, [accounts]);
+  // Format period label (e.g., "March 2026")
+  const periodLabel = formatPeriodLabel(currentPeriod, timeRange);
 
-  const totalSpending = spendingByCategory.reduce((s, c) => s + c.total, 0);
+  // Tab definitions: 5 tabs
+  const tabs: { key: ReportType; label: string }[] = [
+    { key: "spending", label: t("reports.spending") },
+    { key: "income_expense", label: t("reports.incomeExpense") },
+    { key: "net_worth", label: t("reports.netWorth") },
+    { key: "financial_health", label: t("reports.financialHealth") },
+    { key: "sankey", label: t("reports.cashFlow") },
+  ];
 
   return (
     <View className="flex-1 bg-background">
-      {/* Report Type Tabs */}
-      <View className="flex-row bg-surface-100 border-b border-border px-1 pt-1">
-        {(
-          [
-            { key: "spending", label: t("reports.spending") },
-            { key: "income_expense", label: t("reports.incomeExpense") },
-            { key: "net_worth", label: t("reports.netWorth") },
-          ] as const
-        ).map((tab) => (
+      {/* Report Type Tabs -- scrollable if 5 tabs overflow */}
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        className="bg-surface-100 border-b border-border"
+        contentContainerStyle={{ paddingHorizontal: 4, paddingTop: 4 }}
+      >
+        {tabs.map((tab) => (
           <Pressable
             key={tab.key}
             onPress={() => setActiveReport(tab.key)}
-            className={`flex-1 py-3 items-center border-b-2 ${
+            accessibilityRole="tab"
+            accessibilityState={{ selected: activeReport === tab.key }}
+            className={`py-3 px-3 items-center border-b-2 ${
               activeReport === tab.key ? "border-primary-600" : "border-transparent"
             }`}
+            style={{ minWidth: 70 }}
           >
             <Text
               className={`text-xs font-semibold tracking-wide uppercase ${
                 activeReport === tab.key ? "text-primary-700" : "text-surface-800"
               }`}
+              numberOfLines={1}
             >
               {tab.label}
             </Text>
           </Pressable>
         ))}
-      </View>
+      </ScrollView>
 
+      {/* TimeRangeSelector -- pill strip */}
+      <TimeRangeSelector selected={timeRange} onChange={setTimeRange} />
+
+      {/* Period Label */}
+      <Text className="text-sm font-bold text-foreground text-center mb-2">{periodLabel}</Text>
+
+      {/* Main content */}
       <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
@@ -89,172 +98,149 @@ export default function ReportsScreen() {
         decelerationRate="fast"
         removeClippedSubviews
       >
-        {/* Spending Report */}
-        {activeReport === "spending" && (
-          <View className="px-4 mt-5">
-            <Card>
-              <View className="flex-row items-baseline justify-between mb-4">
-                <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest">
-                  {t("reports.totalSpending")}
-                </Text>
-                <Text className="text-xl font-bold text-danger tracking-tight">
-                  {formatCurrency(-totalSpending)}
-                </Text>
-              </View>
+        <SwipeableChart onNext={handleNext} onPrev={handlePrev}>
+          {/* Spending Tab */}
+          {activeReport === "spending" && (
+            <View className="px-4">
+              <Card>
+                {currentMonth && currentMonth.spendingByCategory.length > 0 ? (
+                  <SpendingBarChart
+                    categories={currentMonth.spendingByCategory}
+                    totalSpending={currentMonth.expense}
+                  />
+                ) : (
+                  <ReportEmptyState
+                    type="spending"
+                    title={t("reports.noSpendingTitle")}
+                    body={t("reports.noSpendingBody")}
+                  />
+                )}
+              </Card>
+            </View>
+          )}
 
-              {spendingByCategory.length > 0 ? (
+          {/* Income/Expense Tab */}
+          {activeReport === "income_expense" && (
+            <View className="px-4">
+              <Card>
+                {data.length > 0 ? (
+                  <IncomeExpenseBarChart data={data} />
+                ) : (
+                  <ReportEmptyState
+                    type="transactions"
+                    title={t("reports.noTransactionsTitle")}
+                    body={t("reports.noTransactionsBody")}
+                  />
+                )}
+              </Card>
+            </View>
+          )}
+
+          {/* Net Worth Tab */}
+          {activeReport === "net_worth" && (
+            <View className="px-4">
+              {data.length > 0 ? (
+                <NetWorthLineChart data={data} />
+              ) : (
+                <Card>
+                  <ReportEmptyState
+                    type="accounts"
+                    title={t("reports.noAccountsTitle")}
+                    body={t("reports.noAccountsBody")}
+                  />
+                </Card>
+              )}
+            </View>
+          )}
+
+          {/* Financial Health Tab */}
+          {activeReport === "financial_health" && (
+            <View className="px-4">
+              {data.length > 0 ? (
                 <View className="gap-4">
-                  {spendingByCategory.map((cat) => {
-                    const pct = totalSpending > 0 ? (cat.total / totalSpending) * 100 : 0;
-                    return (
-                      <View key={cat.name}>
-                        <View className="flex-row justify-between mb-1.5">
-                          <Text className="text-xs font-medium text-foreground">{cat.name}</Text>
-                          <Text className="text-xs font-bold text-foreground">
-                            {formatCurrency(-cat.total)}
-                          </Text>
-                        </View>
-                        <View className="h-1.5 bg-surface-400 rounded-full overflow-hidden">
-                          <View
-                            className="h-1.5 bg-primary-500 rounded-full"
-                            style={{ width: `${pct}%` }}
-                          />
-                        </View>
-                        <Text className="text-2xs text-surface-700 mt-1">{pct.toFixed(1)}%</Text>
-                      </View>
-                    );
-                  })}
+                  <Card className="border border-primary-400/15">
+                    <AoMTrendChart data={data} />
+                  </Card>
+                  <Card className="border border-accent-300/10">
+                    <DoBTrendChart data={data} />
+                  </Card>
                 </View>
               ) : (
-                <Text className="text-xs text-surface-800 text-center py-8">
-                  {t("reports.noData")}
-                </Text>
+                <Card>
+                  <ReportEmptyState
+                    type="trend"
+                    title={t("reports.noTrendTitle")}
+                    body={t("reports.noTrendBody")}
+                  />
+                </Card>
               )}
-            </Card>
-          </View>
-        )}
+            </View>
+          )}
 
-        {/* Income vs Expense */}
-        {activeReport === "income_expense" && (
-          <View className="px-4 mt-5 gap-4">
-            <Card>
-              <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest mb-4">
-                {t("reports.incomeExpense")}
-              </Text>
-              <View className="gap-3">
-                <View className="flex-row justify-between">
-                  <Text className="text-sm text-foreground">{t("transaction.income")}</Text>
-                  <Text className="text-sm font-bold text-success">
-                    {formatCurrency(incomeVsExpense.income)}
-                  </Text>
-                </View>
-                <View className="flex-row justify-between">
-                  <Text className="text-sm text-foreground">{t("transaction.expense")}</Text>
-                  <Text className="text-sm font-bold text-danger">
-                    {formatCurrency(-incomeVsExpense.expense)}
-                  </Text>
-                </View>
-                <View className="h-px bg-border/30" />
-                <View className="flex-row justify-between">
-                  <Text className="text-sm font-bold text-foreground">Net</Text>
-                  <Text
-                    className={`text-base font-bold ${incomeVsExpense.net >= 0 ? "text-success" : "text-danger"}`}
-                  >
-                    {formatCurrency(incomeVsExpense.net)}
-                  </Text>
-                </View>
-              </View>
-            </Card>
-
-            <Card>
-              <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest mb-3">
-                Comparison
-              </Text>
-              <View className="gap-3">
-                <View>
-                  <Text className="text-2xs text-surface-800 mb-1">Income</Text>
-                  <View className="h-5 bg-surface-400 rounded-lg overflow-hidden">
-                    <View
-                      className="h-5 bg-success rounded-lg"
-                      style={{
-                        width: `${
-                          Math.max(incomeVsExpense.income, incomeVsExpense.expense) > 0
-                            ? (
-                                incomeVsExpense.income /
-                                  Math.max(incomeVsExpense.income, incomeVsExpense.expense)
-                              ) * 100
-                            : 0
-                        }%`,
-                      }}
+          {/* Cash Flow (Sankey) Tab */}
+          {activeReport === "sankey" && (
+            <View>
+              {currentMonth && currentMonth.spendingByCategory.length > 0 ? (
+                <SankeyDiagram
+                  spending={currentMonth.spendingByCategory}
+                  totalIncome={currentMonth.income}
+                />
+              ) : (
+                <View className="px-4">
+                  <Card>
+                    <ReportEmptyState
+                      type="cashflow"
+                      title={t("reports.noCashFlowTitle")}
+                      body={t("reports.noCashFlowBody")}
                     />
-                  </View>
+                  </Card>
                 </View>
-                <View>
-                  <Text className="text-2xs text-surface-800 mb-1">Expense</Text>
-                  <View className="h-5 bg-surface-400 rounded-lg overflow-hidden">
-                    <View
-                      className="h-5 bg-danger rounded-lg"
-                      style={{
-                        width: `${
-                          Math.max(incomeVsExpense.income, incomeVsExpense.expense) > 0
-                            ? (
-                                incomeVsExpense.expense /
-                                  Math.max(incomeVsExpense.income, incomeVsExpense.expense)
-                              ) * 100
-                            : 0
-                        }%`,
-                      }}
-                    />
-                  </View>
-                </View>
-              </View>
-            </Card>
-          </View>
-        )}
+              )}
+            </View>
+          )}
+        </SwipeableChart>
 
-        {/* Net Worth */}
-        {activeReport === "net_worth" && (
-          <View className="px-4 mt-5">
-            <Card
-              className="items-center border-accent-300/10"
-              style={shadow("#e6a444", 0, 4, 0.08, 16)}
-            >
-              <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest">
-                {t("reports.netWorth")}
-              </Text>
-              <Text
-                className={`text-hero font-bold mt-1 tracking-tight ${netWorth >= 0 ? "text-foreground" : "text-danger"}`}
-                style={{ lineHeight: 42 }}
-              >
-                {formatCurrency(netWorth)}
-              </Text>
-            </Card>
-
-            {accounts && (accounts as any[]).length > 0 && (
-              <Card className="mt-4">
-                <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest mb-3">
-                  By Account
-                </Text>
-                {(accounts as any[]).map((account: any) => (
-                  <View
-                    key={account._id}
-                    className="flex-row justify-between py-2.5 border-b border-border/15"
-                  >
-                    <Text className="text-sm text-foreground">{account.name}</Text>
-                    <Text
-                      className={`text-sm font-bold ${account.balance >= 0 ? "text-foreground" : "text-danger"}`}
-                    >
-                      {formatCurrency(account.balance)}
-                    </Text>
-                  </View>
-                ))}
-              </Card>
-            )}
-          </View>
-        )}
-
+        {/* Bottom spacer for tab bar */}
         <View className="h-20" />
       </ScrollView>
     </View>
   );
+}
+
+/**
+ * Format period label based on current period and time range.
+ * 1M: "March 2026", 3M: "Jan - Mar 2026", 6M: "Oct 2025 - Mar 2026", etc.
+ */
+function formatPeriodLabel(period: string, timeRange: TimeRange): string {
+  const [year, month] = period.split("-").map(Number);
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  if (timeRange === "1M") {
+    return `${months[month - 1]} ${year}`;
+  }
+
+  const rangeMonths: Record<string, number> = { "3M": 3, "6M": 6, "1Y": 12, ALL: 24 };
+  const count = rangeMonths[timeRange] || 1;
+  const startDate = new Date(year, month - 1 - count + 1, 1);
+  const startMonth = months[startDate.getMonth()];
+  const startYear = startDate.getFullYear();
+  const endMonth = months[month - 1];
+
+  if (startYear === year) {
+    return `${startMonth} - ${endMonth} ${year}`;
+  }
+  return `${startMonth} ${startYear} - ${endMonth} ${year}`;
 }

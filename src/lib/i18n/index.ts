@@ -5,8 +5,8 @@ import "@formatjs/intl-pluralrules/polyfill-force";
 import "@formatjs/intl-pluralrules/locale-data/en";
 import "@formatjs/intl-pluralrules/locale-data/bn";
 
-import bn from "./bn.json";
-import en from "./en.json";
+import { bn } from "./bn";
+import { en } from "./en";
 
 const deviceLocale = getLocales()[0]?.languageCode ?? "en";
 const defaultLanguage = deviceLocale === "bn" ? "bn" : "en";
