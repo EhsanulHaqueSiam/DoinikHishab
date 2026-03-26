@@ -1,8 +1,11 @@
 import React from "react";
 import { View, Text, ScrollView, Pressable } from "react-native";
+import { useRouter } from "expo-router";
 import { useAppStore } from "../../src/stores/app-store";
 import { Card } from "../../src/components/ui/Card";
 import { APP_NAME, APP_NAME_BN } from "../../src/lib/constants";
+import { useTranslation } from "../../src/lib/i18n";
+import { resetOnboarding, getLookbackDays } from "../../src/services/onboarding";
 
 interface SettingRowProps {
   icon: string;
@@ -46,6 +49,8 @@ const Divider = () => <View className="h-px bg-border/20" />;
 
 export default function SettingsScreen() {
   const { locale, setLocale, theme, setTheme } = useAppStore();
+  const { t } = useTranslation();
+  const router = useRouter();
 
   return (
     <View className="flex-1 bg-background">
@@ -71,6 +76,21 @@ export default function SettingsScreen() {
             <SettingRow icon="💱" label="Currency" value="৳ BDT" />
             <Divider />
             <SettingRow icon="📅" label="Date Format" value="DD/MM/YYYY" />
+            <Divider />
+            <SettingRow
+              icon="🔄"
+              label={t("settings.redoSetup")}
+              onPress={() => {
+                resetOnboarding();
+                router.replace("/onboarding/rules" as any);
+              }}
+            />
+            <Divider />
+            <SettingRow
+              icon="📊"
+              label={t("settings.bufferLookback")}
+              value={`${getLookbackDays()} ${t("metrics.days")}`}
+            />
           </Card>
         </View>
 

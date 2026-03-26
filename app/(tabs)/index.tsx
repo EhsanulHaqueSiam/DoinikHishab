@@ -1,15 +1,19 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useRef } from "react";
 import { View, Text, ScrollView, RefreshControl, Pressable } from "react-native";
 import { useQuery, useMutation } from "convex/react";
+import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { api } from "../../convex/_generated/api";
 import { useAppStore } from "../../src/stores/app-store";
 import { useUIStore } from "../../src/stores/ui-store";
 import { BalanceCard } from "../../src/components/dashboard/BalanceCard";
+import { MetricsCard } from "../../src/components/dashboard/MetricsCard";
 import { TransactionCard } from "../../src/components/transaction/TransactionCard";
 import { QuickAdd } from "../../src/components/transaction/QuickAdd";
 import { FAB } from "../../src/components/platform/FAB";
 import { Card } from "../../src/components/ui/Card";
 import { formatCurrency } from "../../src/lib/currency";
+import { useTranslation } from "../../src/lib/i18n";
+import { getLookbackDays, setLookbackDays } from "../../src/services/onboarding";
 
 function SectionHeader({ title }: { title: string }) {
   return (
@@ -24,12 +28,28 @@ const ACCOUNT_ICON: Record<string, string> = {
   checking: "🏧", line_of_credit: "💳", mortgage: "🏠",
 };
 
+const LOOKBACK_OPTIONS = [30, 60, 90, 180] as const;
+
 export default function DashboardScreen() {
   const { userId, deviceId, setUserId } = useAppStore();
   const { openQuickAdd } = useUIStore();
+  const { t } = useTranslation();
 
   const createOrGetUser = useMutation(api.users.createOrGet);
   const seedCategories = useMutation(api.categories.seedDefaults);
+
+  const lookbackRef = useRef<BottomSheet>(null);
+  const [currentLookback, setCurrentLookback] = React.useState(getLookbackDays());
+
+  const openLookbackSheet = useCallback(() => {
+    lookbackRef.current?.expand();
+  }, []);
+
+  const handleLookbackSelect = useCallback((days: number) => {
+    setLookbackDays(days);
+    setCurrentLookback(days);
+    lookbackRef.current?.close();
+  }, []);
 
   const [backendError, setBackendError] = React.useState<string | null>(null);
   const [refreshing, setRefreshing] = React.useState(false);
@@ -99,6 +119,9 @@ export default function DashboardScreen() {
           budgetBalance={balances?.budgetTotal ?? 0}
           trackingBalance={balances?.trackingTotal ?? 0}
         />
+
+        {/* Financial Health Metrics */}
+        <MetricsCard onSettingsPress={openLookbackSheet} />
 
         {/* Quick Actions */}
         <View className="flex-row px-4 mt-5 gap-2.5">
@@ -207,6 +230,39 @@ export default function DashboardScreen() {
 
       <FAB onPress={() => openQuickAdd("expense")} />
       <QuickAdd />
+
+      {/* Lookback Period Bottom Sheet */}
+      <BottomSheet
+        ref={lookbackRef}
+        index={-1}
+        snapPoints={["30%"]}
+        enablePanDownToClose
+        backgroundStyle={{ backgroundColor: "#111827" }}
+        handleIndicatorStyle={{ backgroundColor: "#6b7280" }}
+      >
+        <BottomSheetView className="flex-1">
+          <Text className="text-sm font-bold text-foreground px-4 py-3">
+            {t("metrics.lookbackTitle")}
+          </Text>
+          {LOOKBACK_OPTIONS.map((days) => (
+            <Pressable
+              key={days}
+              onPress={() => handleLookbackSelect(days)}
+              className="py-3 px-4 active:bg-surface-400/30"
+            >
+              <Text
+                className={`text-sm font-medium ${
+                  currentLookback === days
+                    ? "text-primary-700"
+                    : "text-foreground"
+                }`}
+              >
+                {days} {t("metrics.days")}
+              </Text>
+            </Pressable>
+          ))}
+        </BottomSheetView>
+      </BottomSheet>
     </View>
   );
 }
