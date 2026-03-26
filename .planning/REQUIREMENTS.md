@@ -47,8 +47,8 @@
 
 ### Recurring & Subscriptions
 
-- [ ] **RECR-01**: Calendar view showing upcoming bills/subscriptions with status indicators (paid/upcoming/overdue)
-- [ ] **RECR-02**: Calendar toggle between calendar grid and list view with monthly totals
+- [x] **RECR-01**: Calendar view showing upcoming bills/subscriptions with status indicators (paid/upcoming/overdue)
+- [x] **RECR-02**: Calendar toggle between calendar grid and list view with monthly totals
 - [x] **RECR-03**: Subscription auto-detection from transaction history (3+ occurrences of same payee at regular intervals)
 - [x] **RECR-04**: Subscriptions view showing monthly/annual burn rate with manual add/remove
 - [ ] **RECR-05**: Cash flow forecasting chart projecting account balance over 30/60/90 days based on recurring items
@@ -132,8 +132,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | RPRT-04 | Phase 4 | Complete |
 | RPRT-05 | Phase 4 | Complete |
 | RPRT-06 | Phase 4 | Complete |
-| RECR-01 | Phase 5 | Pending |
-| RECR-02 | Phase 5 | Pending |
+| RECR-01 | Phase 5 | Complete |
+| RECR-02 | Phase 5 | Complete |
 | RECR-03 | Phase 5 | Complete |
 | RECR-04 | Phase 5 | Complete |
 | RECR-05 | Phase 5 | Pending |
