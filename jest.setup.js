@@ -183,6 +183,17 @@ jest.mock("expo-pdf-text-extract", () => ({
   extractText: jest.fn(() => Promise.resolve("")),
 }));
 
+// Mock expo-updates
+jest.mock("expo-updates", () => ({
+  checkForUpdateAsync: jest.fn(() => Promise.resolve({ isAvailable: false })),
+  fetchUpdateAsync: jest.fn(() => Promise.resolve({ isNew: false })),
+  reloadAsync: jest.fn(),
+  useUpdates: jest.fn(() => ({
+    isUpdateAvailable: false,
+    isUpdatePending: false,
+  })),
+}));
+
 // Silence console.warn for act() warnings in tests
 const originalWarn = console.warn;
 console.warn = (...args) => {

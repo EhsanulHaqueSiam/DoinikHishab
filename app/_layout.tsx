@@ -8,6 +8,7 @@ import type React from "react";
 import { useEffect } from "react";
 import { Platform, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useUpdateCheck } from "../src/hooks/use-update-check";
 import { isOnboardingComplete } from "../src/services/onboarding";
 import "../global.css";
 
@@ -42,6 +43,8 @@ function WebContainer({ children }: { children: React.ReactNode }) {
 }
 
 export default function RootLayout() {
+  useUpdateCheck();
+
   const [loaded, error] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
