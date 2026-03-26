@@ -56,3 +56,14 @@ export function getLookbackDays(): number {
 export function setLookbackDays(days: number): void {
   setSetting(LOOKBACK_DAYS_KEY, String(days));
 }
+
+// Rule tip dismissal (MMKV-persisted)
+const TIP_PREFIX = "tip_dismissed_";
+
+export function isTipDismissed(ruleId: string): boolean {
+  return getSetting(`${TIP_PREFIX}${ruleId}`) === "true";
+}
+
+export function dismissTip(ruleId: string): void {
+  setSetting(`${TIP_PREFIX}${ruleId}`, "true");
+}

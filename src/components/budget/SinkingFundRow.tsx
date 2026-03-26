@@ -29,8 +29,8 @@ export function SinkingFundRow({
   const percentage = Math.round(progress * 100);
 
   // Determine status: funded if >= 100%, on track if >= expected fraction, behind otherwise
-  const elapsedMonths = Math.max(template.defaultMonths - monthsRemaining, 0);
-  const expectedProgress = template.defaultMonths > 0 ? elapsedMonths / template.defaultMonths : 0;
+  const elapsedMonths = Math.max(template.monthsToTarget - monthsRemaining, 0);
+  const expectedProgress = template.monthsToTarget > 0 ? elapsedMonths / template.monthsToTarget : 0;
 
   const status: SinkingFundStatus =
     progress >= 1 ? "funded" : progress >= expectedProgress ? "on_track" : "behind";

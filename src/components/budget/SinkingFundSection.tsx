@@ -17,7 +17,7 @@ const MOCK_ACCUMULATIONS: Record<string, { accumulated: number; monthsRemaining:
 export function SinkingFundSection() {
   const { t } = useTranslation();
 
-  const preSelectedFunds = SINKING_FUND_TEMPLATES.filter((f) => f.preSelected);
+  const preSelectedFunds = SINKING_FUND_TEMPLATES;
 
   if (preSelectedFunds.length === 0) {
     return (
@@ -46,7 +46,7 @@ export function SinkingFundSection() {
         {preSelectedFunds.map((fund, index) => {
           const mock = MOCK_ACCUMULATIONS[fund.id] ?? {
             accumulated: 0,
-            monthsRemaining: fund.defaultMonths,
+            monthsRemaining: fund.monthsToTarget,
           };
           return (
             <View key={fund.id}>
@@ -54,7 +54,7 @@ export function SinkingFundSection() {
               <SinkingFundRow
                 template={fund}
                 accumulated={mock.accumulated}
-                targetAmount={fund.defaultTargetPaisa}
+                targetAmount={fund.targetAmount}
                 monthsRemaining={mock.monthsRemaining}
               />
             </View>
