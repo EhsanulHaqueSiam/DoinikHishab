@@ -137,11 +137,11 @@ Plans:
   1. A JavaScript-only change published via EAS Update reaches a test device without requiring an app store submission
   2. Fingerprint detection prevents OTA updates from shipping when native code changes are present
   3. Maestro E2E test flows cover the critical user paths (add transaction, view budget, navigate reports) and pass against a running app build
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 07-01: expo-updates OTA configuration with fingerprint safety and update channels
-- [ ] 07-02: Maestro E2E test framework setup with critical flow YAML files
+- [ ] 07-01-PLAN.md -- OTA updates: expo-updates install, app.json/eas.json config (fingerprint + 3 channels), useUpdateCheck hook with foreground toast, root layout wiring
+- [ ] 07-02-PLAN.md -- Maestro E2E: testID props on critical components, 3 YAML flow files, shared onboarding sub-flow, GitHub Actions e2e.yml CI workflow
 
 ## Progress
 
