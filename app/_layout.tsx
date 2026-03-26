@@ -1,13 +1,14 @@
 import "../src/lib/i18n";
 import { ConvexProvider, ConvexReactClient } from "convex/react";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { Stack, useRouter, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import type React from "react";
 import { useEffect } from "react";
 import { Platform, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { isOnboardingComplete } from "../src/services/onboarding";
 import "../global.css";
 
 export { ErrorBoundary } from "expo-router";
@@ -44,6 +45,9 @@ export default function RootLayout() {
   const [loaded, error] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
+  const router = useRouter();
+  const segments = useSegments();
+  const onboardingDone = isOnboardingComplete();
 
   useEffect(() => {
     if (error) throw error;
@@ -54,6 +58,13 @@ export default function RootLayout() {
       SplashScreen.hideAsync();
     }
   }, [loaded]);
+
+  // Redirect first-time users to onboarding
+  useEffect(() => {
+    if (loaded && !onboardingDone && !segments[0]?.startsWith("onboarding")) {
+      router.replace("/onboarding/rules");
+    }
+  }, [loaded, onboardingDone, segments, router]);
 
   if (!loaded) return null;
 
@@ -67,6 +78,7 @@ export default function RootLayout() {
               contentStyle: { backgroundColor: "#070b16" },
             }}
           >
+            <Stack.Screen name="onboarding" options={{ headerShown: false }} />
             <Stack.Screen name="(tabs)" />
             <Stack.Screen
               name="transaction/add"
