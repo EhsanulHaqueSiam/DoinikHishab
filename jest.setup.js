@@ -159,6 +159,30 @@ jest.mock("react-native-gesture-handler", () => ({
   GestureHandlerRootView: ({ children }) => children,
 }));
 
+// Mock xlsx (SheetJS) for statement parser tests
+jest.mock("xlsx", () => ({
+  read: jest.fn(),
+  utils: {
+    sheet_to_json: jest.fn(() => []),
+  },
+}));
+
+// Mock expo-document-picker
+jest.mock("expo-document-picker", () => ({
+  getDocumentAsync: jest.fn(),
+}));
+
+// Mock expo-file-system/legacy
+jest.mock("expo-file-system/legacy", () => ({
+  readAsStringAsync: jest.fn(),
+  EncodingType: { Base64: "base64", UTF8: "utf8" },
+}));
+
+// Mock expo-pdf-text-extract
+jest.mock("expo-pdf-text-extract", () => ({
+  extractText: jest.fn(() => Promise.resolve("")),
+}));
+
 // Silence console.warn for act() warnings in tests
 const originalWarn = console.warn;
 console.warn = (...args) => {
