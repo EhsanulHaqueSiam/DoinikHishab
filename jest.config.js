@@ -11,7 +11,7 @@ module.exports = {
     "^@hooks/(.*)$": "<rootDir>/src/hooks/$1",
   },
   transformIgnorePatterns: [
-    "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg|nativewind|react-native-css-interop|sonner-native|lucide-react-native|@gorhom|@shopify|react-native-reanimated|react-native-gesture-handler|react-native-screens|react-native-safe-area-context|react-native-mmkv|convex|react-native-worklets)",
+    "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg|nativewind|react-native-css-interop|sonner-native|lucide-react-native|@gorhom|@shopify|react-native-reanimated|react-native-gesture-handler|react-native-screens|react-native-safe-area-context|react-native-mmkv|convex|react-native-worklets|d3-sankey|react-native-gifted-charts|expo-linear-gradient)",
   ],
   testMatch: [
     "**/*.test.ts",
