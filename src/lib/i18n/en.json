@@ -111,5 +111,38 @@
     "loading": "Loading...",
     "item_one": "{{count}} item",
     "item_other": "{{count}} items"
+  },
+  "sinkingFunds": {
+    "title": "True Expenses",
+    "eidFund": "Eid Fund",
+    "schoolFees": "School Fees",
+    "weddingGifts": "Wedding Gifts",
+    "medicalReserve": "Medical Reserve",
+    "customFund": "Custom Fund",
+    "suggested": "Suggested: {{amount}}/month",
+    "ofTarget": "of target",
+    "onTrack": "On Track",
+    "behind": "Behind",
+    "funded": "Funded",
+    "noFunds": "No True Expenses yet",
+    "noFundsDesc": "Create sinking funds to save for big expenses"
+  },
+  "readyToAssign": {
+    "title": "Ready to Assign",
+    "positive": "Give every taka a job",
+    "overAssigned": "You've assigned more than you have!",
+    "zero": "All money assigned",
+    "assignMoney": "Assign Money"
+  },
+  "tips": {
+    "dismiss": "Got it",
+    "rule1Title": "Give Every Taka a Job",
+    "rule1Body": "Assign every taka to a category before spending. Money without a job disappears.",
+    "rule2Title": "Embrace True Expenses",
+    "rule2Body": "Big expenses aren't surprises. Save a little each month for Eid, school fees, and medical costs.",
+    "rule3Title": "Roll with the Punches",
+    "rule3Body": "Overspent on groceries? Move money from another category. Your budget is flexible.",
+    "rule4Title": "Age Your Money",
+    "rule4Body": "Congratulations! You're spending money earned over 30 days ago. Keep building that buffer."
   }
 }
