@@ -32,6 +32,7 @@ export function ReadyToAssignHero({ amount, onPress }: ReadyToAssignHeroProps) {
 
   return (
     <Pressable
+      testID="ready-to-assign"
       onPress={onPress}
       className="active:bg-surface-400/30"
       accessibilityRole="button"

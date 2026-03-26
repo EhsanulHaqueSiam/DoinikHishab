@@ -137,7 +137,7 @@ export function QuickAdd() {
       }}
       handleIndicatorStyle={{ backgroundColor: "#4e6381", width: 36 }}
     >
-      <View className="flex-1 px-4">
+      <View testID="quick-add-sheet" className="flex-1 px-4">
         {/* Type Toggle */}
         <View className="flex-row bg-surface-200 rounded-xl p-1 mb-4 border border-border/20">
           {(["expense", "income", "transfer"] as const).map((type) => (
@@ -175,7 +175,12 @@ export function QuickAdd() {
               defaultAccountId={defaultAccount?._id || ""}
             />
             <View className="px-4 pb-4 mt-4">
-              <Button onPress={() => setStep("category")} disabled={amount === 0} size="lg">
+              <Button
+                testID="amount-next"
+                onPress={() => setStep("category")}
+                disabled={amount === 0}
+                size="lg"
+              >
                 {t("quickAdd.nextCategory")}
               </Button>
             </View>
@@ -183,7 +188,7 @@ export function QuickAdd() {
         )}
 
         {step === "category" && (
-          <View className="flex-1">
+          <View testID="category-step" className="flex-1">
             <View className="flex-row items-center justify-between mb-3">
               <Pressable onPress={() => setStep("amount")}>
                 <Text className="text-primary-700 font-semibold text-xs">{t("quickAdd.back")}</Text>

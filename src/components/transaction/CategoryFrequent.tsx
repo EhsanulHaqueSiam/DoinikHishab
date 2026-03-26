@@ -67,11 +67,13 @@ function AnimatedCategoryTile({
   name,
   icon,
   onSelect,
+  testID,
 }: {
   id: string;
   name: string;
   icon?: string;
   onSelect: (id: string) => void;
+  testID?: string;
 }) {
   const flash = useSharedValue(0);
 
@@ -91,7 +93,7 @@ function AnimatedCategoryTile({
   const emoji = ICON_EMOJI[icon || ""] || "\u{1F4CC}";
 
   return (
-    <Pressable onPress={handlePress}>
+    <Pressable testID={testID} onPress={handlePress}>
       <Animated.View style={[animatedStyle]} className="w-20 items-center p-2 rounded-xl">
         <View className="w-11 h-11 rounded-xl items-center justify-center bg-surface-300">
           <Text className="text-lg">{emoji}</Text>
@@ -138,13 +140,14 @@ export function CategoryFrequent({
         Frequent
       </Text>
       <View className="flex-row flex-wrap gap-2">
-        {tiles.map((cat: any) => (
+        {tiles.map((cat: any, index: number) => (
           <AnimatedCategoryTile
             key={cat._id}
             id={cat._id}
             name={cat.name}
             icon={cat.icon}
             onSelect={onSelect}
+            testID={`frequent-category-${index}`}
           />
         ))}
       </View>

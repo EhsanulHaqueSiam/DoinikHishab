@@ -61,10 +61,11 @@ export function AmountPad({ value, onChange, type, locale }: AmountPadProps) {
     displayAmount === 0 ? "\u09F30" : formatCurrency(displayAmount, locale === "bn");
 
   return (
-    <View className="items-center">
+    <View testID="amount-pad" className="items-center">
       {/* Amount Display */}
       <View className="py-8 items-center">
         <Text
+          testID="amount-display"
           className={`text-hero font-bold ${TYPE_COLORS[type]} tracking-tight`}
           style={{ lineHeight: 44 }}
         >
@@ -82,7 +83,7 @@ export function AmountPad({ value, onChange, type, locale }: AmountPadProps) {
             {row.map((key) => (
               <Pressable
                 key={key}
-                testID={`keypad-${key}`}
+                testID={`keypad-${key === "\u232B" ? "backspace" : key}`}
                 onPress={() => handleKey(key)}
                 className="flex-1 items-center justify-center py-4 rounded-xl bg-surface-200 active:bg-surface-400 border border-border/20"
               >

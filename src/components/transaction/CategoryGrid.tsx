@@ -69,6 +69,8 @@ export function CategoryGrid({
     return categories.some((c) => c.groupId === g._id && c.type === type && !c.isHidden);
   });
 
+  let catIndex = 0;
+
   return (
     <ScrollView
       className="flex-1"
@@ -76,22 +78,24 @@ export function CategoryGrid({
       scrollEventThrottle={8}
       decelerationRate="fast"
     >
-      {filteredGroups.map((group) => {
+      {filteredGroups.map((group, groupIdx) => {
         const groupCats = categories.filter(
           (c) => c.groupId === group._id && c.type === type && !c.isHidden
         );
 
         return (
-          <View key={group._id} className="mb-5">
+          <View key={group._id} testID={`category-group-${groupIdx}`} className="mb-5">
             <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest px-2 mb-2.5">
               {group.name}
             </Text>
             <View className="flex-row flex-wrap gap-2">
               {groupCats.map((cat) => {
                 const isSelected = selectedId === cat._id;
+                const idx = catIndex++;
                 return (
                   <Pressable
                     key={cat._id}
+                    testID={`category-item-${idx}`}
                     onPress={() => onSelect(cat._id)}
                     className={`items-center p-2 rounded-xl w-20 ${
                       isSelected ? "bg-surface-300 border border-primary-500/30" : ""

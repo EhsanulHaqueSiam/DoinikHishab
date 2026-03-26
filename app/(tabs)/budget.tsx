@@ -53,9 +53,12 @@ export default function BudgetScreen() {
   const readyToAssign = summary?.readyToAssign ?? 0;
 
   return (
-    <View className="flex-1 bg-background">
+    <View testID="budget-screen" className="flex-1 bg-background">
       {/* Month Navigator */}
-      <View className="flex-row items-center justify-between px-4 py-3 bg-surface-100 border-b border-border">
+      <View
+        testID="month-navigator"
+        className="flex-row items-center justify-between px-4 py-3 bg-surface-100 border-b border-border"
+      >
         <Pressable
           onPress={() => setCurrentMonth(previousMonth(currentMonth))}
           className="px-3 py-1"
