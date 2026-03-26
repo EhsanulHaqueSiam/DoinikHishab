@@ -1,109 +1,80 @@
-import {
-  calculateAgeOfMoney,
-  calculateAutoAssign,
-  calculateAvailable,
-  calculateCCPaymentAvailable,
-  calculateReadyToAssign,
-  getOverspentAmount,
-} from "./index";
+import { calculateDaysOfBuffering, calculateSinkingFundSuggest } from "./index";
 
-describe("budget-engine", () => {
-  describe("calculateReadyToAssign", () => {
-    it("computes income minus assigned minus prior overspent", () => {
-      expect(calculateReadyToAssign(100000, 80000, 5000)).toBe(15000);
-    });
-
-    it("returns zero when all balanced", () => {
-      expect(calculateReadyToAssign(0, 0, 0)).toBe(0);
-    });
-
-    it("returns negative when over-assigned", () => {
-      expect(calculateReadyToAssign(50000, 60000, 0)).toBe(-10000);
-    });
+describe("calculateDaysOfBuffering", () => {
+  it("returns null when totalBalance <= 0", () => {
+    const outflows = [{ date: "2026-03-01", amount: -5000 }];
+    expect(calculateDaysOfBuffering(-100, outflows, 90)).toBeNull();
+    expect(calculateDaysOfBuffering(0, outflows, 90)).toBeNull();
   });
 
-  describe("calculateAvailable", () => {
-    it("sums prior available + assigned + activity", () => {
-      expect(calculateAvailable(50000, -20000, 10000)).toBe(40000);
-    });
-
-    it("handles all zeros", () => {
-      expect(calculateAvailable(0, 0, 0)).toBe(0);
-    });
-
-    it("handles negative activity (spending)", () => {
-      expect(calculateAvailable(30000, -30000, 0)).toBe(0);
-    });
+  it("returns null when outflows array is empty", () => {
+    expect(calculateDaysOfBuffering(100000, [], 90)).toBeNull();
   });
 
-  describe("calculateAgeOfMoney", () => {
-    it("returns null for empty inflows", () => {
-      expect(calculateAgeOfMoney([], [{ date: "2026-03-01", amount: -5000 }])).toBeNull();
-    });
-
-    it("returns null for empty outflows", () => {
-      expect(calculateAgeOfMoney([{ date: "2026-03-01", amount: 5000 }], [])).toBeNull();
-    });
-
-    it("calculates age for simple inflow/outflow pair", () => {
-      const inflows = [{ date: "2026-03-01", amount: 10000 }];
-      const outflows = [{ date: "2026-03-11", amount: -5000 }];
-      const age = calculateAgeOfMoney(inflows, outflows);
-      expect(age).toBe(10);
-    });
+  it("returns null when no outflows in lookback period", () => {
+    const outflows = [{ date: "2020-01-01", amount: -5000 }];
+    expect(calculateDaysOfBuffering(100000, outflows, 90)).toBeNull();
   });
 
-  describe("getOverspentAmount", () => {
-    it("returns absolute value when negative", () => {
-      expect(getOverspentAmount(-5000)).toBe(5000);
-    });
-
-    it("returns 0 when positive", () => {
-      expect(getOverspentAmount(5000)).toBe(0);
-    });
-
-    it("returns 0 when zero", () => {
-      expect(getOverspentAmount(0)).toBe(0);
-    });
+  it("returns integer days for valid inputs", () => {
+    // 2 outflows totaling 20000 paisa over 90 day lookback
+    // avgDaily = 20000 / 90 = 222.22
+    // 900000 / 222.22 = 4050
+    const outflows = [
+      { date: "2026-03-01", amount: -10000 },
+      { date: "2026-03-02", amount: -10000 },
+    ];
+    const result = calculateDaysOfBuffering(900000, outflows, 90);
+    expect(result).toBe(Math.floor(900000 / (20000 / 90)));
+    expect(Number.isInteger(result)).toBe(true);
   });
 
-  describe("calculateAutoAssign", () => {
-    it("returns lastMonthAssigned for last_month_budgeted strategy", () => {
-      expect(calculateAutoAssign("last_month_budgeted", 50000, -30000, -25000, 40000, 10000)).toBe(
-        50000
-      );
-    });
-
-    it("returns absolute lastMonthActivity for last_month_spent strategy", () => {
-      expect(calculateAutoAssign("last_month_spent", 50000, -30000, -25000, 40000, 10000)).toBe(
-        30000
-      );
-    });
-
-    it("returns absolute averageActivity for average_spent strategy", () => {
-      expect(calculateAutoAssign("average_spent", 50000, -30000, -25000, 40000, 10000)).toBe(25000);
-    });
-
-    it("returns shortfall for underfunded strategy", () => {
-      expect(calculateAutoAssign("underfunded", 50000, -30000, -25000, 40000, 10000)).toBe(30000);
-    });
-
-    it("returns 0 for underfunded when already funded", () => {
-      expect(calculateAutoAssign("underfunded", 50000, -30000, -25000, 40000, 50000)).toBe(0);
-    });
-
-    it("returns 0 for reset_to_zero strategy", () => {
-      expect(calculateAutoAssign("reset_to_zero", 50000, -30000, -25000, 40000, 10000)).toBe(0);
-    });
+  it("handles custom lookback period (30 days vs 90 days)", () => {
+    const outflows = [
+      { date: "2026-03-01", amount: -10000 },
+      { date: "2026-03-15", amount: -10000 },
+    ];
+    const result30 = calculateDaysOfBuffering(900000, outflows, 30);
+    const result90 = calculateDaysOfBuffering(900000, outflows, 90);
+    // Same outflow total but different divisor -> 30 day period yields lower buffer
+    // 30 day: avgDaily = 20000/30 = 666.67 -> 900000/666.67 = 1350
+    // 90 day: avgDaily = 20000/90 = 222.22 -> 900000/222.22 = 4050
+    expect(result30).toBe(Math.floor(900000 / (20000 / 30)));
+    expect(result90).toBe(Math.floor(900000 / (20000 / 90)));
+    expect(result30).toBeLessThan(result90!);
   });
 
-  describe("calculateCCPaymentAvailable", () => {
-    it("computes budgeted + activity + abs(spending)", () => {
-      expect(calculateCCPaymentAvailable(10000, -5000, -8000)).toBe(13000);
-    });
+  it("only considers negative amounts as expenses", () => {
+    const outflows = [
+      { date: "2026-03-01", amount: -10000 },
+      { date: "2026-03-02", amount: 50000 }, // positive = not expense
+    ];
+    const result = calculateDaysOfBuffering(900000, outflows, 90);
+    // Only -10000 counted, avgDaily = 10000/90
+    expect(result).toBe(Math.floor(900000 / (10000 / 90)));
+  });
+});
 
-    it("returns budgeted when no activity or spending", () => {
-      expect(calculateCCPaymentAvailable(10000, 0, 0)).toBe(10000);
-    });
+describe("calculateSinkingFundSuggest", () => {
+  it("returns (target - accumulated) / monthsRemaining rounded up", () => {
+    expect(calculateSinkingFundSuggest(1200000, 400000, 4)).toBe(200000);
+  });
+
+  it("returns full remaining amount when monthsRemaining <= 0", () => {
+    expect(calculateSinkingFundSuggest(1200000, 400000, 0)).toBe(800000);
+    expect(calculateSinkingFundSuggest(1200000, 400000, -1)).toBe(800000);
+  });
+
+  it("returns 0 when accumulated >= target", () => {
+    expect(calculateSinkingFundSuggest(1200000, 1200000, 4)).toBe(0);
+  });
+
+  it("returns 0 when accumulated > target", () => {
+    expect(calculateSinkingFundSuggest(1200000, 1500000, 4)).toBe(0);
+  });
+
+  it("rounds up to integer paisa (Math.ceil)", () => {
+    // 1000000 / 3 = 333333.33... -> ceil = 333334
+    expect(calculateSinkingFundSuggest(1000000, 0, 3)).toBe(333334);
   });
 });

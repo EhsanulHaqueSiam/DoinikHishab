@@ -12,14 +12,16 @@ jest.mock("../storage", () => ({
   getSetting: jest.fn((key: string) => mockStore.get(key)),
   setSetting: jest.fn((key: string, value: string) => mockStore.set(key, value)),
   getAllKeys: jest.fn(() => Array.from(mockStore.keys())),
-  deleteSetting: jest.fn((key: string) => { mockStore.delete(key); }),
+  deleteSetting: jest.fn((key: string) => {
+    mockStore.delete(key);
+  }),
 }));
 
 import {
-  initDefaultFrequencies,
   getCategoryFrequencies,
-  incrementCategoryFrequency,
   getFrequentCategoryIds,
+  incrementCategoryFrequency,
+  initDefaultFrequencies,
   resetFrequencies,
 } from "./index";
 

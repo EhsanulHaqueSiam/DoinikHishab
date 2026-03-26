@@ -400,3 +400,141 @@ export const MOCK_ACCOUNTS: readonly MockAccount[] = Object.freeze([
     sortOrder: 2,
   },
 ]);
+
+// --- Sinking Fund Templates (Phase 3) ---
+
+export interface SinkingFundTemplate {
+  id: string;
+  nameKey: string; // i18n key
+  icon: string; // lucide icon name
+  color: string;
+  defaultTargetPaisa: number;
+  defaultMonths: number;
+  preSelected: boolean; // true for BD defaults
+}
+
+export const SINKING_FUND_TEMPLATES: readonly SinkingFundTemplate[] = Object.freeze([
+  {
+    id: "eid_fund",
+    nameKey: "sinkingFunds.eidFund",
+    icon: "moon",
+    color: "#eab308",
+    defaultTargetPaisa: 2500000,
+    defaultMonths: 6,
+    preSelected: true,
+  },
+  {
+    id: "school_fees",
+    nameKey: "sinkingFunds.schoolFees",
+    icon: "graduation-cap",
+    color: "#2563eb",
+    defaultTargetPaisa: 5000000,
+    defaultMonths: 12,
+    preSelected: true,
+  },
+  {
+    id: "wedding_gifts",
+    nameKey: "sinkingFunds.weddingGifts",
+    icon: "gift",
+    color: "#d946ef",
+    defaultTargetPaisa: 3000000,
+    defaultMonths: 6,
+    preSelected: true,
+  },
+  {
+    id: "medical_reserve",
+    nameKey: "sinkingFunds.medicalReserve",
+    icon: "heart-pulse",
+    color: "#ef4444",
+    defaultTargetPaisa: 5000000,
+    defaultMonths: 12,
+    preSelected: true,
+  },
+  {
+    id: "custom",
+    nameKey: "sinkingFunds.customFund",
+    icon: "plus-circle",
+    color: "#6b7280",
+    defaultTargetPaisa: 0,
+    defaultMonths: 6,
+    preSelected: false,
+  },
+]);
+
+// --- Category Template Sets (Phase 3 - D-11) ---
+
+export interface CategoryTemplateSet {
+  id: string;
+  nameKey: string; // i18n key
+  icon: string; // lucide icon name
+  descriptionKey: string; // i18n key
+  categoryIds: string[]; // mock_cat_* IDs from MOCK_CATEGORIES
+}
+
+export const CATEGORY_TEMPLATE_SETS: readonly CategoryTemplateSet[] = Object.freeze([
+  {
+    id: "student",
+    nameKey: "templates.student",
+    icon: "book-open",
+    descriptionKey: "templates.studentDesc",
+    categoryIds: [
+      "mock_cat_food_groceries",
+      "mock_cat_transport",
+      "mock_cat_rickshaw",
+      "mock_cat_mobile_recharge",
+      "mock_cat_education",
+      "mock_cat_entertainment",
+      "mock_cat_clothing",
+    ],
+  },
+  {
+    id: "professional",
+    nameKey: "templates.professional",
+    icon: "briefcase",
+    descriptionKey: "templates.professionalDesc",
+    categoryIds: [
+      "mock_cat_food_groceries",
+      "mock_cat_rent",
+      "mock_cat_utilities",
+      "mock_cat_transport",
+      "mock_cat_mobile_recharge",
+      "mock_cat_medical",
+      "mock_cat_eating_out",
+      "mock_cat_shopping",
+      "mock_cat_clothing",
+    ],
+  },
+  {
+    id: "freelancer",
+    nameKey: "templates.freelancer",
+    icon: "laptop",
+    descriptionKey: "templates.freelancerDesc",
+    categoryIds: [
+      "mock_cat_food_groceries",
+      "mock_cat_rent",
+      "mock_cat_utilities",
+      "mock_cat_mobile_recharge",
+      "mock_cat_eating_out",
+      "mock_cat_entertainment",
+      "mock_cat_education",
+    ],
+  },
+  {
+    id: "family",
+    nameKey: "templates.family",
+    icon: "users",
+    descriptionKey: "templates.familyDesc",
+    categoryIds: [
+      "mock_cat_food_groceries",
+      "mock_cat_rent",
+      "mock_cat_utilities",
+      "mock_cat_transport",
+      "mock_cat_medical",
+      "mock_cat_education",
+      "mock_cat_clothing",
+      "mock_cat_shopping",
+      "mock_cat_eid_fund",
+      "mock_cat_school_fees",
+    ],
+  },
+]);

@@ -219,3 +219,52 @@ export function calculateCCPaymentAvailable(
 ): number {
   return ccBudgeted + ccActivity + Math.abs(spendingOnCC);
 }
+
+/**
+ * Days of Buffering:
+ * How many days your current balance would last based on average daily spending.
+ * totalBalance / (totalOutflow over lookback period / lookbackDays)
+ */
+export function calculateDaysOfBuffering(
+  totalBalance: number,
+  outflows: { date: string; amount: number }[],
+  lookbackDays: number = 90
+): number | null {
+  if (totalBalance <= 0 || outflows.length === 0) return null;
+
+  const today = new Date();
+  const cutoff = new Date(today);
+  cutoff.setDate(cutoff.getDate() - lookbackDays);
+  const cutoffStr = cutoff.toISOString().slice(0, 10);
+
+  // Filter to only expenses (negative amounts) within lookback period
+  const periodOutflows = outflows.filter((o) => o.amount < 0 && o.date >= cutoffStr);
+
+  if (periodOutflows.length === 0) return null;
+
+  const totalOutflow = periodOutflows.reduce((sum, o) => sum + Math.abs(o.amount), 0);
+  const avgDailyOutflow = totalOutflow / lookbackDays;
+
+  if (avgDailyOutflow === 0) return null;
+
+  return Math.floor(totalBalance / avgDailyOutflow);
+}
+
+/**
+ * Sinking Fund Monthly Suggestion:
+ * How much to save per month to reach target by deadline.
+ * (target - accumulated) / monthsRemaining, rounded up to avoid underfunding.
+ */
+export function calculateSinkingFundSuggest(
+  targetAmount: number,
+  accumulated: number,
+  monthsRemaining: number
+): number {
+  if (accumulated >= targetAmount) return 0;
+
+  const remaining = targetAmount - accumulated;
+
+  if (monthsRemaining <= 0) return remaining;
+
+  return Math.ceil(remaining / monthsRemaining);
+}

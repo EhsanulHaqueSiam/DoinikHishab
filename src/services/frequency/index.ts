@@ -3,7 +3,7 @@
  * MMKV-backed with Bangladesh-relevant defaults
  */
 
-import { getJSON, setJSON, getAllKeys, getSetting, setSetting, deleteSetting } from "../storage";
+import { deleteSetting, getAllKeys, getJSON, getSetting, setJSON, setSetting } from "../storage";
 
 export interface FrequencyEntry {
   count: number;
