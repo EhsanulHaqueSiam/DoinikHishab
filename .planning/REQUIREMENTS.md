@@ -64,11 +64,11 @@
 
 ### Statement Import
 
-- [ ] **IMPT-01**: bKash PDF statement parser handling password-protected PDFs with field extraction (date, type, amount, reference)
-- [ ] **IMPT-02**: Nagad statement parser supporting XLS, PDF, and TXT formats
-- [ ] **IMPT-03**: Transaction type mapping (bKash Cash Out = expense, Cash In = income, Send Money = user-decided)
-- [ ] **IMPT-04**: Deduplication check against existing transactions by date + amount + reference before import
-- [ ] **IMPT-05**: All statement parsing happens on-device — never upload files to server
+- [x] **IMPT-01**: bKash PDF statement parser handling password-protected PDFs with field extraction (date, type, amount, reference)
+- [x] **IMPT-02**: Nagad statement parser supporting XLS, PDF, and TXT formats
+- [x] **IMPT-03**: Transaction type mapping (bKash Cash Out = expense, Cash In = income, Send Money = user-decided)
+- [x] **IMPT-04**: Deduplication check against existing transactions by date + amount + reference before import
+- [x] **IMPT-05**: All statement parsing happens on-device — never upload files to server
 
 ## v2 Requirements
 
@@ -143,11 +143,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | GOAL-03 | Phase 6 | Pending |
 | GOAL-04 | Phase 6 | Pending |
 | GOAL-05 | Phase 6 | Pending |
-| IMPT-01 | Phase 6 | Pending |
-| IMPT-02 | Phase 6 | Pending |
-| IMPT-03 | Phase 6 | Pending |
-| IMPT-04 | Phase 6 | Pending |
-| IMPT-05 | Phase 6 | Pending |
+| IMPT-01 | Phase 6 | Complete |
+| IMPT-02 | Phase 6 | Complete |
+| IMPT-03 | Phase 6 | Complete |
+| IMPT-04 | Phase 6 | Complete |
+| IMPT-05 | Phase 6 | Complete |
 | TOOL-03 | Phase 7 | Pending |
 | TOOL-04 | Phase 7 | Pending |
 
