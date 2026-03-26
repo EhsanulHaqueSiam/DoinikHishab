@@ -1,9 +1,10 @@
+import { useRouter } from "expo-router";
 import type React from "react";
-import { useTranslation } from "react-i18next";
-import { AccessibilityInfo, Pressable, ScrollView, Text, View } from "react-native";
+import { Pressable, ScrollView, Text, View } from "react-native";
 import { Card } from "../../src/components/ui/Card";
 import { APP_NAME, APP_NAME_BN } from "../../src/lib/constants";
-import i18n from "../../src/lib/i18n";
+import { useTranslation } from "../../src/lib/i18n";
+import { getLookbackDays, resetOnboarding } from "../../src/services/onboarding";
 import { useAppStore } from "../../src/stores/app-store";
 
 interface SettingRowProps {
@@ -13,25 +14,11 @@ interface SettingRowProps {
   onPress?: () => void;
   rightElement?: React.ReactNode;
   danger?: boolean;
-  accessibilityLabel?: string;
 }
 
-function SettingRow({
-  icon,
-  label,
-  value,
-  onPress,
-  rightElement,
-  danger,
-  accessibilityLabel,
-}: SettingRowProps) {
+function SettingRow({ icon, label, value, onPress, rightElement, danger }: SettingRowProps) {
   return (
-    <Pressable
-      onPress={onPress}
-      className="flex-row items-center py-3.5 active:bg-surface-400/30"
-      accessibilityRole={onPress ? "button" : undefined}
-      accessibilityLabel={accessibilityLabel || label}
-    >
+    <Pressable onPress={onPress} className="flex-row items-center py-3.5 active:bg-surface-400/30">
       <Text className="text-base mr-3">{icon}</Text>
       <Text className={`flex-1 text-sm font-medium ${danger ? "text-danger" : "text-foreground"}`}>
         {label}
@@ -54,8 +41,9 @@ function SectionLabel({ title }: { title: string }) {
 const Divider = () => <View className="h-px bg-border/20" />;
 
 export default function SettingsScreen() {
-  const { setLocale, theme, setTheme } = useAppStore();
+  const { locale, setLocale, theme, setTheme } = useAppStore();
   const { t } = useTranslation();
+  const router = useRouter();
 
   return (
     <View className="flex-1 bg-background">
@@ -76,75 +64,74 @@ export default function SettingsScreen() {
 
         {/* General */}
         <View className="px-4 mb-6">
-          <SectionLabel title={t("settings.general")} />
+          <SectionLabel title="General" />
           <Card className="p-0 px-4">
             <SettingRow
               icon="🌐"
-              label={t("settings.language")}
-              value={i18n.language === "en" ? "English" : "বাংলা"}
-              accessibilityLabel={t("settings.language")}
-              onPress={() => {
-                const newLang = i18n.language === "en" ? "bn" : "en";
-                i18n.changeLanguage(newLang);
-                setLocale(newLang as "en" | "bn");
-                AccessibilityInfo.announceForAccessibility(t("settings.languageChanged"));
-              }}
+              label="Language"
+              value={locale === "en" ? "English" : "বাংলা"}
+              onPress={() => setLocale(locale === "en" ? "bn" : "en")}
             />
             <Divider />
             <SettingRow
               icon="🎨"
-              label={t("settings.theme")}
+              label="Theme"
               value={theme === "system" ? "System" : theme === "dark" ? "Dark" : "Light"}
               onPress={() =>
                 setTheme(theme === "light" ? "dark" : theme === "dark" ? "system" : "light")
               }
             />
             <Divider />
-            <SettingRow icon="💱" label={t("settings.currency")} value="৳ BDT" />
+            <SettingRow icon="💱" label="Currency" value="৳ BDT" />
             <Divider />
-            <SettingRow icon="📅" label={t("settings.dateFormat")} value="DD/MM/YYYY" />
+            <SettingRow icon="📅" label="Date Format" value="DD/MM/YYYY" />
+            <Divider />
+            <SettingRow
+              icon="🔄"
+              label={t("settings.redoSetup")}
+              onPress={() => {
+                resetOnboarding();
+                router.replace("/onboarding/rules" as any);
+              }}
+            />
+            <Divider />
+            <SettingRow
+              icon="📊"
+              label={t("settings.bufferLookback")}
+              value={`${getLookbackDays()} ${t("metrics.days")}`}
+            />
           </Card>
         </View>
 
         {/* Data */}
         <View className="px-4 mb-6">
-          <SectionLabel title={t("settings.data")} />
+          <SectionLabel title="Data" />
           <Card className="p-0 px-4">
-            <SettingRow icon="📤" label={t("settings.exportData")} onPress={() => {}} />
+            <SettingRow icon="📤" label="Export Data" onPress={() => {}} />
             <Divider />
-            <SettingRow icon="📥" label={t("settings.importTransactions")} onPress={() => {}} />
+            <SettingRow icon="📥" label="Import Transactions" onPress={() => {}} />
             <Divider />
-            <SettingRow icon="🔄" label={t("settings.freshStart")} onPress={() => {}} />
+            <SettingRow icon="🔄" label="Fresh Start" onPress={() => {}} />
           </Card>
         </View>
 
         {/* AI */}
         <View className="px-4 mb-6">
-          <SectionLabel title={t("settings.ai")} />
+          <SectionLabel title="AI Features" />
           <Card className="p-0 px-4">
-            <SettingRow
-              icon="🤖"
-              label={t("settings.aiSettings")}
-              value="Not configured"
-              onPress={() => {}}
-            />
+            <SettingRow icon="🤖" label="AI Settings" value="Not configured" onPress={() => {}} />
           </Card>
         </View>
 
         {/* Account */}
         <View className="px-4 mb-6">
-          <SectionLabel title={t("settings.account")} />
+          <SectionLabel title="Account" />
           <Card className="p-0 px-4">
-            <SettingRow
-              icon="👤"
-              label={t("settings.signIn")}
-              value="Local only"
-              onPress={() => {}}
-            />
+            <SettingRow icon="👤" label="Sign In" value="Local only" onPress={() => {}} />
             <Divider />
             <SettingRow
               icon="👨‍👩‍👧‍👦"
-              label={t("settings.familySharing")}
+              label="Family Sharing"
               value="Not set up"
               onPress={() => {}}
             />
@@ -153,11 +140,11 @@ export default function SettingsScreen() {
 
         {/* About */}
         <View className="px-4 mb-8">
-          <SectionLabel title={t("settings.about")} />
+          <SectionLabel title="About" />
           <Card className="p-0 px-4">
-            <SettingRow icon="📝" label={t("settings.feedback")} onPress={() => {}} />
+            <SettingRow icon="📝" label="Feedback" onPress={() => {}} />
             <Divider />
-            <SettingRow icon="📜" label={t("settings.privacy")} onPress={() => {}} />
+            <SettingRow icon="📜" label="Privacy Policy" onPress={() => {}} />
           </Card>
         </View>
 

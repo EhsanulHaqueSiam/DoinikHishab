@@ -1,14 +1,17 @@
+import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { useMutation, useQuery } from "convex/react";
-import React, { useCallback, useEffect } from "react";
-import { useTranslation } from "react-i18next";
+import React, { useCallback, useEffect, useRef } from "react";
 import { Pressable, RefreshControl, ScrollView, Text, View } from "react-native";
 import { api } from "../../convex/_generated/api";
 import { BalanceCard } from "../../src/components/dashboard/BalanceCard";
+import { MetricsCard } from "../../src/components/dashboard/MetricsCard";
 import { FAB } from "../../src/components/platform/FAB";
 import { QuickAdd } from "../../src/components/transaction/QuickAdd";
 import { TransactionCard } from "../../src/components/transaction/TransactionCard";
 import { Card } from "../../src/components/ui/Card";
 import { formatCurrency } from "../../src/lib/currency";
+import { useTranslation } from "../../src/lib/i18n";
+import { getLookbackDays, setLookbackDays } from "../../src/services/onboarding";
 import { useAppStore } from "../../src/stores/app-store";
 import { useUIStore } from "../../src/stores/ui-store";
 
@@ -29,6 +32,8 @@ const ACCOUNT_ICON: Record<string, string> = {
   mortgage: "🏠",
 };
 
+const LOOKBACK_OPTIONS = [30, 60, 90, 180] as const;
+
 export default function DashboardScreen() {
   const { userId, deviceId, setUserId } = useAppStore();
   const { openQuickAdd } = useUIStore();
@@ -36,6 +41,19 @@ export default function DashboardScreen() {
 
   const createOrGetUser = useMutation(api.users.createOrGet);
   const seedCategories = useMutation(api.categories.seedDefaults);
+
+  const lookbackRef = useRef<BottomSheet>(null);
+  const [currentLookback, setCurrentLookback] = React.useState(getLookbackDays());
+
+  const openLookbackSheet = useCallback(() => {
+    lookbackRef.current?.expand();
+  }, []);
+
+  const handleLookbackSelect = useCallback((days: number) => {
+    setLookbackDays(days);
+    setCurrentLookback(days);
+    lookbackRef.current?.close();
+  }, []);
 
   const [backendError, setBackendError] = React.useState<string | null>(null);
   const [refreshing, setRefreshing] = React.useState(false);
@@ -112,27 +130,15 @@ export default function DashboardScreen() {
           trackingBalance={balances?.trackingTotal ?? 0}
         />
 
+        {/* Financial Health Metrics */}
+        <MetricsCard onSettingsPress={openLookbackSheet} />
+
         {/* Quick Actions */}
         <View className="flex-row px-4 mt-5 gap-2.5">
           {[
-            {
-              label: t("transaction.expense"),
-              icon: "💸",
-              type: "expense" as const,
-              color: "text-danger",
-            },
-            {
-              label: t("transaction.income"),
-              icon: "💵",
-              type: "income" as const,
-              color: "text-success",
-            },
-            {
-              label: t("transaction.transfer"),
-              icon: "🔄",
-              type: "transfer" as const,
-              color: "text-primary-700",
-            },
+            { label: "Expense", icon: "💸", type: "expense" as const, color: "text-danger" },
+            { label: "Income", icon: "💵", type: "income" as const, color: "text-success" },
+            { label: "Transfer", icon: "🔄", type: "transfer" as const, color: "text-primary-700" },
           ].map((action) => (
             <Pressable
               key={action.type}
@@ -150,7 +156,7 @@ export default function DashboardScreen() {
         {/* Accounts Summary */}
         {accounts && accounts.length > 0 && (
           <View className="px-4 mt-6">
-            <SectionHeader title={t("tabs.accounts")} />
+            <SectionHeader title="Accounts" />
             <Card className="p-0 overflow-hidden">
               {accounts
                 .filter((a) => !a.isClosed)
@@ -183,11 +189,9 @@ export default function DashboardScreen() {
           <View className="px-4 mt-6">
             <Card className="items-center py-10">
               <Text className="text-4xl mb-3">🏦</Text>
-              <Text className="text-base font-bold text-foreground">
-                {t("dashboard.addFirstAccount")}
-              </Text>
+              <Text className="text-base font-bold text-foreground">Add Your First Account</Text>
               <Text className="text-xs text-surface-800 text-center mt-1.5 px-4 leading-5">
-                {t("dashboard.addFirstAccountDesc")}
+                Start by adding a cash wallet or bank account to begin tracking
               </Text>
             </Card>
           </View>
@@ -195,7 +199,7 @@ export default function DashboardScreen() {
 
         {/* Recent Transactions */}
         <View className="px-4 mt-6 mb-24">
-          <SectionHeader title={t("dashboard.recentTransactions")} />
+          <SectionHeader title="Recent Transactions" />
           {transactions && transactions.length > 0 ? (
             <Card className="p-0 overflow-hidden">
               {transactions.map((txn, idx) => {
@@ -217,7 +221,7 @@ export default function DashboardScreen() {
             <Card className="items-center py-10">
               <Text className="text-4xl mb-3">📝</Text>
               <Text className="text-sm font-medium text-surface-900 text-center">
-                {t("dashboard.noTransactions")}
+                No transactions yet. Tap + to add your first one!
               </Text>
             </Card>
           )}
@@ -226,6 +230,37 @@ export default function DashboardScreen() {
 
       <FAB onPress={() => openQuickAdd("expense")} />
       <QuickAdd />
+
+      {/* Lookback Period Bottom Sheet */}
+      <BottomSheet
+        ref={lookbackRef}
+        index={-1}
+        snapPoints={["30%"]}
+        enablePanDownToClose
+        backgroundStyle={{ backgroundColor: "#111827" }}
+        handleIndicatorStyle={{ backgroundColor: "#6b7280" }}
+      >
+        <BottomSheetView className="flex-1">
+          <Text className="text-sm font-bold text-foreground px-4 py-3">
+            {t("metrics.lookbackTitle")}
+          </Text>
+          {LOOKBACK_OPTIONS.map((days) => (
+            <Pressable
+              key={days}
+              onPress={() => handleLookbackSelect(days)}
+              className="py-3 px-4 active:bg-surface-400/30"
+            >
+              <Text
+                className={`text-sm font-medium ${
+                  currentLookback === days ? "text-primary-700" : "text-foreground"
+                }`}
+              >
+                {days} {t("metrics.days")}
+              </Text>
+            </Pressable>
+          ))}
+        </BottomSheetView>
+      </BottomSheet>
     </View>
   );
 }

@@ -67,8 +67,8 @@ Plans:
 **Plans**: 4 plans
 
 Plans:
-- [x] 03-01-PLAN.md -- Data foundation: budget engine extensions, mock data templates, onboarding service, YNAB rules data, hooks, i18n keys
-- [x] 03-02-PLAN.md -- Budget screen UI: ReadyToAssignHero, SinkingFundSection, SinkingFundRow, RuleTip components and integration
+- [ ] 03-01-PLAN.md -- Data foundation: budget engine extensions, mock data templates, onboarding service, YNAB rules data, hooks, i18n keys
+- [ ] 03-02-PLAN.md -- Budget screen UI: ReadyToAssignHero, SinkingFundSection, SinkingFundRow, RuleTip components and integration
 - [ ] 03-03-PLAN.md -- Dashboard MetricsCard, onboarding UI components (RuleCarousel, StepIndicator, CategoryTemplateSelector), settings integration
 - [ ] 03-04-PLAN.md -- Onboarding flow: 5-step guided setup screens, root layout onboarding gate, human verification
 **UI hint**: yes
