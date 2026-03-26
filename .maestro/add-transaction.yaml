@@ -1,0 +1,33 @@
+appId: com.doinikhishab.app
+---
+# Flow: Add Transaction via QuickAdd (3-tap)
+- launchApp
+- runFlow: shared/complete-onboarding.yaml
+
+# Tap the FAB to open QuickAdd
+- tapOn:
+    id: "quick-add-fab"
+- assertVisible:
+    id: "amount-display"
+
+# Enter amount: 500
+- tapOn:
+    id: "keypad-5"
+- tapOn:
+    id: "keypad-0"
+- tapOn:
+    id: "keypad-0"
+
+# Select category
+- tapOn:
+    id: "category-grid"
+    index: 0
+
+# Confirm/save
+- tapOn:
+    id: "quick-add-save"
+    optional: true
+
+# Verify we're back on dashboard
+- assertVisible:
+    id: "dashboard-screen"

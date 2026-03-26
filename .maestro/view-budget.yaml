@@ -1,0 +1,15 @@
+appId: com.doinikhishab.app
+---
+# Flow: View Budget screen
+- launchApp
+- runFlow: shared/complete-onboarding.yaml
+
+# Navigate to Budget tab
+- tapOn:
+    id: "tab-budget"
+
+# Verify budget screen elements visible
+- assertVisible:
+    id: "ready-to-assign"
+- assertVisible:
+    id: "budget-category-list"

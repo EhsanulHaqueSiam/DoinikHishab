@@ -8,6 +8,7 @@ interface FABProps {
 export function FAB({ onPress }: FABProps) {
   return (
     <Pressable
+      testID="quick-add-fab"
       onPress={onPress}
       className="absolute bottom-6 right-6 w-14 h-14 rounded-full bg-primary-500 items-center justify-center z-50 active:bg-primary-400"
       style={[

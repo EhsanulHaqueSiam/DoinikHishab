@@ -1,0 +1,17 @@
+appId: com.doinikhishab.app
+---
+# Shared sub-flow: Complete onboarding if shown
+- runFlow:
+    when:
+      visible: ".*onboarding.*"
+    commands:
+      - tapOn:
+          id: "onboarding-skip"
+          optional: true
+      - tapOn:
+          id: "onboarding-next"
+          optional: true
+          repeat: 5
+      - tapOn:
+          id: "onboarding-complete"
+          optional: true

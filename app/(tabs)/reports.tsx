@@ -53,7 +53,7 @@ export default function ReportsScreen() {
   ];
 
   return (
-    <View className="flex-1 bg-background">
+    <View testID="reports-screen" className="flex-1 bg-background">
       {/* Report Type Tabs -- scrollable if 5 tabs overflow */}
       <ScrollView
         horizontal
@@ -64,6 +64,7 @@ export default function ReportsScreen() {
         {tabs.map((tab) => (
           <Pressable
             key={tab.key}
+            testID={`report-tab-${tab.key}`}
             onPress={() => setActiveReport(tab.key)}
             accessibilityRole="tab"
             accessibilityState={{ selected: activeReport === tab.key }}

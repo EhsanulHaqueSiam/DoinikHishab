@@ -100,7 +100,7 @@ export default function DashboardScreen() {
   );
 
   return (
-    <View className="flex-1 bg-background">
+    <View testID="dashboard-screen" className="flex-1 bg-background">
       <ScrollView
         showsVerticalScrollIndicator={false}
         scrollEventThrottle={8}

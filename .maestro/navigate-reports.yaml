@@ -1,0 +1,29 @@
+appId: com.doinikhishab.app
+---
+# Flow: Navigate Reports tabs
+- launchApp
+- runFlow: shared/complete-onboarding.yaml
+
+# Navigate to Reports tab
+- tapOn:
+    id: "tab-reports"
+
+# Verify reports screen
+- assertVisible:
+    id: "reports-screen"
+
+# Tap through report tabs
+- tapOn:
+    id: "report-tab-spending"
+- assertVisible:
+    id: "spending-chart"
+
+- tapOn:
+    id: "report-tab-income_expense"
+- assertVisible:
+    id: "income-expense-chart"
+
+- tapOn:
+    id: "report-tab-net_worth"
+- assertVisible:
+    id: "net-worth-chart"

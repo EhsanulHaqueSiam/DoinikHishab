@@ -82,6 +82,7 @@ export function AmountPad({ value, onChange, type, locale }: AmountPadProps) {
             {row.map((key) => (
               <Pressable
                 key={key}
+                testID={`keypad-${key}`}
                 onPress={() => handleKey(key)}
                 className="flex-1 items-center justify-center py-4 rounded-xl bg-surface-200 active:bg-surface-400 border border-border/20"
               >
