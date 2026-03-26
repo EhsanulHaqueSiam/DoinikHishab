@@ -87,8 +87,8 @@ Plans:
 Plans:
 - [x] 04-01-PLAN.md -- Foundation: packages, types, useReportData hook, i18n keys, jest config, TimeRangeSelector, SwipeableChart, ChartTooltip, ReportEmptyState
 - [x] 04-02-PLAN.md -- Chart replacements: SpendingBarChart, IncomeExpenseBarChart, NetWorthLineChart (react-native-gifted-charts), AoMTrendChart, DoBTrendChart
-- [ ] 04-03-PLAN.md -- Sankey: d3-sankey layout engine, SankeyVertical, SankeyHorizontal, SankeyDiagram wrapper, PrivacyToggle with MMKV
-- [ ] 04-04-PLAN.md -- Integration: reports.tsx rewrite (5 tabs, all charts wired), human verification
+- [x] 04-03-PLAN.md -- Sankey: d3-sankey layout engine, SankeyVertical, SankeyHorizontal, SankeyDiagram wrapper, PrivacyToggle with MMKV
+- [x] 04-04-PLAN.md -- Integration: reports.tsx rewrite (5 tabs, all charts wired), human verification
 **UI hint**: yes
 
 ### Phase 5: Recurring & Subscriptions
