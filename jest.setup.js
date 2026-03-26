@@ -74,24 +74,23 @@ jest.mock("./src/lib/platform", () => ({
 }));
 
 // Mock react-native-gifted-charts (SVG-based charts)
-jest.mock("react-native-gifted-charts", () => ({
-  BarChart: ({ testID, ...props }) => {
-    const { View } = require("react-native");
-    return View({ testID: testID || "bar-chart", ...props });
-  },
-  LineChart: ({ testID, ...props }) => {
-    const { View } = require("react-native");
-    return View({ testID: testID || "line-chart", ...props });
-  },
-}));
+jest.mock("react-native-gifted-charts", () => {
+  const React = require("react");
+  const { View } = require("react-native");
+  return {
+    BarChart: (props) => React.createElement(View, { testID: props.testID || "bar-chart" }),
+    LineChart: (props) => React.createElement(View, { testID: props.testID || "line-chart" }),
+  };
+});
 
 // Mock expo-linear-gradient
-jest.mock("expo-linear-gradient", () => ({
-  LinearGradient: ({ children, ...props }) => {
-    const { View } = require("react-native");
-    return View(props, children);
-  },
-}));
+jest.mock("expo-linear-gradient", () => {
+  const React = require("react");
+  const { View } = require("react-native");
+  return {
+    LinearGradient: ({ children, ...props }) => React.createElement(View, props, children),
+  };
+});
 
 // Mock d3-sankey
 jest.mock("d3-sankey", () => ({
