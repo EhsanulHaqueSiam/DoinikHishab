@@ -24,4 +24,5 @@ i18n.use(initReactI18next).init({
   initImmediate: false,
 });
 
+export { useTranslation } from "react-i18next";
 export default i18n;

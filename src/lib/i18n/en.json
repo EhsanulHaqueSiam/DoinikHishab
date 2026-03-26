@@ -144,5 +144,59 @@
     "rule3Body": "Overspent on groceries? Move money from another category. Your budget is flexible.",
     "rule4Title": "Age Your Money",
     "rule4Body": "Congratulations! You're spending money earned over 30 days ago. Keep building that buffer."
+  },
+  "onboarding": {
+    "rule1": {
+      "title": "Give Every Taka a Job",
+      "desc": "When money comes in, assign every taka to a category. No taka sits idle.",
+      "example": "Your salary of 30,000 comes in. Assign 8,000 to rent, 5,000 to groceries, 2,000 to transport... until 0 remains."
+    },
+    "rule2": {
+      "title": "Embrace True Expenses",
+      "desc": "Big, predictable expenses aren't surprises. Break them into monthly amounts.",
+      "example": "Eid is in 4 months. Set aside 2,500/month now. When Eid arrives, the money is ready."
+    },
+    "rule3": {
+      "title": "Roll with the Punches",
+      "desc": "When you overspend, move money from another category. No guilt, just adjust.",
+      "example": "Medical emergency costs 5,000 extra. Move from entertainment and shopping to cover it."
+    },
+    "rule4": {
+      "title": "Age Your Money",
+      "desc": "Spend money that's at least 30 days old. Break the paycheck-to-paycheck cycle.",
+      "example": "February salary pays March bills. The older your money, the more breathing room you have."
+    },
+    "step1": "Learn the Rules",
+    "step2": "Add Account",
+    "step2Desc": "Start with your most-used account",
+    "step3": "Choose Categories",
+    "step3Desc": "Pick a template that fits your life",
+    "step4": "Assign Money",
+    "step4Desc": "Assign your balance to categories. Every taka gets a job.",
+    "step5": "Enter Transaction",
+    "step5Desc": "Try adding your first expense. It only takes 3 taps!",
+    "skip": "Skip Setup",
+    "letsGo": "Let's Go",
+    "nextStep": "Next Step",
+    "startBudgeting": "Start Budgeting",
+    "readyToAssign": "Ready to Assign",
+    "remaining": "Remaining",
+    "accountCash": "Cash",
+    "accountBkash": "bKash",
+    "accountBank": "Bank Account",
+    "accountCustom": "Custom",
+    "accountCustomPlaceholder": "Account name",
+    "startingBalance": "Starting balance: Tk 0",
+    "sinkingFundsTitle": "True Expenses (Sinking Funds)",
+    "templates": {
+      "student": "Student",
+      "studentDesc": "Tuition, books, transport, food, and fun",
+      "professional": "Professional",
+      "professionalDesc": "Rent, bills, groceries, savings, and dining",
+      "freelancer": "Freelancer",
+      "freelancerDesc": "Internet, software, taxes, equipment, and savings",
+      "family": "Family",
+      "familyDesc": "Rent, bills, groceries, education, medical, and more"
+    }
   }
 }

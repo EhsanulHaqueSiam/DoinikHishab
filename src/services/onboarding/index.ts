@@ -3,7 +3,7 @@
  * Manages the 5-step guided setup flow and lookback period preference.
  */
 
-import { storage } from "../storage";
+import { getSetting, setSetting, deleteSetting } from "../storage";
 
 const ONBOARDING_COMPLETE_KEY = "onboarding_complete";
 const ONBOARDING_STEP_KEY = "onboarding_step";
@@ -17,37 +17,42 @@ export interface OnboardingState {
   completedSteps: boolean[];
 }
 
+export function isOnboardingComplete(): boolean {
+  return getSetting(ONBOARDING_COMPLETE_KEY) === "true";
+}
+
 export function getOnboardingState(): OnboardingState {
-  const isComplete = storage.getString(ONBOARDING_COMPLETE_KEY) === "true";
-  const step = Number(storage.getString(ONBOARDING_STEP_KEY) || "0");
+  const isComplete = getSetting(ONBOARDING_COMPLETE_KEY) === "true";
+  const step = Number(getSetting(ONBOARDING_STEP_KEY) || "0");
   const completedSteps = Array.from({ length: 5 }, (_, i) => i < step);
   return { isComplete, currentStep: step, completedSteps };
 }
 
-export function completeStep(step: number): void {
+export function completeStep(step: number): OnboardingState {
   const nextStep = step + 1;
-  storage.set(ONBOARDING_STEP_KEY, String(nextStep));
+  setSetting(ONBOARDING_STEP_KEY, String(nextStep));
+  return getOnboardingState();
 }
 
 export function skipOnboarding(): void {
-  storage.set(ONBOARDING_COMPLETE_KEY, "true");
+  setSetting(ONBOARDING_COMPLETE_KEY, "true");
 }
 
 export function completeOnboarding(): void {
-  storage.set(ONBOARDING_COMPLETE_KEY, "true");
-  storage.set(ONBOARDING_STEP_KEY, "5");
+  setSetting(ONBOARDING_COMPLETE_KEY, "true");
+  setSetting(ONBOARDING_STEP_KEY, "5");
 }
 
 export function resetOnboarding(): void {
-  storage.delete(ONBOARDING_COMPLETE_KEY);
-  storage.set(ONBOARDING_STEP_KEY, "0");
+  deleteSetting(ONBOARDING_COMPLETE_KEY);
+  setSetting(ONBOARDING_STEP_KEY, "0");
 }
 
 export function getLookbackDays(): number {
-  const stored = storage.getString(LOOKBACK_DAYS_KEY);
+  const stored = getSetting(LOOKBACK_DAYS_KEY);
   return stored ? Number(stored) : DEFAULT_LOOKBACK_DAYS;
 }
 
 export function setLookbackDays(days: number): void {
-  storage.set(LOOKBACK_DAYS_KEY, String(days));
+  setSetting(LOOKBACK_DAYS_KEY, String(days));
 }
