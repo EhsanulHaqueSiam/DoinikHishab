@@ -96,6 +96,29 @@ export const en = {
     next: "Next",
     loading: "Loading...",
   },
+  import: {
+    title: "Import Statement",
+    importN: "Import {{count}} Transactions",
+    emptyTitle: "Import Your Statements",
+    emptyBody:
+      "Select a bKash or Nagad statement file to import transactions automatically.",
+    parseError:
+      "Couldn't parse this file. Make sure it's a valid bKash or Nagad statement.",
+    importError: "Import failed. Please try again.",
+    selectFile: "Select bKash or Nagad Statement",
+    acceptedFormats: "PDF, XLS, or TXT",
+    parsing: "Parsing statement...",
+    importing: "Importing transactions...",
+    parseSummary: "Found {{total}} transactions, {{duplicates}} duplicates",
+    selectAll: "Select All",
+    deselectAll: "Deselect All",
+    duplicate: "Duplicate",
+    success: "Imported {{count}} transactions",
+    tryAnother: "Try Another File",
+    selectToImport: "Select transactions to import",
+    importMore: "Import More",
+    successTitle: "Import Complete",
+  },
 } as const;
 
 export type TranslationKeys = typeof en;

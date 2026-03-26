@@ -108,3 +108,22 @@ export function setApiKey(provider: string, key: string): void {
 export function deleteApiKey(provider: string): void {
   getStorage().delete(`api_key_${provider}`);
 }
+
+// JSON helpers for structured data persistence
+export function getJSON<T>(key: string): T | undefined {
+  const raw = getStorage().getString(key);
+  if (raw == null) return undefined;
+  try {
+    return JSON.parse(raw) as T;
+  } catch {
+    return undefined;
+  }
+}
+
+export function setJSON<T>(key: string, value: T): void {
+  getStorage().set(key, JSON.stringify(value));
+}
+
+export function deleteKey(key: string): void {
+  getStorage().delete(key);
+}
