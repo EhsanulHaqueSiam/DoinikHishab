@@ -23,9 +23,9 @@
 
 ### Budget & YNAB Ideology
 
-- [ ] **BUDG-01**: True Expenses / Sinking Funds displayed with culturally relevant Bengali templates (Eid Fund, School Fees, Wedding Gifts, Medical Reserve)
-- [ ] **BUDG-02**: Sinking fund progress bars showing accumulation toward target with monthly auto-suggest amounts (target / months remaining)
-- [ ] **BUDG-03**: "Give every taka a job" language throughout UI in Bengali and English — Ready to Assign prominently displayed and color-coded (teal positive, red over-assigned)
+- [x] **BUDG-01**: True Expenses / Sinking Funds displayed with culturally relevant Bengali templates (Eid Fund, School Fees, Wedding Gifts, Medical Reserve)
+- [x] **BUDG-02**: Sinking fund progress bars showing accumulation toward target with monthly auto-suggest amounts (target / months remaining)
+- [x] **BUDG-03**: "Give every taka a job" language throughout UI in Bengali and English — Ready to Assign prominently displayed and color-coded (teal positive, red over-assigned)
 - [ ] **BUDG-04**: Age of Money metric computed via FIFO queue algorithm, displayed on dashboard card with trend arrow
 - [ ] **BUDG-05**: Days of Buffering metric (total balance / average daily outflow) with configurable lookback period, displayed alongside Age of Money
 
@@ -33,7 +33,7 @@
 
 - [ ] **ONBD-01**: YNAB 4 Rules education carousel with Bengali/English toggle explaining each rule
 - [ ] **ONBD-02**: Guided first-time flow: add account, create categories (pre-populated Bangladeshi templates), assign first money, enter first transaction
-- [ ] **ONBD-03**: Contextual rule tips that surface when relevant (first overspend triggers Rule 3, first sinking fund triggers Rule 2)
+- [x] **ONBD-03**: Contextual rule tips that surface when relevant (first overspend triggers Rule 3, first sinking fund triggers Rule 2)
 - [ ] **ONBD-04**: Progress indicator showing onboarding completion status
 
 ### Reports & Analytics
@@ -117,14 +117,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TRAN-03 | Phase 2 | Complete |
 | TRAN-04 | Phase 2 | Complete |
 | TRAN-05 | Phase 2 | Complete |
-| BUDG-01 | Phase 3 | Pending |
-| BUDG-02 | Phase 3 | Pending |
-| BUDG-03 | Phase 3 | Pending |
+| BUDG-01 | Phase 3 | Complete |
+| BUDG-02 | Phase 3 | Complete |
+| BUDG-03 | Phase 3 | Complete |
 | BUDG-04 | Phase 3 | Pending |
 | BUDG-05 | Phase 3 | Pending |
 | ONBD-01 | Phase 3 | Pending |
 | ONBD-02 | Phase 3 | Pending |
-| ONBD-03 | Phase 3 | Pending |
+| ONBD-03 | Phase 3 | Complete |
 | ONBD-04 | Phase 3 | Pending |
 | RPRT-01 | Phase 4 | Pending |
 | RPRT-02 | Phase 4 | Pending |
