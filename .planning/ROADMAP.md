@@ -100,12 +100,13 @@ Plans:
   2. The app auto-detects subscriptions from transaction history (3+ occurrences of the same payee at regular intervals) and surfaces them for user confirmation
   3. User can view a subscriptions page showing total monthly and annual burn rate, with ability to manually add or remove subscriptions
   4. Cash flow forecasting chart projects account balance over 30/60/90 days based on recurring items, with danger zones highlighted in red where projected balance dips below zero
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 05-01: Recurring transaction calendar with status indicators
-- [ ] 05-02: Subscription auto-detection and management view
-- [ ] 05-03: Cash flow forecasting chart with danger zone highlighting
+- [ ] 05-01-PLAN.md -- Foundation: types, subscription detector service, recurring storage service, mock data hook, i18n keys, jest mock updates
+- [ ] 05-02-PLAN.md -- Calendar & bills UI: BillSummaryCard, ViewToggle, BillCalendarGrid, BillDaySheet, BillListView
+- [ ] 05-03-PLAN.md -- Subscriptions UI: SubscriptionCard, SubscriptionHeader, SubscriptionList, AddSubscriptionForm
+- [ ] 05-04-PLAN.md -- Cash flow forecast chart, recurring tab screen assembly, navigation integration, human verification
 **UI hint**: yes
 
 ### Phase 6: Goals & Statement Import
@@ -151,7 +152,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 | 1. Tooling Foundation | 3/3 | Complete | - |
 | 2. 3-Tap Transaction Entry | 1/2 | In progress | - |
 | 3. Budget Ideology & Onboarding | 4/4 | Complete | - |
-| 4. Mobile Reports & Sankey | 0/4 | Planned | - |
-| 5. Recurring & Subscriptions | 0/3 | Not started | - |
+| 4. Mobile Reports & Sankey | 4/4 | Complete | - |
+| 5. Recurring & Subscriptions | 0/4 | Planned | - |
 | 6. Goals & Statement Import | 0/4 | Not started | - |
 | 7. Deployment & E2E Testing | 0/2 | Not started | - |
