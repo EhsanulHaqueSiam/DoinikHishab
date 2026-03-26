@@ -344,6 +344,9 @@ export const en = {
     success: "Imported {{count}} transactions",
     tryAnother: "Try Another File",
     selectToImport: "Select transactions to import",
+    importing: "Importing transactions...",
+    successTitle: "Import Complete",
+    importMore: "Import More",
     pdfMobileOnly: "PDF import is only available on mobile",
     passwordProtected:
       "This PDF appears to be password-protected. Please unlock it first using your PDF viewer, then try again. Or use the TXT/XLS format instead.",
