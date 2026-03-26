@@ -82,12 +82,13 @@ Plans:
   2. Age of Money trend line chart appears in the reports section showing AoM over time
   3. Sankey cash flow diagram renders on mobile as a simplified vertical layout (income top, expenses bottom) and as full horizontal layout on web
   4. User can toggle Sankey privacy mode to hide amounts and show only proportions for sharing/screenshots
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 04-01: Mobile-responsive chart components with touch interactions
-- [ ] 04-02: Age of Money trend chart in reports
-- [ ] 04-03: Sankey cash flow diagram with d3-sankey and react-native-svg
+- [ ] 04-01-PLAN.md -- Foundation: packages, types, useReportData hook, i18n keys, jest config, TimeRangeSelector, SwipeableChart, ChartTooltip, ReportEmptyState
+- [ ] 04-02-PLAN.md -- Chart replacements: SpendingBarChart, IncomeExpenseBarChart, NetWorthLineChart (react-native-gifted-charts), AoMTrendChart, DoBTrendChart
+- [ ] 04-03-PLAN.md -- Sankey: d3-sankey layout engine, SankeyVertical, SankeyHorizontal, SankeyDiagram wrapper, PrivacyToggle with MMKV
+- [ ] 04-04-PLAN.md -- Integration: reports.tsx rewrite (5 tabs, all charts wired), human verification
 **UI hint**: yes
 
 ### Phase 5: Recurring & Subscriptions
@@ -147,10 +148,10 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Tooling Foundation | 0/3 | Not started | - |
-| 2. 3-Tap Transaction Entry | 0/2 | Not started | - |
-| 3. Budget Ideology & Onboarding | 0/4 | Not started | - |
-| 4. Mobile Reports & Sankey | 0/3 | Not started | - |
+| 1. Tooling Foundation | 3/3 | Complete | - |
+| 2. 3-Tap Transaction Entry | 1/2 | In progress | - |
+| 3. Budget Ideology & Onboarding | 4/4 | Complete | - |
+| 4. Mobile Reports & Sankey | 0/4 | Planned | - |
 | 5. Recurring & Subscriptions | 0/3 | Not started | - |
 | 6. Goals & Statement Import | 0/4 | Not started | - |
 | 7. Deployment & E2E Testing | 0/2 | Not started | - |
