@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: milestone
 status: Ready to execute
-stopped_at: Completed 04-01-PLAN.md
-last_updated: "2026-03-26T02:55:57.257Z"
+stopped_at: Completed 04-03-PLAN.md
+last_updated: "2026-03-26T03:03:16.611Z"
 progress:
   total_phases: 7
   completed_phases: 3
   total_plans: 13
-  completed_plans: 10
+  completed_plans: 11
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-25)
 ## Current Position
 
 Phase: 04 (mobile-reports-sankey) — EXECUTING
-Plan: 2 of 4
+Plan: 3 of 4
 
 ## Performance Metrics
 
@@ -54,6 +54,7 @@ Plan: 2 of 4
 | Phase 03 P03 | 9min | 2 tasks | 15 files |
 | Phase 03 P04 | 6min | 3 tasks | 11 files |
 | Phase 04 P01 | 4min | 2 tasks | 15 files |
+| Phase 04 P03 | 3min | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -88,6 +89,9 @@ Recent decisions affecting current work:
 - [Phase 04]: react-native-gifted-charts over victory-native: SVG-based, works on iOS/Android/web without Skia
 - [Phase 04]: Deterministic mock data via Math.sin for reproducible 12-month dataset
 - [Phase 04]: useReportData filters by currentPeriod endpoint: ALL returns start-to-period
+- [Phase 04]: Vertical layout via d3-sankey coordinate swap (compute horizontal then swap x/y) per Pitfall 2
+- [Phase 04]: Max 8 categories on mobile, 15 on web horizontal to prevent overcrowding
+- [Phase 04]: Privacy mode persisted to MMKV with reports_privacy_mode key
 
 ### Pending Todos
 
@@ -101,6 +105,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-26T02:55:57.255Z
-Stopped at: Completed 04-01-PLAN.md
+Last session: 2026-03-26T03:03:16.609Z
+Stopped at: Completed 04-03-PLAN.md
 Resume file: None

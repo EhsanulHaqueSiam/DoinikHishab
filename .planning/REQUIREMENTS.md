@@ -41,9 +41,9 @@
 - [x] **RPRT-01**: All existing reports (spending breakdown, income vs expense, net worth) fully functional on mobile with touch interactions
 - [x] **RPRT-02**: Responsive chart components with tap-to-filter segments and swipe between time periods
 - [x] **RPRT-03**: Age of Money line chart showing AoM trend over time in reports section
-- [ ] **RPRT-04**: Sankey cash flow diagram using d3-sankey layout + react-native-svg rendering
-- [ ] **RPRT-05**: Sankey simplified to vertical layout on mobile (income top, expenses bottom), full horizontal on web
-- [ ] **RPRT-06**: Sankey privacy mode to hide amounts for screenshots/sharing (show proportions only)
+- [x] **RPRT-04**: Sankey cash flow diagram using d3-sankey layout + react-native-svg rendering
+- [x] **RPRT-05**: Sankey simplified to vertical layout on mobile (income top, expenses bottom), full horizontal on web
+- [x] **RPRT-06**: Sankey privacy mode to hide amounts for screenshots/sharing (show proportions only)
 
 ### Recurring & Subscriptions
 
@@ -129,9 +129,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | RPRT-01 | Phase 4 | Complete |
 | RPRT-02 | Phase 4 | Complete |
 | RPRT-03 | Phase 4 | Complete |
-| RPRT-04 | Phase 4 | Pending |
-| RPRT-05 | Phase 4 | Pending |
-| RPRT-06 | Phase 4 | Pending |
+| RPRT-04 | Phase 4 | Complete |
+| RPRT-05 | Phase 4 | Complete |
+| RPRT-06 | Phase 4 | Complete |
 | RECR-01 | Phase 5 | Pending |
 | RECR-02 | Phase 5 | Pending |
 | RECR-03 | Phase 5 | Pending |
