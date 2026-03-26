@@ -5,11 +5,13 @@ import { Modal, Pressable, ScrollView, Text, View } from "react-native";
 import type { Id } from "../../convex/_generated/dataModel";
 import { AssignMoney } from "../../src/components/budget/AssignMoney";
 import { BudgetRow } from "../../src/components/budget/BudgetRow";
+import { ReadyToAssignHero } from "../../src/components/budget/ReadyToAssignHero";
+import { RuleTip } from "../../src/components/budget/RuleTip";
+import { SinkingFundSection } from "../../src/components/budget/SinkingFundSection";
 import { Card } from "../../src/components/ui/Card";
 import { useBudget } from "../../src/hooks/use-budget";
 import { formatCurrency } from "../../src/lib/currency";
 import { getMonthLabel, nextMonth, previousMonth } from "../../src/lib/date";
-import { shadow } from "../../src/lib/platform";
 import { useAppStore } from "../../src/stores/app-store";
 
 interface AssignTarget {
@@ -66,46 +68,19 @@ export default function BudgetScreen() {
         </Pressable>
       </View>
 
-      {/* Ready to Assign */}
-      <Pressable className="mx-4 mt-3">
-        <Card
-          className={`items-center py-3.5 ${
-            readyToAssign > 0
-              ? "border-success/20"
-              : readyToAssign < 0
-                ? "border-danger/20"
-                : "border-primary-400/15"
-          }`}
-          style={
-            readyToAssign > 0
-              ? shadow("#34d399", 0, 0, 0.1, 16)
-              : readyToAssign < 0
-                ? shadow("#f87171", 0, 0, 0.1, 16)
-                : undefined
-          }
-        >
-          <Text className="text-2xs font-semibold text-surface-800 uppercase tracking-widest">
-            {t("budget.readyToAssign")}
-          </Text>
-          <Text
-            className={`text-2xl font-bold mt-0.5 tracking-tight ${
-              readyToAssign > 0
-                ? "text-success"
-                : readyToAssign < 0
-                  ? "text-danger"
-                  : "text-primary-700"
-            }`}
-          >
-            {formatCurrency(readyToAssign)}
-          </Text>
-          {readyToAssign > 0 && (
-            <Text className="text-2xs text-surface-800 mt-1">Distribute to categories below</Text>
-          )}
-          {readyToAssign < 0 && (
-            <Text className="text-2xs text-danger mt-1">You've assigned more than you have!</Text>
-          )}
-        </Card>
-      </Pressable>
+      {/* Ready to Assign Hero */}
+      <ReadyToAssignHero amount={readyToAssign} />
+
+      {/* Rule 1 Tip: appears when there's money to assign */}
+      {readyToAssign > 0 && (
+        <RuleTip ruleId="rule_1" titleKey="tips.rule1Title" bodyKey="tips.rule1Body" />
+      )}
+
+      {/* Sinking Funds / True Expenses */}
+      <SinkingFundSection />
+
+      {/* Rule 2 Tip: below sinking funds */}
+      <RuleTip ruleId="rule_2" titleKey="tips.rule2Title" bodyKey="tips.rule2Body" />
 
       {/* Budget Grid */}
       <ScrollView
@@ -180,6 +155,11 @@ export default function BudgetScreen() {
                     }
                   />
                 ))}
+
+              {/* Rule 3 Tip: appears below groups with overspent categories */}
+              {group.budgets.some((b: any) => b.available < 0) && (
+                <RuleTip ruleId="rule_3" titleKey="tips.rule3Title" bodyKey="tips.rule3Body" />
+              )}
             </View>
           );
         })}
