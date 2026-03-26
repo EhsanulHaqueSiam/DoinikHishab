@@ -266,9 +266,11 @@ Empty state visual treatment: Centered vertically within card area. Icon above t
 | Context | English Copy | Bengali Copy | i18n Key |
 |---------|-------------|-------------|----------|
 | Chart render failure | Unable to load chart | চার্ট লোড করা যায়নি | `reports.chartError` |
+| Chart error body | Try selecting a different time range | অন্য সময়সীমা নির্বাচন করে দেখুন | `reports.chartErrorBody` |
 | Sankey layout failure | Unable to generate flow diagram | ফ্লো ডায়াগ্রাম তৈরি করা যায়নি | `reports.sankeyError` |
+| Sankey error body | Try a different time period or check that you have both income and expense transactions | অন্য সময়কাল ব্যবহার করুন অথবা আয় ও ব্যয় উভয় লেনদেন আছে কিনা দেখুন | `reports.sankeyErrorBody` |
 
-Error state visual treatment: Replace chart area with centered error message. `AlertTriangle` Lucide icon (24px, `text-surface-700`) + error text in `text-sm text-surface-800`. Same card background.
+Error state visual treatment: Replace chart area with centered error message. `AlertTriangle` Lucide icon (24px, `text-surface-700`) + heading in `text-sm font-bold text-surface-800` + body/solution path in `text-xs text-surface-700 mt-1`. Same card background.
 
 ### Destructive Actions
 
