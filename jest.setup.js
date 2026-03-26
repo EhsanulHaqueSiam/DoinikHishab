@@ -32,6 +32,7 @@ jest.mock("convex/react", () => ({
 jest.mock("./src/lib/i18n", () => ({
   __esModule: true,
   default: { language: "en", changeLanguage: jest.fn(), t: jest.fn((key) => key) },
+  useTranslation: () => ({ t: (key) => key, locale: "en" }),
 }));
 
 // Mock react-native-reanimated (no native worklets in test)
@@ -149,6 +150,17 @@ jest.mock("react-native-gesture-handler", () => ({
   GestureDetector: ({ children }) => children,
   GestureHandlerRootView: ({ children }) => children,
 }));
+
+// Mock @shopify/flash-list (native RecyclerView not available in test)
+jest.mock("@shopify/flash-list", () => {
+  const React = require("react");
+  const { FlatList } = require("react-native");
+  return {
+    FlashList: React.forwardRef((props, ref) =>
+      React.createElement(FlatList, { ...props, ref })
+    ),
+  };
+});
 
 // Silence console.warn for act() warnings in tests
 const originalWarn = console.warn;
