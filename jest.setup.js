@@ -136,6 +136,15 @@ jest.mock("@gorhom/bottom-sheet", () => {
   };
 });
 
+// Mock @shopify/flash-list (FlashList doesn't render in tests without layout)
+jest.mock("@shopify/flash-list", () => {
+  const React = require("react");
+  const { FlatList } = require("react-native");
+  return {
+    FlashList: React.forwardRef((props, ref) => React.createElement(FlatList, { ...props, ref })),
+  };
+});
+
 // Mock react-native-gesture-handler
 jest.mock("react-native-gesture-handler", () => ({
   Gesture: {

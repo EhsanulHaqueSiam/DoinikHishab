@@ -2,6 +2,12 @@ import { render } from "@testing-library/react-native";
 import { BillListView } from "./BillListView";
 import type { BillItem } from "./recurring-types";
 
+jest.mock("../../lib/i18n", () => ({
+  useTranslation: () => ({
+    t: (key: string) => key,
+  }),
+}));
+
 // Helper to get a date string N days from now
 function daysFromNow(n: number): string {
   const d = new Date();
