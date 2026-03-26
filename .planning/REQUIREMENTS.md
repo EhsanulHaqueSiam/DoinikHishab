@@ -56,11 +56,11 @@
 
 ### Goals & Debt Payoff
 
-- [ ] **GOAL-01**: Save-up goals with target amount, target date, linked account, and monthly contribution calculation
-- [ ] **GOAL-02**: Save-up goal status tracking: on-track, behind, or ahead with progress bars
-- [ ] **GOAL-03**: Pay-down goals with loan balance, APR, minimum payment, and amortization schedule
-- [ ] **GOAL-04**: Avalanche vs snowball strategy comparison showing total interest saved and payoff date difference
-- [ ] **GOAL-05**: Goal contributions appear as budget category line items
+- [x] **GOAL-01**: Save-up goals with target amount, target date, linked account, and monthly contribution calculation
+- [x] **GOAL-02**: Save-up goal status tracking: on-track, behind, or ahead with progress bars
+- [x] **GOAL-03**: Pay-down goals with loan balance, APR, minimum payment, and amortization schedule
+- [x] **GOAL-04**: Avalanche vs snowball strategy comparison showing total interest saved and payoff date difference
+- [x] **GOAL-05**: Goal contributions appear as budget category line items
 
 ### Statement Import
 
@@ -138,11 +138,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | RECR-04 | Phase 5 | Complete |
 | RECR-05 | Phase 5 | Complete |
 | RECR-06 | Phase 5 | Complete |
-| GOAL-01 | Phase 6 | Pending |
-| GOAL-02 | Phase 6 | Pending |
-| GOAL-03 | Phase 6 | Pending |
-| GOAL-04 | Phase 6 | Pending |
-| GOAL-05 | Phase 6 | Pending |
+| GOAL-01 | Phase 6 | Complete |
+| GOAL-02 | Phase 6 | Complete |
+| GOAL-03 | Phase 6 | Complete |
+| GOAL-04 | Phase 6 | Complete |
+| GOAL-05 | Phase 6 | Complete |
 | IMPT-01 | Phase 6 | Pending |
 | IMPT-02 | Phase 6 | Pending |
 | IMPT-03 | Phase 6 | Pending |

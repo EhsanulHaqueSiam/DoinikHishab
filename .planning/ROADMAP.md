@@ -122,7 +122,7 @@ Plans:
 **Plans**: 5 plans
 
 Plans:
-- [ ] 06-01-PLAN.md -- Goals foundation: goal-storage service, goal-engine calculations, types, tests, goals i18n keys
+- [x] 06-01-PLAN.md -- Goals foundation: goal-storage service, goal-engine calculations, types, tests, goals i18n keys
 - [ ] 06-02-PLAN.md -- Import foundation: statement-parser service, bKash/Nagad parsers, xlsx install, type mapping, dedup, tests, import i18n keys
 - [ ] 06-03-PLAN.md -- Goals UI: GoalCard, GoalForm, DebtCard, DebtForm, AmortizationTable, StrategyComparison, useGoals hook, goals screens
 - [ ] 06-04-PLAN.md -- Import UI: FilePickerButton, ImportReviewList, ImportReviewRow, TypeMappingPill, useImport hook, import screen
