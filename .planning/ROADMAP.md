@@ -140,7 +140,7 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 07-01-PLAN.md -- OTA updates: expo-updates install, app.json/eas.json config (fingerprint + 3 channels), useUpdateCheck hook with foreground toast, root layout wiring
+- [x] 07-01-PLAN.md -- OTA updates: expo-updates install, app.json/eas.json config (fingerprint + 3 channels), useUpdateCheck hook with foreground toast, root layout wiring
 - [ ] 07-02-PLAN.md -- Maestro E2E: testID props on critical components, 3 YAML flow files, shared onboarding sub-flow, GitHub Actions e2e.yml CI workflow
 
 ## Progress

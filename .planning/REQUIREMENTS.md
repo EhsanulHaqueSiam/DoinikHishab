@@ -9,7 +9,7 @@
 
 - [x] **TOOL-01**: Biome configured for linting and formatting with project-specific rules, replacing manual style enforcement
 - [x] **TOOL-02**: Jest + jest-expo + React Native Testing Library configured for unit and integration tests with Convex mock patterns
-- [ ] **TOOL-03**: expo-updates configured with EAS Update free tier for OTA JavaScript updates without app store review
+- [x] **TOOL-03**: expo-updates configured with EAS Update free tier for OTA JavaScript updates without app store review
 - [ ] **TOOL-04**: Maestro E2E test framework configured with YAML-based flows for critical user paths
 - [x] **TOOL-05**: expo-localization + i18next configured for proper Bengali/English internationalization with pluralization, interpolation, and locale detection
 
@@ -161,7 +161,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | IMPT-04 | Phase 6 | Complete |
 | IMPT-05 | Phase 6 | Complete |
 >>>>>>> worktree-agent-a59c0069
-| TOOL-03 | Phase 7 | Pending |
+| TOOL-03 | Phase 7 | Complete |
 | TOOL-04 | Phase 7 | Pending |
 
 **Coverage:**
