@@ -7,6 +7,14 @@
     "icon": "./assets/images/icon.png",
     "scheme": "doinikhishab",
     "userInterfaceStyle": "automatic",
+    "runtimeVersion": {
+      "policy": "fingerprint"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/YOUR_PROJECT_ID",
+      "enabled": true,
+      "checkAutomatically": "ON_ERROR_RECOVERY"
+    },
     "splash": {
       "image": "./assets/images/splash-icon.png",
       "resizeMode": "contain",
@@ -63,6 +71,11 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "YOUR_PROJECT_ID"
+      }
     }
   }
 }
