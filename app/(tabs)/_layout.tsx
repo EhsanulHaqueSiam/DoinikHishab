@@ -9,6 +9,7 @@ const TAB_ICONS: Record<string, string> = {
   budget: "📊",
   accounts: "🏦",
   reports: "📈",
+  recurring: "🔄",
   settings: "⚙️",
 };
 
@@ -71,6 +72,7 @@ export default function TabsLayout() {
       <Tabs.Screen name="budget" options={{ title: t("tabs.budget") }} />
       <Tabs.Screen name="accounts" options={{ title: t("tabs.accounts") }} />
       <Tabs.Screen name="reports" options={{ title: t("tabs.reports") }} />
+      <Tabs.Screen name="recurring" options={{ title: t("tabs.recurring") }} />
       <Tabs.Screen name="settings" options={{ title: t("tabs.settings") }} />
     </Tabs>
   );
