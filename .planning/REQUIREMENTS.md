@@ -150,11 +150,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | IMPT-04 | Phase 6 | Complete |
 | IMPT-05 | Phase 6 | Complete |
 =======
-| GOAL-01 | Phase 6 | Pending |
-| GOAL-02 | Phase 6 | Pending |
-| GOAL-03 | Phase 6 | Pending |
-| GOAL-04 | Phase 6 | Pending |
-| GOAL-05 | Phase 6 | Pending |
+| GOAL-01 | Phase 6 | Complete |
+| GOAL-02 | Phase 6 | Complete |
+| GOAL-03 | Phase 6 | Complete |
+| GOAL-04 | Phase 6 | Complete |
+| GOAL-05 | Phase 6 | Complete |
 | IMPT-01 | Phase 6 | Complete |
 | IMPT-02 | Phase 6 | Complete |
 | IMPT-03 | Phase 6 | Complete |
