@@ -80,6 +80,7 @@ jest.mock("react-native-gifted-charts", () => {
   return {
     BarChart: (props) => React.createElement(View, { testID: props.testID || "bar-chart" }),
     LineChart: (props) => React.createElement(View, { testID: props.testID || "line-chart" }),
+    LineChartBicolor: (props) => React.createElement(View, { testID: props.testID || "line-chart-bicolor" }),
   };
 });
 
@@ -112,6 +113,28 @@ jest.mock("d3-sankey", () => ({
   sankeyCenter: "center",
   sankeyJustify: "justify",
 }));
+
+// Mock react-native-gesture-handler/ReanimatedSwipeable
+jest.mock("react-native-gesture-handler/ReanimatedSwipeable", () => {
+  const React = require("react");
+  const { View } = require("react-native");
+  return {
+    __esModule: true,
+    default: ({ children }) => React.createElement(View, { testID: "swipeable" }, children),
+  };
+});
+
+// Mock @gorhom/bottom-sheet
+jest.mock("@gorhom/bottom-sheet", () => {
+  const React = require("react");
+  const { View } = require("react-native");
+  return {
+    __esModule: true,
+    default: React.forwardRef(({ children }, ref) => React.createElement(View, { testID: "bottom-sheet", ref }, children)),
+    BottomSheetView: ({ children }) => React.createElement(View, null, children),
+    BottomSheetBackdrop: () => null,
+  };
+});
 
 // Mock react-native-gesture-handler
 jest.mock("react-native-gesture-handler", () => ({
