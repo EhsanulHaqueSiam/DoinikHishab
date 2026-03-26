@@ -51,8 +51,8 @@
 - [x] **RECR-02**: Calendar toggle between calendar grid and list view with monthly totals
 - [x] **RECR-03**: Subscription auto-detection from transaction history (3+ occurrences of same payee at regular intervals)
 - [x] **RECR-04**: Subscriptions view showing monthly/annual burn rate with manual add/remove
-- [ ] **RECR-05**: Cash flow forecasting chart projecting account balance over 30/60/90 days based on recurring items
-- [ ] **RECR-06**: Forecast danger zones highlighted in red where projected balance dips below zero
+- [x] **RECR-05**: Cash flow forecasting chart projecting account balance over 30/60/90 days based on recurring items
+- [x] **RECR-06**: Forecast danger zones highlighted in red where projected balance dips below zero
 
 ### Goals & Debt Payoff
 
@@ -136,8 +136,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | RECR-02 | Phase 5 | Complete |
 | RECR-03 | Phase 5 | Complete |
 | RECR-04 | Phase 5 | Complete |
-| RECR-05 | Phase 5 | Pending |
-| RECR-06 | Phase 5 | Pending |
+| RECR-05 | Phase 5 | Complete |
+| RECR-06 | Phase 5 | Complete |
 | GOAL-01 | Phase 6 | Pending |
 | GOAL-02 | Phase 6 | Pending |
 | GOAL-03 | Phase 6 | Pending |
