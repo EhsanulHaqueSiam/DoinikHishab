@@ -119,13 +119,14 @@ Plans:
   3. User can compare avalanche vs snowball debt payoff strategies side-by-side, seeing total interest saved and payoff date difference between strategies
   4. Goal contributions appear as budget category line items in the budget view
   5. User can import a bKash or Nagad statement (PDF, XLS, or TXT), see parsed transactions with type mapping (Cash Out = expense, Cash In = income), review duplicates flagged by date + amount + reference, and confirm import -- all parsing happens on-device
-**Plans**: TBD
+**Plans**: 5 plans
 
 Plans:
-- [ ] 06-01: Save-up goals with progress tracking
-- [ ] 06-02: Pay-down goals with amortization and strategy comparison
-- [ ] 06-03: bKash statement parser with on-device PDF processing
-- [ ] 06-04: Nagad parser, transaction type mapping, and deduplication
+- [ ] 06-01-PLAN.md -- Goals foundation: goal-storage service, goal-engine calculations, types, tests, goals i18n keys
+- [ ] 06-02-PLAN.md -- Import foundation: statement-parser service, bKash/Nagad parsers, xlsx install, type mapping, dedup, tests, import i18n keys
+- [ ] 06-03-PLAN.md -- Goals UI: GoalCard, GoalForm, DebtCard, DebtForm, AmortizationTable, StrategyComparison, useGoals hook, goals screens
+- [ ] 06-04-PLAN.md -- Import UI: FilePickerButton, ImportReviewList, ImportReviewRow, TypeMappingPill, useImport hook, import screen
+- [ ] 06-05-PLAN.md -- Integration: GoalDashboardCard, navigation wiring, budget goal categories, human verification
 **UI hint**: yes
 
 ### Phase 7: Deployment & E2E Testing
@@ -154,5 +155,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 | 3. Budget Ideology & Onboarding | 4/4 | Complete | - |
 | 4. Mobile Reports & Sankey | 4/4 | Complete | - |
 | 5. Recurring & Subscriptions | 0/4 | Planned | - |
-| 6. Goals & Statement Import | 0/4 | Not started | - |
+| 6. Goals & Statement Import | 0/5 | Planned | - |
 | 7. Deployment & E2E Testing | 0/2 | Not started | - |
