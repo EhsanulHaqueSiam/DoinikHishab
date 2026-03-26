@@ -105,7 +105,7 @@ Plans:
 Plans:
 - [x] 05-01-PLAN.md -- Foundation: types, subscription detector service, recurring storage service, mock data hook, i18n keys, jest mock updates
 - [ ] 05-02-PLAN.md -- Calendar & bills UI: BillSummaryCard, ViewToggle, BillCalendarGrid, BillDaySheet, BillListView
-- [ ] 05-03-PLAN.md -- Subscriptions UI: SubscriptionCard, SubscriptionHeader, SubscriptionList, AddSubscriptionForm
+- [x] 05-03-PLAN.md -- Subscriptions UI: SubscriptionCard, SubscriptionHeader, SubscriptionList, AddSubscriptionForm
 - [ ] 05-04-PLAN.md -- Cash flow forecast chart, recurring tab screen assembly, navigation integration, human verification
 **UI hint**: yes
 
