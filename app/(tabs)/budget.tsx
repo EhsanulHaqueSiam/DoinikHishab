@@ -10,6 +10,7 @@ import { RuleTip } from "../../src/components/budget/RuleTip";
 import { SinkingFundSection } from "../../src/components/budget/SinkingFundSection";
 import { Card } from "../../src/components/ui/Card";
 import { useBudget } from "../../src/hooks/use-budget";
+import { useGoals } from "../../src/hooks/use-goals";
 import { formatCurrency } from "../../src/lib/currency";
 import { getMonthLabel, nextMonth, previousMonth } from "../../src/lib/date";
 import { useAppStore } from "../../src/stores/app-store";
@@ -24,6 +25,7 @@ interface AssignTarget {
 export default function BudgetScreen() {
   const { userId, currentMonth, setCurrentMonth } = useAppStore();
   const { summary, groups, isLoading } = useBudget();
+  const { goalBudgetCategories } = useGoals();
   const router = useRouter();
   const { t } = useTranslation();
 
@@ -163,6 +165,55 @@ export default function BudgetScreen() {
             </View>
           );
         })}
+
+        {/* Goal Budget Categories */}
+        {goalBudgetCategories.length > 0 && (
+          <View>
+            <View className="flex-row items-center px-4 py-2.5 bg-surface-300 border-b border-border/20">
+              <View className="flex-1 flex-row items-center">
+                <Text className="text-2xs mr-1.5 text-primary-700">🎯</Text>
+                <Text className="text-xs font-bold text-foreground tracking-wide">
+                  {t("goals.title")}
+                </Text>
+              </View>
+              <Text className="w-24 text-2xs font-medium text-surface-800 text-right">
+                {formatCurrency(goalBudgetCategories.reduce((s, c) => s + c.targetAmount, 0))}
+              </Text>
+              <Text className="w-24 text-2xs font-medium text-surface-800 text-right">
+                {formatCurrency(goalBudgetCategories.reduce((s, c) => s + c.activity, 0))}
+              </Text>
+              <Text className="w-24 text-2xs font-bold text-foreground text-right">
+                {formatCurrency(
+                  goalBudgetCategories.reduce((s, c) => s + (c.targetAmount - c.activity), 0)
+                )}
+              </Text>
+            </View>
+            {goalBudgetCategories.map((cat) => (
+              <View
+                key={cat.id}
+                className="flex-row items-center px-4 py-2.5 border-b border-border/10"
+              >
+                <View className="flex-1 flex-row items-center pl-4">
+                  <View className="w-1.5 h-1.5 rounded-full bg-primary-500 mr-2" />
+                  <Text className="text-xs font-medium text-foreground">{cat.name}</Text>
+                </View>
+                <Text className="w-24 text-2xs text-surface-800 text-right">
+                  {formatCurrency(cat.targetAmount)}
+                </Text>
+                <Text className="w-24 text-2xs text-surface-800 text-right">
+                  {formatCurrency(cat.activity)}
+                </Text>
+                <Text
+                  className={`w-24 text-2xs font-medium text-right ${
+                    cat.targetAmount - cat.activity < 0 ? "text-danger" : "text-foreground"
+                  }`}
+                >
+                  {formatCurrency(cat.targetAmount - cat.activity)}
+                </Text>
+              </View>
+            ))}
+          </View>
+        )}
 
         {summary && summary.overspent > 0 && (
           <View className="mx-4 mt-4">

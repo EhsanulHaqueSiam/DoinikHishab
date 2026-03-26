@@ -2,17 +2,37 @@ import { useQuery } from "convex/react";
 import { useRouter } from "expo-router";
 import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { SectionList, Text, View } from "react-native";
+import { Pressable, SectionList, Text, View } from "react-native";
 import { api } from "../../convex/_generated/api";
 import { FAB } from "../../src/components/platform/FAB";
 import { QuickAdd } from "../../src/components/transaction/QuickAdd";
 import { TransactionCard } from "../../src/components/transaction/TransactionCard";
 import { formatCurrency } from "../../src/lib/currency";
 import { formatDateShort, groupByDate } from "../../src/lib/date";
+import type { ParsedTransaction } from "../../src/services/statement-parser/types";
+import { getJSON } from "../../src/services/storage";
 import { useAppStore } from "../../src/stores/app-store";
 import { useUIStore } from "../../src/stores/ui-store";
 
 const ItemSeparator = () => <View className="h-px bg-border/20 mx-4" />;
+
+/**
+ * Convert imported ParsedTransaction to a shape compatible with TransactionCard.
+ * Amount is stored as positive paisa in MMKV; expenses become negative for display.
+ */
+function mapImportedTransaction(txn: ParsedTransaction, index: number) {
+  return {
+    _id: `imported_${txn.reference}_${index}`,
+    date: txn.date,
+    description: `${txn.provider.toUpperCase()}: ${txn.description}`,
+    amount: txn.type === "expense" ? -txn.amount : txn.amount,
+    type: txn.type,
+    flag: null,
+    isCleared: true,
+    categoryId: undefined,
+    accountId: undefined,
+  };
+}
 
 export default function TransactionsScreen() {
   const { userId } = useAppStore();
@@ -38,15 +58,27 @@ export default function TransactionsScreen() {
 
   const accounts = useQuery(api.accounts.list, userId ? { userId } : "skip");
 
+  // Read imported transactions from MMKV and merge with Convex transactions
+  const allTransactions = useMemo(() => {
+    const convexTxns = transactions ?? [];
+    const imported = getJSON<ParsedTransaction[]>("import:transactions");
+    const mappedImported = imported ? imported.map((txn, i) => mapImportedTransaction(txn, i)) : [];
+
+    // Merge and sort by date descending
+    const merged = [...convexTxns, ...mappedImported];
+    merged.sort((a, b) => b.date.localeCompare(a.date));
+    return merged;
+  }, [transactions]);
+
   const sections = useMemo(() => {
-    if (!transactions) return [];
-    const grouped = groupByDate(transactions);
+    if (allTransactions.length === 0) return [];
+    const grouped = groupByDate(allTransactions);
     return grouped.map((g) => ({
       title: g.date,
       data: g.items,
-      total: g.items.reduce((sum, t) => sum + t.amount, 0),
+      total: g.items.reduce((sum, t: any) => sum + t.amount, 0),
     }));
-  }, [transactions]);
+  }, [allTransactions]);
 
   // Pre-build lookup maps for O(1) access in renderItem
   const categoryMap = useMemo(() => {
@@ -60,7 +92,11 @@ export default function TransactionsScreen() {
   }, [accounts]);
 
   const handlePress = useCallback(
-    (id: string) => router.push(`/transaction/${id}` as any),
+    (id: string) => {
+      // Don't navigate for imported transactions (they don't have Convex detail pages)
+      if (id.startsWith("imported_")) return;
+      router.push(`/transaction/${id}` as any);
+    },
     [router]
   );
 
@@ -100,9 +136,22 @@ export default function TransactionsScreen() {
 
   return (
     <View className="flex-1 bg-background">
+      {/* Import button header */}
+      <View className="flex-row items-center justify-end px-4 py-2 bg-surface-100 border-b border-border/20">
+        <Pressable
+          onPress={() => router.push("/import" as any)}
+          className="flex-row items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-300 active:bg-surface-400"
+        >
+          <Text className="text-xs">📥</Text>
+          <Text className="text-2xs font-semibold text-surface-900 uppercase tracking-wider">
+            {t("import.title")}
+          </Text>
+        </Pressable>
+      </View>
+
       <SectionList
         sections={sections}
-        keyExtractor={(item) => item._id}
+        keyExtractor={(item: any) => item._id}
         renderSectionHeader={renderSectionHeader}
         renderItem={renderItem}
         ItemSeparatorComponent={ItemSeparator}

@@ -109,7 +109,11 @@ export default function SettingsScreen() {
           <Card className="p-0 px-4">
             <SettingRow icon="📤" label="Export Data" onPress={() => {}} />
             <Divider />
-            <SettingRow icon="📥" label="Import Transactions" onPress={() => {}} />
+            <SettingRow
+              icon="📥"
+              label={t("import.title")}
+              onPress={() => router.push("/import" as any)}
+            />
             <Divider />
             <SettingRow icon="🔄" label="Fresh Start" onPress={() => {}} />
           </Card>

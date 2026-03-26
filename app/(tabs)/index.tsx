@@ -5,6 +5,7 @@ import { Pressable, RefreshControl, ScrollView, Text, View } from "react-native"
 import { api } from "../../convex/_generated/api";
 import { BalanceCard } from "../../src/components/dashboard/BalanceCard";
 import { MetricsCard } from "../../src/components/dashboard/MetricsCard";
+import { GoalDashboardCard } from "../../src/components/goals/GoalDashboardCard";
 import { FAB } from "../../src/components/platform/FAB";
 import { QuickAdd } from "../../src/components/transaction/QuickAdd";
 import { TransactionCard } from "../../src/components/transaction/TransactionCard";
@@ -132,6 +133,11 @@ export default function DashboardScreen() {
 
         {/* Financial Health Metrics */}
         <MetricsCard onSettingsPress={openLookbackSheet} />
+
+        {/* Goals Card */}
+        <View className="px-4 mt-4">
+          <GoalDashboardCard />
+        </View>
 
         {/* Quick Actions */}
         <View className="flex-row px-4 mt-5 gap-2.5">
