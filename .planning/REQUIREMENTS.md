@@ -32,8 +32,8 @@
 ### Onboarding & Education
 
 - [x] **ONBD-01**: YNAB 4 Rules education carousel with Bengali/English toggle explaining each rule
-- [ ] **ONBD-02**: Guided first-time flow: add account, create categories (pre-populated Bangladeshi templates), assign first money, enter first transaction
-- [ ] **ONBD-03**: Contextual rule tips that surface when relevant (first overspend triggers Rule 3, first sinking fund triggers Rule 2)
+- [x] **ONBD-02**: Guided first-time flow: add account, create categories (pre-populated Bangladeshi templates), assign first money, enter first transaction
+- [x] **ONBD-03**: Contextual rule tips that surface when relevant (first overspend triggers Rule 3, first sinking fund triggers Rule 2)
 - [x] **ONBD-04**: Progress indicator showing onboarding completion status
 
 ### Reports & Analytics
@@ -123,8 +123,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | BUDG-04 | Phase 3 | Complete |
 | BUDG-05 | Phase 3 | Complete |
 | ONBD-01 | Phase 3 | Complete |
-| ONBD-02 | Phase 3 | Pending |
-| ONBD-03 | Phase 3 | Pending |
+| ONBD-02 | Phase 3 | Complete |
+| ONBD-03 | Phase 3 | Complete |
 | ONBD-04 | Phase 3 | Complete |
 | RPRT-01 | Phase 4 | Pending |
 | RPRT-02 | Phase 4 | Pending |
