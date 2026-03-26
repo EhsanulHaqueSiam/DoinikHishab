@@ -6,6 +6,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ConvexProvider, ConvexReactClient } from "convex/react";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
+import { useUpdateCheck } from "../src/hooks/use-update-check";
 import "../global.css";
 
 export { ErrorBoundary } from "expo-router";
@@ -39,6 +40,8 @@ function WebContainer({ children }: { children: React.ReactNode }) {
 }
 
 export default function RootLayout() {
+  useUpdateCheck();
+
   const [loaded, error] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
